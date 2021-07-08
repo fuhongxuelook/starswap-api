@@ -57,9 +57,7 @@ public class StarswapController {
     public TokenPair getTokenPair(@PathVariable(name = "tokenPairId") String tokenPairId) {
         String[] xy = tokenPairId.split(":");
         if (xy.length < 2) throw new IllegalArgumentException();
-        TokenPairId tokenPairIdObj = new TokenPairId();
-        tokenPairIdObj.setTokenXId(xy[0]);
-        tokenPairIdObj.setTokenYId(xy[1]);
+        TokenPairId tokenPairIdObj = new TokenPairId(xy[0], xy[1]);
         return tokenPairService.getTokenPair(tokenPairIdObj);
     }
 

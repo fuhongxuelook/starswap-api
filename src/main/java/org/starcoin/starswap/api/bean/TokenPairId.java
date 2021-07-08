@@ -10,6 +10,22 @@ import java.io.Serializable;
 @Embeddable
 public class TokenPairId implements Serializable {
 
+    public TokenPairId() {
+    }
+
+    public TokenPairId(String tokenXId, String tokenYId) {
+        int i = tokenXId.compareTo(tokenYId);
+        if (i < 0) {
+            this.tokenXId = tokenXId;
+            this.tokenYId = tokenYId;
+        } else if (i > 0)  {
+            this.tokenYId = tokenXId;
+            this.tokenXId = tokenYId;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     @Column(name = "token_x_id", length = 200, nullable = false)
     private String tokenXId;
 
