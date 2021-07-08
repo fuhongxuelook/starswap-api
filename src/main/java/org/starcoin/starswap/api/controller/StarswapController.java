@@ -6,7 +6,11 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.starcoin.starswap.api.bean.Token;
+import org.starcoin.starswap.api.bean.TokenPair;
+import org.starcoin.starswap.api.bean.TokenPairId;
 import org.starcoin.starswap.api.service.ContractService;
+import org.starcoin.starswap.api.service.TokenPairService;
 import org.starcoin.starswap.api.service.TokenService;
 //import org.starcoin.starswap.api.service.TransactionService;
 import org.starcoin.starswap.api.vo.Result;
@@ -27,12 +31,38 @@ public class StarswapController {
     private TokenService tokenService;
 
     @Resource
+    private TokenPairService tokenPairService;
+
+    @Resource
     private ContractService contractService;
 
 
 //    @Resource
 //    private TransactionService transactionService;
-//
+
+    @GetMapping(path = "tokens")
+    public List<Token> getTokens() {
+        return tokenService.findByDeactivedIsFalse();
+    }
+
+    @GetMapping(path = "tokens/{tokenId}")
+    public Token getToken(@PathVariable(name = "tokenId") String tokenId) {
+        return tokenService.getToken(tokenId);
+    }
+
+    @GetMapping(path = "tokenPairs")
+    public List<TokenPair> getTokenPairs() {
+        return tokenPairService.findByDeactivedIsFalse();
+    }
+
+    @GetMapping(path = "tokenPairs/{tokenPairId}")
+    public TokenPair getTokenPair(@PathVariable(name = "tokenPairId") String tokenPairId) {
+        String[] xy = tokenPairId.split(":");
+        TokenPairId tokenPairIdObj = new TokenPairId();
+        tokenPairIdObj.setTokenXId(xy[0]);
+        tokenPairIdObj.setTokenYId(xy[1]);
+        return tokenPairService.getTokenPair(tokenPairIdObj);
+    }
 
 //
 //    @ApiOperation(value = "获取指定poll的详情列表数据")

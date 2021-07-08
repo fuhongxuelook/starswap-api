@@ -5,10 +5,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.starcoin.starswap.api.bean.Token;
 
-public interface TokenRepository extends JpaRepository<Token, Long> {
+import java.util.List;
 
-//    Token findByIdAndDeletedAtIsNull(Long id);
-//
+public interface TokenRepository extends JpaRepository<Token, String> {
+
+
+    List<Token> findByDeactivedIsFalse();
+
 //    Page<Token> findByNetworkAndDeletedAtIsNull(String network, Pageable page);
 //
 //    Token findByTitleOrTitleEnAndDeletedAtIsNull(String title, String titleEn);

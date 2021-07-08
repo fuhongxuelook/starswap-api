@@ -1,5 +1,6 @@
 package org.starcoin.starswap.api.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "token_pair")
 @DynamicInsert
+@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
 public class TokenPair {
 
 
@@ -17,21 +19,21 @@ public class TokenPair {
     @AttributeOverride(name="address", column=@Column(name="token_pair_struct_address", nullable = false))
     @AttributeOverride(name="module", column=@Column(name="token_pair_struct_module", nullable = false))
     @AttributeOverride(name="name", column=@Column(name="token_pair_struct_name", nullable = false))
-    private StructTag tokenPairStructTag;
+    private StructType tokenPairStructType;
 
 
     @Embedded
     @AttributeOverride(name="address", column=@Column(name="token_x_struct_address", nullable = false))
     @AttributeOverride(name="module", column=@Column(name="token_x_struct_module", nullable = false))
     @AttributeOverride(name="name", column=@Column(name="token_x_struct_name", nullable = false))
-    private StructTag tokenXStructTag;
+    private StructType tokenXStructType;
 
 
     @Embedded
     @AttributeOverride(name="address", column=@Column(name="token_y_struct_address", nullable = false))
     @AttributeOverride(name="module", column=@Column(name="token_y_struct_module", nullable = false))
     @AttributeOverride(name="name", column=@Column(name="token_y_struct_name", nullable = false))
-    private StructTag tokenYStructTag;
+    private StructType tokenYStructType;
 
     @Column(length = 1000, nullable = false)
     private String description;
@@ -66,30 +68,6 @@ public class TokenPair {
 
     public void setTokenPairId(TokenPairId tokenPairId) {
         this.tokenPairId = tokenPairId;
-    }
-
-    public StructTag getTokenPairStructTag() {
-        return tokenPairStructTag;
-    }
-
-    public void setTokenPairStructTag(StructTag tokenPairStructTag) {
-        this.tokenPairStructTag = tokenPairStructTag;
-    }
-
-    public StructTag getTokenXStructTag() {
-        return tokenXStructTag;
-    }
-
-    public void setTokenXStructTag(StructTag tokenXStructTag) {
-        this.tokenXStructTag = tokenXStructTag;
-    }
-
-    public StructTag getTokenYStructTag() {
-        return tokenYStructTag;
-    }
-
-    public void setTokenYStructTag(StructTag tokenYStructTag) {
-        this.tokenYStructTag = tokenYStructTag;
     }
 
     public String getDescription() {
@@ -156,13 +134,37 @@ public class TokenPair {
         this.updatedAt = updatedAt;
     }
 
+    public StructType getTokenPairStructType() {
+        return tokenPairStructType;
+    }
+
+    public void setTokenPairStructType(StructType tokenPairStructType) {
+        this.tokenPairStructType = tokenPairStructType;
+    }
+
+    public StructType getTokenXStructType() {
+        return tokenXStructType;
+    }
+
+    public void setTokenXStructType(StructType tokenXStructType) {
+        this.tokenXStructType = tokenXStructType;
+    }
+
+    public StructType getTokenYStructType() {
+        return tokenYStructType;
+    }
+
+    public void setTokenYStructType(StructType tokenYStructType) {
+        this.tokenYStructType = tokenYStructType;
+    }
+
     @Override
     public String toString() {
         return "TokenPair{" +
                 "tokenPairId=" + tokenPairId +
-                ", tokenPairStructTag=" + tokenPairStructTag +
-                ", tokenXStructTag=" + tokenXStructTag +
-                ", tokenYStructTag=" + tokenYStructTag +
+                ", tokenPairStructType=" + tokenPairStructType +
+                ", tokenXStructType=" + tokenXStructType +
+                ", tokenYStructType=" + tokenYStructType +
                 ", description='" + description + '\'' +
                 ", descriptionEn='" + descriptionEn + '\'' +
                 ", sequenceNumber=" + sequenceNumber +

@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class StructTag {
+public class StructType {
 
     @Column(nullable = false)
     private String address;
@@ -42,7 +42,7 @@ public class StructTag {
 
     @Override
     public String toString() {
-        return "StructTag{" +
+        return "StructType{" +
                 "address='" + address + '\'' +
                 ", module='" + module + '\'' +
                 ", name='" + name + '\'' +

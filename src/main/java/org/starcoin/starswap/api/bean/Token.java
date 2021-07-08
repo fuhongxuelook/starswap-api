@@ -1,5 +1,6 @@
 package org.starcoin.starswap.api.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "token")
 @DynamicInsert
+@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
 public class Token {
 
     /**
@@ -20,7 +22,7 @@ public class Token {
     @AttributeOverride(name="address", column=@Column(name="token_struct_address", nullable = false))
     @AttributeOverride(name="module", column=@Column(name="token_struct_module", nullable = false))
     @AttributeOverride(name="name", column=@Column(name="token_struct_name", nullable = false))
-    private StructTag tokenStructTag;
+    private StructType tokenStructType;
 
     @Column(length = 1000, nullable = false)
     private String iconUrl;
@@ -61,12 +63,12 @@ public class Token {
         this.tokenId = tokenId;
     }
 
-    public StructTag getTokenStructTag() {
-        return tokenStructTag;
+    public StructType getTokenStructType() {
+        return tokenStructType;
     }
 
-    public void setTokenStructTag(StructTag tokenStructTag) {
-        this.tokenStructTag = tokenStructTag;
+    public void setTokenStructType(StructType tokenStructType) {
+        this.tokenStructType = tokenStructType;
     }
 
     public String getIconUrl() {
@@ -145,7 +147,7 @@ public class Token {
     public String toString() {
         return "Token{" +
                 "tokenId='" + tokenId + '\'' +
-                ", tokenStructTag=" + tokenStructTag +
+                ", tokenStructType=" + tokenStructType +
                 ", iconUrl='" + iconUrl + '\'' +
                 ", description='" + description + '\'' +
                 ", descriptionEn='" + descriptionEn + '\'' +
