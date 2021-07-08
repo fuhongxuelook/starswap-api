@@ -7,10 +7,10 @@ import java.io.Serializable;
 @Embeddable
 public class TokenPairId implements Serializable {
 
-    @Column(name = "token_x_id", length = 200)
+    @Column(name = "token_x_id", length = 200, nullable = false)
     private String tokenXId;
 
-    @Column(name = "token_y_id", length = 200)
+    @Column(name = "token_y_id", length = 200, nullable = false)
     private String tokenYId;
 
     public String getTokenXId() {

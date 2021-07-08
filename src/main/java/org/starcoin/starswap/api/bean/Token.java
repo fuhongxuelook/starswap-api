@@ -52,6 +52,108 @@ public class Token {
     @Column
     private Long updatedAt;
 
+    public String getTokenId() {
+        return tokenId;
+    }
 
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
 
+    public StructTag getTokenStructTag() {
+        return tokenStructTag;
+    }
+
+    public void setTokenStructTag(StructTag tokenStructTag) {
+        this.tokenStructTag = tokenStructTag;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescriptionEn() {
+        return descriptionEn;
+    }
+
+    public void setDescriptionEn(String descriptionEn) {
+        this.descriptionEn = descriptionEn;
+    }
+
+    public Integer getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
+    }
+
+    public Boolean getDeactived() {
+        return deactived;
+    }
+
+    public void setDeactived(Boolean deactived) {
+        this.deactived = deactived;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "tokenId='" + tokenId + '\'' +
+                ", tokenStructTag=" + tokenStructTag +
+                ", iconUrl='" + iconUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", descriptionEn='" + descriptionEn + '\'' +
+                ", sequenceNumber=" + sequenceNumber +
+                ", deactived=" + deactived +
+                ", createdBy='" + createdBy + '\'' +
+                ", updatedBy='" + updatedBy + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

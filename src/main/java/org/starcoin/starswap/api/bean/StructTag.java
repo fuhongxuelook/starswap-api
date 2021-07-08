@@ -6,13 +6,13 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class StructTag {
 
-    @Column
+    @Column(nullable = false)
     private String address;
 
-    @Column
+    @Column(nullable = false)
     private String module;
 
-    @Column
+    @Column(nullable = false)
     private String name;
     // private java.util.List<TypeTag> type_params;
 
