@@ -26,6 +26,6 @@ public class TokenService {
     }
 
     public Token getToken(String tokenId) {
-        return tokenRepository.getById(tokenId);
+       return tokenRepository.findById(tokenId).orElse(null);
     }
 }

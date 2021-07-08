@@ -29,6 +29,6 @@ public class TokenPairService {
     }
 
     public TokenPair getTokenPair(TokenPairId tokenPairId) {
-        return tokenPairRepository.getById(tokenPairId);
+        return tokenPairRepository.findById(tokenPairId).orElse(null);
     }
 }

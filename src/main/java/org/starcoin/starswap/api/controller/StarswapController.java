@@ -1,26 +1,23 @@
 package org.starcoin.starswap.api.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.novi.serde.DeserializationError;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.starcoin.starswap.api.bean.Token;
 import org.starcoin.starswap.api.bean.TokenPair;
 import org.starcoin.starswap.api.bean.TokenPairId;
 import org.starcoin.starswap.api.service.ContractService;
 import org.starcoin.starswap.api.service.TokenPairService;
 import org.starcoin.starswap.api.service.TokenService;
-//import org.starcoin.starswap.api.service.TransactionService;
-import org.starcoin.starswap.api.vo.Result;
-import org.starcoin.starswap.api.vo.ResultUtils;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.List;
 
-@Api(tags = {"投票列表配置接口"}, description = "投票列表配置接口，包含管理服务API")
+@Api(tags = {"Starswap RESTful API"})
 @RestController
 @RequestMapping("v1/starswap")
 public class StarswapController {
@@ -47,7 +44,8 @@ public class StarswapController {
 
     @GetMapping(path = "tokens/{tokenId}")
     public Token getToken(@PathVariable(name = "tokenId") String tokenId) {
-        return tokenService.getToken(tokenId);
+        Token token = tokenService.getToken(tokenId);
+        return token;
     }
 
     @GetMapping(path = "tokenPairs")
@@ -58,6 +56,7 @@ public class StarswapController {
     @GetMapping(path = "tokenPairs/{tokenPairId}")
     public TokenPair getTokenPair(@PathVariable(name = "tokenPairId") String tokenPairId) {
         String[] xy = tokenPairId.split(":");
+        if (xy.length < 2) throw new IllegalArgumentException();
         TokenPairId tokenPairIdObj = new TokenPairId();
         tokenPairIdObj.setTokenXId(xy[0]);
         tokenPairIdObj.setTokenYId(xy[1]);
