@@ -31,6 +31,9 @@ public class Token {
     @Column(length = 1000)
     private String descriptionEn;
 
+    @Column
+    private Integer sequenceNumber;
+
     /**
      * 是否已禁用。
      */
