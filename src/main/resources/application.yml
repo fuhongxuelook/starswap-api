@@ -1,0 +1,42 @@
+server:
+  port: 8600
+  max-http-header-size: 102400
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${STARCOIN_MYSQL_URL}
+    username: ${STARCOIN_MYSQL_USER}
+    password: ${STARCOIN_MYSQL_PWD}
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+jasypt:
+  encryptor:
+    bean: encryptorBean
+    password: ${STARCOIN_ES_PWD}
+
+#elasticsearch:
+#  host: ${STARCOIN_ES_URL}
+#  protocol: ${STARCOIN_ES_PROTOCOL}
+#  port: ${STARCOIN_ES_PORT}
+#  username: ${STARCOIN_ES_USER}
+#  connTimeout: 10000
+#  socketTimeout: 10000
+#  connectionRequestTimeout: 2000
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
