@@ -50,7 +50,16 @@ public class DevNetworkInteractApp {
                     .expect("\"ok\":", 10)
                     .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/Ddd.mv -b")
                     .expect("\"ok\":", 10)
-            // 注册代币资源、发币
+                    // 注册代币资源、发币
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Ddd::init -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Ddd::mint --arg 100000000999u128 -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Bot::init -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Bot::mint --arg 100000000999u128 -b")
+                    .expect("\"ok\":", 10)
+            // 转一部分币给账户2
             // todo
             //.sendLine()
             ;

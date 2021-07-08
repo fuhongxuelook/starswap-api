@@ -11,6 +11,7 @@ public class CommandLineInteractor {
 
 
     public CommandLineInteractor(Process process) {
+        this.process = process;
         this.reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         this.writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
     }
