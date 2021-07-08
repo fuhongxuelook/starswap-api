@@ -17,40 +17,41 @@ public class Token {
     private String tokenId;
 
     @Embedded
-    @AttributeOverride(name="address", column=@Column(name="token_struct_address"))
-    @AttributeOverride(name="module", column=@Column(name="token_struct_module"))
-    @AttributeOverride(name="name", column=@Column(name="token_struct_name"))
+    @AttributeOverride(name="address", column=@Column(name="token_struct_address", nullable = false))
+    @AttributeOverride(name="module", column=@Column(name="token_struct_module", nullable = false))
+    @AttributeOverride(name="name", column=@Column(name="token_struct_name", nullable = false))
     private StructTag tokenStructTag;
 
-    @Column(length = 1000)
+    @Column(length = 1000, nullable = false)
     private String iconUrl;
 
-    @Column(length = 1000)
+    @Column(length = 1000, nullable = false)
     private String description;
 
-    @Column(length = 1000)
+    @Column(length = 1000, nullable = false)
     private String descriptionEn;
 
-    @Column
+    @Column(nullable = false)
     private Integer sequenceNumber;
 
     /**
      * 是否已禁用。
      */
-    @Column
+    @Column(nullable = false)
     private Boolean deactived;
 
-    @Column(length = 70)
+    @Column(length = 70, nullable = false)
     private String createdBy;
 
-    @Column(length = 70)
+    @Column(length = 70, nullable = false)
     private String updatedBy;
 
-    @Column
+    @Column(nullable = false)
     private Long createdAt;
 
-    @Column
+    @Column(nullable = false)
     private Long updatedAt;
+
 
     public String getTokenId() {
         return tokenId;

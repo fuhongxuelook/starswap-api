@@ -14,23 +14,23 @@ public class TokenPair {
     private TokenPairId tokenPairId;
 
     @Embedded
-    @AttributeOverride(name="address", column=@Column(name="token_pair_struct_address"))
-    @AttributeOverride(name="module", column=@Column(name="token_pair_struct_module"))
-    @AttributeOverride(name="name", column=@Column(name="token_pair_struct_name"))
+    @AttributeOverride(name="address", column=@Column(name="token_pair_struct_address", nullable = false))
+    @AttributeOverride(name="module", column=@Column(name="token_pair_struct_module", nullable = false))
+    @AttributeOverride(name="name", column=@Column(name="token_pair_struct_name", nullable = false))
     private StructTag tokenPairStructTag;
 
 
     @Embedded
-    @AttributeOverride(name="address", column=@Column(name="token_x_struct_address"))
-    @AttributeOverride(name="module", column=@Column(name="token_x_struct_module"))
-    @AttributeOverride(name="name", column=@Column(name="token_x_struct_name"))
+    @AttributeOverride(name="address", column=@Column(name="token_x_struct_address", nullable = false))
+    @AttributeOverride(name="module", column=@Column(name="token_x_struct_module", nullable = false))
+    @AttributeOverride(name="name", column=@Column(name="token_x_struct_name", nullable = false))
     private StructTag tokenXStructTag;
 
 
     @Embedded
-    @AttributeOverride(name="address", column=@Column(name="token_y_struct_address"))
-    @AttributeOverride(name="module", column=@Column(name="token_y_struct_module"))
-    @AttributeOverride(name="name", column=@Column(name="token_y_struct_name"))
+    @AttributeOverride(name="address", column=@Column(name="token_y_struct_address", nullable = false))
+    @AttributeOverride(name="module", column=@Column(name="token_y_struct_module", nullable = false))
+    @AttributeOverride(name="name", column=@Column(name="token_y_struct_name", nullable = false))
     private StructTag tokenYStructTag;
 
     @Column(length = 1000, nullable = false)

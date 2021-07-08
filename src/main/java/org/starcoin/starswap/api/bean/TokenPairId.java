@@ -4,6 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+/**
+ * Token Pair 的 Id。
+ */
 @Embeddable
 public class TokenPairId implements Serializable {
 
