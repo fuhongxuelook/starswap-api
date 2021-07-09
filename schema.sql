@@ -101,4 +101,32 @@ insert into token_pair (  `token_x_id`, `token_y_id`,
   'admin')
 ;
 
-
+insert into `token_pair_pool` (
+  `pool_address`,
+  `token_x_id`,
+  `token_y_id`,
+  `created_at`,
+  `created_by`,
+  `deactived`,
+  `description`,
+  `description_en`,
+  `sequence_number`,
+  `updated_at`,
+  `updated_by`)
+  values (
+  '0x07fa08a855753f0ff7292fdcbe871216',
+  'Bot',
+  'Ddd',
+  unix_timestamp(now()),
+  'admin',
+  false,
+  'Bot<->Ddd Pool',
+  'Bot<->Ddd Pool',
+  11,
+  unix_timestamp(now()),
+  'admin'
+  )
+  ;
+  
+  
+  

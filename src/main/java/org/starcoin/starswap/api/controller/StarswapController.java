@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.starcoin.starswap.api.bean.Token;
-import org.starcoin.starswap.api.bean.TokenPair;
-import org.starcoin.starswap.api.bean.TokenPairId;
+import org.starcoin.starswap.api.bean.*;
 import org.starcoin.starswap.api.service.ContractService;
+import org.starcoin.starswap.api.service.TokenPairPoolService;
 import org.starcoin.starswap.api.service.TokenPairService;
 import org.starcoin.starswap.api.service.TokenService;
 
@@ -29,6 +28,9 @@ public class StarswapController {
 
     @Resource
     private TokenPairService tokenPairService;
+
+    @Resource
+    private TokenPairPoolService tokenPairPoolService;
 
     @Resource
     private ContractService contractService;
@@ -55,10 +57,29 @@ public class StarswapController {
 
     @GetMapping(path = "tokenPairs/{tokenPairId}")
     public TokenPair getTokenPair(@PathVariable(name = "tokenPairId") String tokenPairId) {
+        TokenPairId tokenPairIdObj = parseTokenPairId(tokenPairId);
+        return tokenPairService.getTokenPair(tokenPairIdObj);
+    }
+
+    private TokenPairId parseTokenPairId(String tokenPairId) {
         String[] xy = tokenPairId.split(":");
         if (xy.length < 2) throw new IllegalArgumentException();
         TokenPairId tokenPairIdObj = new TokenPairId(xy[0], xy[1]);
-        return tokenPairService.getTokenPair(tokenPairIdObj);
+        return tokenPairIdObj;
+    }
+
+    @GetMapping(path = "tokenPairPools")
+    public List<TokenPairPool> getTokenPairPools() {
+        return tokenPairPoolService.findByDeactivedIsFalse();
+    }
+
+    @GetMapping(path = "tokenPairPools/{tokenPairPoolId}")
+    public TokenPairPool getTokenPairPool(@PathVariable(name = "tokenPairPoolId") String tokenPairPoolId) {
+        String[] axy = tokenPairPoolId.split("::");
+        if (axy.length < 2) throw new IllegalArgumentException();
+        TokenPairId tokenPairIdObj = parseTokenPairId(axy[1]);
+        TokenPairPoolId tokenPairPoolIdObj = new TokenPairPoolId(tokenPairIdObj, axy[0]);
+        return tokenPairPoolService.getTokenPairPool(tokenPairPoolIdObj);
     }
 
 //

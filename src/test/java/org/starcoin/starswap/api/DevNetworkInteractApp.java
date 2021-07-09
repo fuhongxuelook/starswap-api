@@ -75,7 +75,7 @@ public class DevNetworkInteractApp {
                 .expect("\"ok\":", 10)
                 .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot")
                 .expect("\"ok\":", 10)
-                .waitSeconds(10)
+                .waitSeconds(10)// or -b
                 .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd")
                 .expect("\"ok\":", 10)
                 .waitSeconds(10)
