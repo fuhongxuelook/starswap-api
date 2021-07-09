@@ -75,11 +75,17 @@ public class DevNetworkInteractApp {
                 .expect("\"ok\":", 10)
                 .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot")
                 .expect("\"ok\":", 10)
+                .waitSeconds(10)
                 .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd")
+                .expect("\"ok\":", 10)
+                .waitSeconds(10)
+                .sendLine("account show")
                 .expect("\"ok\":", 10)
                 .sendLine("account default 0x07fa08a855753f0ff7292fdcbe871216")
                 .expect("\"ok\":", 10)
                 .sendLine("account unlock")
+                .expect("\"ok\":", 10)
+                .sendLine("account show")
                 .expect("\"ok\":", 10)
                 .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x1::TransferScripts::peer_to_peer_v2 -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot --arg 0xff2794187d72cc3a9240198ca98ac7b6 --arg 100000u128 -b")
                 .expect("\"ok\":", 10)
@@ -121,7 +127,7 @@ public class DevNetworkInteractApp {
                 // 检查代币发布
                 .sendLine("dev call --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwap::assert_is_token -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot")
                 .expect("\"ok\":", 10)
-                ;
+        ;
     }
 
 }

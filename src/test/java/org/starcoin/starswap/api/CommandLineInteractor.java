@@ -80,4 +80,14 @@ public class CommandLineInteractor {
         }
         return expectOk;
     }
+
+    public CommandLineInteractor waitSeconds(int i) {
+        try {
+            Thread.sleep(i * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return this;
+    }
 }
