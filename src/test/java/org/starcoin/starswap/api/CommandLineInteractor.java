@@ -44,6 +44,7 @@ public class CommandLineInteractor {
     }
 
     private static void sendLine(BufferedWriter writer, String outputLine) throws IOException {
+        System.out.println("Send: " + outputLine);
         writer.write(outputLine);
         writer.newLine();
         writer.flush();
