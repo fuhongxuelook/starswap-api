@@ -7,7 +7,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 -- TEST insert ----------------------------
 -- insert test tokens and token pair...
-insert into token ( `token_id`,
+insert into token ( 
+  `token_id`,
   `created_at`,
   `created_by`,
   `deactived`,
@@ -35,7 +36,8 @@ insert into token ( `token_id`,
   'admin')
 ;
 
-insert into token ( `token_id`,
+insert into token ( 
+  `token_id`,
   `created_at`,
   `created_by`,
   `deactived`,
@@ -63,6 +65,7 @@ insert into token ( `token_id`,
   'admin')
 ;
 
+-- token pair
 insert into token_pair (  `token_x_id`, `token_y_id`,
   `created_at`,
   `created_by`,
@@ -70,7 +73,7 @@ insert into token_pair (  `token_x_id`, `token_y_id`,
   `description`,
   `description_en`,
   `sequence_number`,
-  `default_pool_address`,
+  `default_pool_address`, -- 假设支持多个池子
   `token_x_struct_address`,
   `token_x_struct_module`,
   `token_x_struct_name`,
@@ -97,6 +100,7 @@ insert into token_pair (  `token_x_id`, `token_y_id`,
   'admin')
 ;
 
+-- 交易池子
 insert into `token_pair_pool` (
   `pool_address`,
   `token_x_id`,
@@ -124,5 +128,31 @@ insert into `token_pair_pool` (
   )
   ;
   
+  -- 流动性账户（用户提供的流动性）
+  insert into `liquidity_account` (
+  `account_address`, 
+  `pool_address`,
+  `token_x_id`,
+  `token_y_id`,
+  `created_at`,
+  `created_by`,
+  `deactived`,
+  `liquidity`,
+  `updated_at`,
+  `updated_by`
+  ) 
+  values (
+  '0x07fa08a855753f0ff7292fdcbe871216',
+  '0x07fa08a855753f0ff7292fdcbe871216',
+  'Bot',
+  'Ddd',
+  unix_timestamp(now()),
+  'admin',
+  false,
+  10000000,
+  unix_timestamp(now()),
+  'admin'
+  )
+  ;
   
   

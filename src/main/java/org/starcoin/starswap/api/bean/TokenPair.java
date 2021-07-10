@@ -21,6 +21,9 @@ public class TokenPair {
 //    @AttributeOverride(name="name", column=@Column(name="token_pair_struct_name", nullable = false))
 //    private StructType tokenPairStructType;
 
+    /**
+     * 默认的交易池子。假设可能支持多个池子。
+     */
     @Column
     private String defaultPoolAddress;
 

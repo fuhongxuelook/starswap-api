@@ -7,27 +7,28 @@ import java.io.Serializable;
 
 @Embeddable
 public class TokenPairPoolId implements Serializable {
-    private TokenPairId tokenPairId = new TokenPairId();
 
-    @Column
+    @Column(length = 50)
     private String poolAddress;
 
-    @Column(length = 200)
+    private TokenPairId tokenPairId = new TokenPairId();
+
+    @Column(length = 50)
     protected String getTokenXId() {
-        return this.tokenPairId.getTokenXId();
+        return this.getTokenPairId().getTokenXId();
     }
 
     protected void setTokenXId(String tokenXId) {
-        this.tokenPairId.setTokenXId(tokenXId);
+        this.getTokenPairId().setTokenXId(tokenXId);
     }
 
-    @Column(length = 200)
+    @Column(length = 50)
     protected String getTokenYId() {
-        return this.tokenPairId.getTokenYId();
+        return this.getTokenPairId().getTokenYId();
     }
 
     protected void setTokenYId(String tokenYId) {
-        this.tokenPairId.setTokenYId(tokenYId);
+        this.getTokenPairId().setTokenYId(tokenYId);
     }
 
 

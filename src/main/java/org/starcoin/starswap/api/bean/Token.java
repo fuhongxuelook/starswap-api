@@ -15,7 +15,7 @@ public class Token {
      * Token 的 Id。一般应该是缩写，同样的缩写只应该允许注册一次，防止混淆。
      */
     @Id
-    @Column(length = 200, nullable = false, unique = true)
+    @Column(length = 50, nullable = false, unique = true)
     private String tokenId;
 
     @Embedded

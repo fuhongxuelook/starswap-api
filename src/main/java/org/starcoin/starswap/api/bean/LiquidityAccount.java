@@ -4,36 +4,35 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 /**
- * Token Pair 池子。
+ * 流动性账号（用户提供的流动性）。
  */
 @Entity
-@Table(name = "token_pair_pool")
+@Table(name = "liquidity_account")
 @DynamicInsert
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
-public class TokenPairPool {
+public class LiquidityAccount {
 
     /**
-     * 池子 Id（领域键）。
+     * 账号 Id（领域键）。
      */
     @EmbeddedId
     @AttributeOverride(name="tokenXId", column=@Column(name="token_x_id", nullable = false))
     @AttributeOverride(name="tokenYId", column=@Column(name="token_y_id", nullable = false))
     @AttributeOverride(name="poolAddress", column=@Column(name="pool_address", nullable = false))
-    private TokenPairPoolId tokenPairPoolId;
-
-    @Column(length = 1000, nullable = false)
-    private String description;
-
-    @Column(length = 1000, nullable = false)
-    private String descriptionEn;
-
-    @Column(nullable = false)
-    private Integer sequenceNumber;
+    @AttributeOverride(name="accountAddress", column = @Column(name = "account_address", nullable = false))
+    private LiquidityAccountId liquidityAccountId;
 
     /**
-     * 是否已禁用。
+     * 账号提供的流动性数量。
+     */
+    @Column
+    private BigInteger liquidity;
+
+    /**
+     * 是否已不再使用。
      */
     @Column(nullable = false)
     private Boolean deactived;
@@ -50,36 +49,20 @@ public class TokenPairPool {
     @Column(nullable = false)
     private Long updatedAt;
 
-    public TokenPairPoolId getTokenPairPoolId() {
-        return tokenPairPoolId;
+    public LiquidityAccountId getLiquidityAccountId() {
+        return liquidityAccountId;
     }
 
-    public void setTokenPairPoolId(TokenPairPoolId tokenPairPoolId) {
-        this.tokenPairPoolId = tokenPairPoolId;
+    public void setLiquidityAccountId(LiquidityAccountId liquidityAccountId) {
+        this.liquidityAccountId = liquidityAccountId;
     }
 
-    public String getDescription() {
-        return description;
+    public BigInteger getLiquidity() {
+        return liquidity;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDescriptionEn() {
-        return descriptionEn;
-    }
-
-    public void setDescriptionEn(String descriptionEn) {
-        this.descriptionEn = descriptionEn;
-    }
-
-    public Integer getSequenceNumber() {
-        return sequenceNumber;
-    }
-
-    public void setSequenceNumber(Integer sequenceNumber) {
-        this.sequenceNumber = sequenceNumber;
+    public void setLiquidity(BigInteger liquidity) {
+        this.liquidity = liquidity;
     }
 
     public Boolean getDeactived() {
@@ -124,11 +107,9 @@ public class TokenPairPool {
 
     @Override
     public String toString() {
-        return "TokenPairPool{" +
-                "tokenPairPoolId=" + tokenPairPoolId +
-                ", description='" + description + '\'' +
-                ", descriptionEn='" + descriptionEn + '\'' +
-                ", sequenceNumber=" + sequenceNumber +
+        return "LiquidityAccount{" +
+                "liquidityAccountId=" + liquidityAccountId +
+                ", liquidity=" + liquidity +
                 ", deactived=" + deactived +
                 ", createdBy='" + createdBy + '\'' +
                 ", updatedBy='" + updatedBy + '\'' +
