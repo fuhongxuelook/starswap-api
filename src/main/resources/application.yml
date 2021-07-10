@@ -30,7 +30,7 @@ spring:
     properties:
       hibernate:
         hbm2ddl:
-          auto: create
+          auto: create # 开发阶段使用
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
 jasypt:
@@ -54,3 +54,8 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+      # 输出数据库模型（开发阶段）
+      hibernate:
+        tool:
+          hbm2ddl: DEBUG
+
