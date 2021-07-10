@@ -1,6 +1,10 @@
 server:
   port: 8600
   max-http-header-size: 102400
+  compression:
+    enabled: true
+    min-response-size: 20480  #20K 以上开启gzip
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json,application/xml
 
 spring:
   profiles:
@@ -10,6 +14,16 @@ spring:
     url: ${STARCOIN_MYSQL_URL}
     username: ${STARCOIN_MYSQL_USER}
     password: ${STARCOIN_MYSQL_PWD}
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      # 不配置默认与maximum-pool-size相同
+      minimum-idle: 5 #minimum number of idle connections maintained by HikariCP in a connection pool
+      # 连接池最大连接数，默认是10
+      maximum-pool-size: 20
+      connection-test-query: SELECT 1
+      idle-timeout: 500000 #maximum idle time for connection
+      connection-timeout: 20000 #maximum number of milliseconds that a client will wait for a connection
+      max-lifetime: 1800000 # maximum lifetime in milliseconds of a connection in the pool after it is closed.
 
   jpa:
     show-sql: true

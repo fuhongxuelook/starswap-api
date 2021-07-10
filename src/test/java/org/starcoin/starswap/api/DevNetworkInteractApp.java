@@ -73,12 +73,12 @@ public class DevNetworkInteractApp {
                 .expect("\"ok\":", 10)
                 .sendLine("account unlock")
                 .expect("\"ok\":", 10)
-                .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot")
+                .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -b")
                 .expect("\"ok\":", 10)
-                .waitSeconds(10)// or -b
-                .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd")
+                //.waitSeconds(10)// or -b
+                .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd -b")
                 .expect("\"ok\":", 10)
-                .waitSeconds(10)
+                //.waitSeconds(10)
                 .sendLine("account show")
                 .expect("\"ok\":", 10)
                 .sendLine("account default 0x07fa08a855753f0ff7292fdcbe871216")
