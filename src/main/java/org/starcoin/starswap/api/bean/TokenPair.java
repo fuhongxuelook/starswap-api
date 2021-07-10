@@ -15,12 +15,14 @@ public class TokenPair {
     @EmbeddedId
     private TokenPairId tokenPairId;
 
-    @Embedded
-    @AttributeOverride(name="address", column=@Column(name="token_pair_struct_address", nullable = false))
-    @AttributeOverride(name="module", column=@Column(name="token_pair_struct_module", nullable = false))
-    @AttributeOverride(name="name", column=@Column(name="token_pair_struct_name", nullable = false))
-    private StructType tokenPairStructType;
+//    @Embedded
+//    @AttributeOverride(name="address", column=@Column(name="token_pair_struct_address", nullable = false))
+//    @AttributeOverride(name="module", column=@Column(name="token_pair_struct_module", nullable = false))
+//    @AttributeOverride(name="name", column=@Column(name="token_pair_struct_name", nullable = false))
+//    private StructType tokenPairStructType;
 
+    @Column
+    private String defaultPoolAddress;
 
     @Embedded
     @AttributeOverride(name="address", column=@Column(name="token_x_struct_address", nullable = false))
@@ -134,12 +136,13 @@ public class TokenPair {
         this.updatedAt = updatedAt;
     }
 
-    public StructType getTokenPairStructType() {
-        return tokenPairStructType;
+
+    public String getDefaultPoolAddress() {
+        return defaultPoolAddress;
     }
 
-    public void setTokenPairStructType(StructType tokenPairStructType) {
-        this.tokenPairStructType = tokenPairStructType;
+    public void setDefaultPoolAddress(String defaultPoolAddress) {
+        this.defaultPoolAddress = defaultPoolAddress;
     }
 
     public StructType getTokenXStructType() {
@@ -162,7 +165,7 @@ public class TokenPair {
     public String toString() {
         return "TokenPair{" +
                 "tokenPairId=" + tokenPairId +
-                ", tokenPairStructType=" + tokenPairStructType +
+                ", defaultPoolAddress=" + defaultPoolAddress +
                 ", tokenXStructType=" + tokenXStructType +
                 ", tokenYStructType=" + tokenYStructType +
                 ", description='" + description + '\'' +
