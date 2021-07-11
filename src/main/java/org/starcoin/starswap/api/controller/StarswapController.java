@@ -3,15 +3,9 @@ package org.starcoin.starswap.api.controller;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.starcoin.starswap.api.bean.*;
-import org.starcoin.starswap.api.service.ContractService;
-import org.starcoin.starswap.api.service.TokenPairPoolService;
-import org.starcoin.starswap.api.service.TokenPairService;
-import org.starcoin.starswap.api.service.TokenService;
+import org.starcoin.starswap.api.service.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -33,11 +27,11 @@ public class StarswapController {
     private TokenPairPoolService tokenPairPoolService;
 
     @Resource
-    private ContractService contractService;
-
+    private LiquidityAccountService liquidityAccountService;
 
 //    @Resource
-//    private TransactionService transactionService;
+//    private ContractService contractService;
+
 
     @GetMapping(path = "tokens")
     public List<Token> getTokens() {
@@ -82,19 +76,10 @@ public class StarswapController {
         return tokenPairPoolService.getTokenPairPool(tokenPairPoolIdObj);
     }
 
-//
-//    @ApiOperation(value = "获取指定poll的详情列表数据")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "network", value = "网络参数", required = true, dataType = "String", dataTypeClass = String.class),
-//            @ApiImplicitParam(name = "proposalId", value = "proposalId", required = true, dataType = "Long", dataTypeClass = Long.class),
-//            @ApiImplicitParam(name = "proposer", value = "proposer", required = true, dataType = "String", dataTypeClass = String.class)
-//    })
-//    @ApiResponse(code = 200, message = "SUCCESS", response = Result.class)
-//    @GetMapping("/votes/{network}/{proposalId}/{proposer}")
-//    public Result<List<JSONObject>> delPollItem(@PathVariable("network") String network,
-//                                                @PathVariable("proposalId") Long proposalId,
-//                                                @PathVariable("proposer") String proposer) throws IOException, DeserializationError {
-//        List<JSONObject> list = transactionService.getEventsByProposalIdAndProposer(network, proposalId, proposer);
-//        return ResultUtils.success(list);
-//    }
+    @GetMapping(path = "liquidityAccounts")
+    public List<LiquidityAccount> getLiquidityAccounts(
+            @RequestParam(value = "accountAddress", required = true) String accountAddress) {
+        return liquidityAccountService.findByAccountAddress(accountAddress);
+    }
+
 }
