@@ -29,7 +29,7 @@ http://localhost:8600/v1/starswap/tokenPairs
 
 ```
 http://localhost:8600/v1/starswap/tokenPairs/Bot:Ddd
-``
+```
 
 获取交易池子的列表：
 
