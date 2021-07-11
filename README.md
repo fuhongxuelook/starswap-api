@@ -43,3 +43,12 @@ http://localhost:8600/v1/starswap/tokenPairPools
 http://localhost:8600/v1/starswap/tokenPairPools/0x07fa08a855753f0ff7292fdcbe871216::Bot:Ddd
 ```
 
+取得某个账号地址注入的流动性：
+
+```
+http://localhost:8600/v1/starswap/liquidityAccounts?accountAddress=0x07fa08a855753f0ff7292fdcbe871216
+```
+
+
+
+
