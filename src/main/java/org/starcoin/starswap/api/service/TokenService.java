@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.starcoin.starswap.api.bean.StructType;
 import org.starcoin.starswap.api.bean.Token;
 import org.starcoin.starswap.api.dao.TokenRepository;
 
@@ -27,5 +28,9 @@ public class TokenService {
 
     public Token getToken(String tokenId) {
        return tokenRepository.findById(tokenId).orElse(null);
+    }
+
+    public Token getTokenByStructType(String address, String module, String name) {
+        return tokenRepository.findFirstByTokenStructType(new StructType(address, module, name));
     }
 }

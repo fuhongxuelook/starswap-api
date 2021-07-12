@@ -14,7 +14,17 @@ public class StructType {
 
     @Column(nullable = false)
     private String name;
+
     // private java.util.List<TypeTag> type_params;
+
+    public StructType() {
+    }
+
+    public StructType(String address, String module, String name) {
+        this.address = address;
+        this.module = module;
+        this.name = name;
+    }
 
     public String getAddress() {
         return address;

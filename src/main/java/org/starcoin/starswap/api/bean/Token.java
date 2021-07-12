@@ -6,7 +6,9 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "token")
+@Table(name = "token", uniqueConstraints = {
+        @UniqueConstraint(name = "UniqueTokenCode", columnNames = {"token_struct_address", "token_struct_module", "token_struct_name"})
+})
 @DynamicInsert
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
 public class Token {

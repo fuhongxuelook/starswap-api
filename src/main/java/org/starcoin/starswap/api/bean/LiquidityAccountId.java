@@ -52,6 +52,14 @@ public class LiquidityAccountId implements Serializable {
         this.tokenPairPoolId = tokenPairPoolId;
     }
 
+    public LiquidityAccountId() {
+    }
+
+    public LiquidityAccountId(String accountAddress, TokenPairPoolId tokenPairPoolId) {
+        this.accountAddress = accountAddress;
+        this.tokenPairPoolId = tokenPairPoolId;
+    }
+
     @Override
     public String toString() {
         return "LiquidityAccountId{" +
