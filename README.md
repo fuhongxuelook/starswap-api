@@ -50,5 +50,18 @@ http://localhost:8600/v1/starswap/liquidityAccounts?accountAddress=0x07fa08a8557
 ```
 
 
+## 数据结构的序列化/反序列化
 
+生成数据结构的 BCS 序列化/反序列化代码（Java 语言版本）：
+
+```
+serdegen --language java --module-name org.starcoin.base --with-runtimes=Serde --target-source-dir ./src/main/java ./generate-format/starcoin.yaml
+serdegen --language java --module-name org.starcoin.base --with-runtimes=Bcs --target-source-dir ./src/main/java ./generate-format/starcoin.yaml
+```
+
+相关链接：
+
+https://crates.io/crates/serde-generate/0.9.0
+https://lib.rs/crates/bcs
+https://github.com/novifinancial/serde-reflection/blob/master/serde-generate/README.md#quick-start-with-python-and-bincode
 
