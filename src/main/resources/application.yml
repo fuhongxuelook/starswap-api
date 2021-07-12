@@ -38,6 +38,10 @@ jasypt:
     bean: encryptorBean
     password: ${STARCOIN_ES_PWD}
 
+starcoin:
+  seeds=${STARCOIN_SEEDS}
+  network=${STARCOIN_NETWORK}
+
 #elasticsearch:
 #  host: ${STARCOIN_ES_URL}
 #  protocol: ${STARCOIN_ES_PROTOCOL}

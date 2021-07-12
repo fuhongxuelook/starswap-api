@@ -3,9 +3,9 @@
 
 package com.novi.bcs;
 
-import com.novi.serde.BinaryDeserializer;
 import com.novi.serde.DeserializationError;
 import com.novi.serde.Slice;
+import com.novi.serde.BinaryDeserializer;
 
 public class BcsDeserializer extends BinaryDeserializer {
     public BcsDeserializer(byte[] input) {

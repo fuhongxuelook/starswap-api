@@ -1,34 +1,38 @@
-package org.starcoin.starswap.api.bean;
+package org.starcoin.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Event {
-
+    @JsonProperty("block_hash")
     @JSONField(name = "block_hash")
-    private String blockHash;
+    String blockHash;
 
     @JSONField(name = "block_number")
-    private String blockNumber;
+    @JsonProperty("block_number")
+    String blockNumber;
 
     @JSONField(name = "transaction_hash")
-    private String transactionHash;
+    @JsonProperty("transaction_hash")
+    String transactionHash;
 
     @JSONField(name = "transaction_index")
-    private int transactionIndex;
+    @JsonProperty("transaction_index")
+    int transactionIndex;
 
-    private String data;
+    String data;
 
     @JSONField(name = "type_tag")
-    private String typeTag;
-
-    @JSONField(name = "tag_name")
-    private String tagName;
+    @JsonProperty("type_tag")
+    TypeTag typeTag;
 
     @JSONField(name = "event_key")
-    private String eventKey;
+    @JsonProperty("event_key")
+    String eventKey;
 
     @JSONField(name = "event_seq_number")
-    private String eventSeqNumber;
+    @JsonProperty("event_seq_number")
+    String eventSeqNumber;
 
     public String getBlockHash() {
         return blockHash;
@@ -70,20 +74,13 @@ public class Event {
         this.data = data;
     }
 
-    public String getTypeTag() {
+
+    public TypeTag getTypeTag() {
         return typeTag;
     }
 
-    public void setTypeTag(String typeTag) {
+    public void setTypeTag(TypeTag typeTag) {
         this.typeTag = typeTag;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
     }
 
     public String getEventKey() {
