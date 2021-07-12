@@ -5,6 +5,10 @@ import io.reactivex.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.starcoin.base.AddLiquidityEvent;
+import org.starcoin.starswap.api.bean.LiquidityAccountId;
+import org.starcoin.starswap.api.bean.TokenPairId;
+import org.starcoin.starswap.api.bean.TokenPairPoolId;
+import org.starcoin.starswap.api.service.LiquidityAccountService;
 import org.starcoin.starswap.subscribe.StarcoinSubscriber;
 import org.starcoin.bean.EventNotification;
 import org.starcoin.utils.CommonUtils;
@@ -22,11 +26,14 @@ public class EventsSubscribeHandler implements Runnable {
 
     private String network;
 
+    private LiquidityAccountService liquidityAccountService;
+
     //private ElasticSearchHandler elasticSearchHandler;
 
-    public EventsSubscribeHandler(String host, String network) { //, ElasticSearchHandler elasticSearchHandler) {
+    public EventsSubscribeHandler(String host, String network, LiquidityAccountService liquidityAccountService) { //, ElasticSearchHandler elasticSearchHandler) {
         this.host = host;
         this.network = network;
+        this.liquidityAccountService = liquidityAccountService;
         //this.elasticSearchHandler = elasticSearchHandler;
     }
 
@@ -72,8 +79,13 @@ public class EventsSubscribeHandler implements Runnable {
                 String yTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.y_token_code.address.value);
                 String yTokenTypeModule = addLiquidityEvent.y_token_code.module;
                 String yTokenTypeName = addLiquidityEvent.y_token_code.name;
+                String accountAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.signer.value);
                 BigInteger liquidity = addLiquidityEvent.liquidity;
-                // todo 
+                String xTokenId = xTokenTypeName;//todo
+                String yTokenId = yTokenTypeName;//todo
+                LiquidityAccountId liquidityAccountId = new LiquidityAccountId(accountAddress, new TokenPairPoolId(new TokenPairId(xTokenId, yTokenId), tokenPairPoolAddress));
+                this.liquidityAccountService.activeLiquidityAccount(liquidityAccountId);
+                // todo
             }
         } catch (ConnectException e) {// | MalformedURLException | JSONRPC2SessionException e) {
             LOG.info("handle subscribe exception", e);
