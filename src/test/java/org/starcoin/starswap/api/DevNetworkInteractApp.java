@@ -6,6 +6,10 @@ import java.io.IOException;
 public class DevNetworkInteractApp {
 
     public static void main(String[] args) {
+        // ------------------------------------
+        // 先编译 move 代码：
+        // move clean && move publish
+        // ------------------------------------
         String shellPath = "/bin/sh";
         String starcoinCmd = "/Users/yangjiefeng/Documents/starcoinorg/starcoin/target/debug/starcoin -n dev -d alice console";
         String moveProjectDir = "/Users/yangjiefeng/Documents/starcoinorg/starswap-core";
