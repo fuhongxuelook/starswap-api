@@ -30,7 +30,8 @@ spring:
     properties:
       hibernate:
         hbm2ddl:
-          auto: create # 开发阶段使用
+          # auto: create # 开发阶段使用
+          auto: none
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
 jasypt:
