@@ -6,9 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.starcoin.base.AddLiquidityEvent;
 import org.starcoin.starswap.api.bean.LiquidityAccountId;
+import org.starcoin.starswap.api.bean.Token;
 import org.starcoin.starswap.api.bean.TokenPairId;
 import org.starcoin.starswap.api.bean.TokenPairPoolId;
 import org.starcoin.starswap.api.service.LiquidityAccountService;
+import org.starcoin.starswap.api.service.TokenService;
 import org.starcoin.starswap.subscribe.StarcoinSubscriber;
 import org.starcoin.bean.EventNotification;
 import org.starcoin.utils.CommonUtils;
@@ -28,12 +30,16 @@ public class EventsSubscribeHandler implements Runnable {
 
     private LiquidityAccountService liquidityAccountService;
 
+    private TokenService tokenService;
+
     //private ElasticSearchHandler elasticSearchHandler;
 
-    public EventsSubscribeHandler(String host, String network, LiquidityAccountService liquidityAccountService) { //, ElasticSearchHandler elasticSearchHandler) {
+    public EventsSubscribeHandler(String host, String network,
+                                  LiquidityAccountService liquidityAccountService, TokenService tokenService) { //, ElasticSearchHandler elasticSearchHandler) {
         this.host = host;
         this.network = network;
         this.liquidityAccountService = liquidityAccountService;
+        this.tokenService = tokenService;
         //this.elasticSearchHandler = elasticSearchHandler;
     }
 
@@ -81,12 +87,20 @@ public class EventsSubscribeHandler implements Runnable {
                 String yTokenTypeName = addLiquidityEvent.y_token_code.name;
                 String accountAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.signer.value);
                 BigInteger liquidity = addLiquidityEvent.liquidity;
-                String xTokenId = xTokenTypeName;//todo
-                String yTokenId = yTokenTypeName;//todo
+                Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
+                if (xToken == null) {
+                    LOG.info("Cannot get token by struct type.");
+                    continue;
+                }
+                Token yToken = tokenService.getTokenByStructType(yTokenTypeAddress, yTokenTypeModule, yTokenTypeName);
+                if (yToken == null) {
+                    LOG.info("Cannot get token by struct type.");
+                    continue;
+                }
                 LiquidityAccountId liquidityAccountId = new LiquidityAccountId(accountAddress,
-                        new TokenPairPoolId(new TokenPairId(xTokenId, yTokenId), tokenPairPoolAddress));
+                        new TokenPairPoolId(new TokenPairId(xToken.getTokenId(), yToken.getTokenId()), tokenPairPoolAddress));
                 this.liquidityAccountService.activeLiquidityAccount(liquidityAccountId);
-                // todo
+                // todo ???
             }
         } catch (ConnectException e) {// | MalformedURLException | JSONRPC2SessionException e) {
             LOG.info("handle subscribe exception", e);
