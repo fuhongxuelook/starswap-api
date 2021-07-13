@@ -416,7 +416,7 @@ WithdrawEvent:
         SEQ: U8
 
 # The above content is copied from repository 'starcoinorg/starcoin', file path:
-# testsuite/generate-format/tests/staged/starcoin.yaml
+# testsuite/generate-format/tests/staged/starcoin_types.yaml
 
 AddLiquidityEvent:
   STRUCT:

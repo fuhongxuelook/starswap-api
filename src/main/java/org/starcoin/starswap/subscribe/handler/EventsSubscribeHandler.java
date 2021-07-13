@@ -83,7 +83,8 @@ public class EventsSubscribeHandler implements Runnable {
                 BigInteger liquidity = addLiquidityEvent.liquidity;
                 String xTokenId = xTokenTypeName;//todo
                 String yTokenId = yTokenTypeName;//todo
-                LiquidityAccountId liquidityAccountId = new LiquidityAccountId(accountAddress, new TokenPairPoolId(new TokenPairId(xTokenId, yTokenId), tokenPairPoolAddress));
+                LiquidityAccountId liquidityAccountId = new LiquidityAccountId(accountAddress,
+                        new TokenPairPoolId(new TokenPairId(xTokenId, yTokenId), tokenPairPoolAddress));
                 this.liquidityAccountService.activeLiquidityAccount(liquidityAccountId);
                 // todo
             }
