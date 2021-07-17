@@ -1,4 +1,4 @@
-package org.starcoin.base;
+package org.starcoin.types;
 
 final class TraitHelpers {
     static void serialize_array16_u8_array(java.util.@com.novi.serde.ArrayLen(length=16) List<@com.novi.serde.Unsigned Byte> value, com.novi.serde.Serializer serializer) throws com.novi.serde.SerializationError {

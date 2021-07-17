@@ -1,5 +1,8 @@
-package org.starcoin.base;
+package org.starcoin.starswap.types;
 
+
+import org.starcoin.types.event.*;
+import org.starcoin.types.*;
 
 public final class AddLiquidityEvent {
     public final java.math.@com.novi.serde.Unsigned @com.novi.serde.Int128 BigInteger liquidity;
@@ -93,3 +96,4 @@ public final class AddLiquidityEvent {
         }
     }
 }
+

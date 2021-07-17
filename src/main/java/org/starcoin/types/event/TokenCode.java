@@ -1,5 +1,7 @@
-package org.starcoin.base;
+package org.starcoin.types.event;
 
+
+import org.starcoin.types.*;
 
 public final class TokenCode {
     public final AccountAddress address;
@@ -84,3 +86,4 @@ public final class TokenCode {
         }
     }
 }
+

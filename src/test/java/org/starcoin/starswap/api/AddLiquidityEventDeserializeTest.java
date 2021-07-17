@@ -1,7 +1,7 @@
 package org.starcoin.starswap.api;
 
 import com.novi.serde.DeserializationError;
-import org.starcoin.base.AddLiquidityEvent;
+import org.starcoin.starswap.types.AddLiquidityEvent;
 import org.starcoin.utils.CommonUtils;
 
 

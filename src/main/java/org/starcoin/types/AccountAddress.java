@@ -1,4 +1,4 @@
-package org.starcoin.base;
+package org.starcoin.types;
 
 
 public final class AccountAddress {
