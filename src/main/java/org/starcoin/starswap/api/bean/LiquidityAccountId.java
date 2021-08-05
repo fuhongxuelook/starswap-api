@@ -2,6 +2,7 @@ package org.starcoin.starswap.api.bean;
 
 import javax.persistence.Column;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class LiquidityAccountId implements Serializable {
     @Column(length = 50)
@@ -66,5 +67,18 @@ public class LiquidityAccountId implements Serializable {
                 "accountAddress='" + accountAddress + '\'' +
                 ", tokenPairPoolId=" + tokenPairPoolId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LiquidityAccountId that = (LiquidityAccountId) o;
+        return Objects.equals(accountAddress, that.accountAddress) && Objects.equals(tokenPairPoolId, that.tokenPairPoolId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountAddress, tokenPairPoolId);
     }
 }

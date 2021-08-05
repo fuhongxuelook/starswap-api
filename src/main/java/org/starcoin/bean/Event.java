@@ -24,7 +24,8 @@ public class Event {
 
     @JSONField(name = "type_tag")
     @JsonProperty("type_tag")
-    TypeTag typeTag;
+    //TypeTag typeTag;
+    String typeTag;
 
     @JSONField(name = "event_key")
     @JsonProperty("event_key")
@@ -75,11 +76,11 @@ public class Event {
     }
 
 
-    public TypeTag getTypeTag() {
+    public String getTypeTag() {
         return typeTag;
     }
 
-    public void setTypeTag(TypeTag typeTag) {
+    public void setTypeTag(String typeTag) {
         this.typeTag = typeTag;
     }
 

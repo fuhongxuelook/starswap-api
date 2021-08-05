@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class TokenPairPoolId implements Serializable {
@@ -30,9 +31,6 @@ public class TokenPairPoolId implements Serializable {
     protected void setTokenYId(String tokenYId) {
         this.getTokenPairId().setTokenYId(tokenYId);
     }
-
-
-
 
     public TokenPairId getTokenPairId() {
         return tokenPairId;
@@ -69,5 +67,18 @@ public class TokenPairPoolId implements Serializable {
                 "tokenPairId=" + tokenPairId +
                 ", poolAddress='" + poolAddress + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TokenPairPoolId that = (TokenPairPoolId) o;
+        return Objects.equals(poolAddress, that.poolAddress) && Objects.equals(tokenPairId, that.tokenPairId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(poolAddress, tokenPairId);
     }
 }
