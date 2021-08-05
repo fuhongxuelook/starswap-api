@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: starswap-api
-  name: starswap-api
+    app: starswap-api-barnard
+  name: starswap-api-barnard
 spec:
   ports:
   - port: 80
@@ -11,7 +11,7 @@ spec:
     protocol: TCP
     targetPort: 8600
   selector:
-    app: starswap-api
+    app: starswap-api-barnard
   type: LoadBalancer
 status:
   loadBalancer: {}
