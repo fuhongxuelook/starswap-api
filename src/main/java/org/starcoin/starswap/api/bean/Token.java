@@ -2,6 +2,7 @@ package org.starcoin.starswap.api.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
         @UniqueConstraint(name = "UniqueTokenCode", columnNames = {"token_struct_address", "token_struct_module", "token_struct_name"})
 })
 @DynamicInsert
+@DynamicUpdate
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
 public class Token {
 

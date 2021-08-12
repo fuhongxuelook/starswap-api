@@ -10,7 +10,6 @@ import org.starcoin.starswap.api.bean.LiquidityAccountId;
 import org.starcoin.starswap.api.bean.Token;
 import org.starcoin.starswap.api.bean.TokenPairId;
 import org.starcoin.starswap.api.bean.TokenPairPoolId;
-import org.starcoin.starswap.subscribe.handler.EventsSubscribeHandler;
 import org.starcoin.starswap.types.AddLiquidityEvent;
 import org.starcoin.utils.CommonUtils;
 

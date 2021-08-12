@@ -37,12 +37,12 @@ public class DevNetworkInteractApp {
         }
 
         CommandLineInteractor commandLineInteractor = new CommandLineInteractor(process);
-        commandLineInteractor.expect("Start console,", 10)
+        commandLineInteractor.expect("Start console,", 30)
                 // 导入账户，部署合约
-                .sendLine("account import -i " + firstPrivateKey)
-                .expect("\"ok\":", 10)
-                .sendLine("account import -i " + secondPrivateKey)
-                .expect("\"ok\":", 10)
+//                .sendLine("account import -i " + firstPrivateKey)
+//                .expect("\"ok\":", 10)
+//                .sendLine("account import -i " + secondPrivateKey)
+//                .expect("\"ok\":", 10)
                 .sendLine("account default 0x07fa08a855753f0ff7292fdcbe871216")
                 .expect("\"ok\":", 10)
                 .sendLine("account unlock 0x07fa08a855753f0ff7292fdcbe871216")

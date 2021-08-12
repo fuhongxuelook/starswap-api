@@ -149,3 +149,22 @@ insert into `token_pair_pool` (
   )
   ;
 
+
+ insert into pulling_event_task
+	(from_block_number,
+    created_at,
+    created_by,
+    status,
+    to_block_number,
+    updated_at,
+    updated_by
+    ) values (
+    0,
+    unix_timestamp(now()),
+    'ADMIN',
+    'CREATED',
+    200,
+    unix_timestamp(now()),
+    'ADMIN'
+    );
+

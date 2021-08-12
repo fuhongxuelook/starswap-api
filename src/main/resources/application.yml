@@ -60,6 +60,7 @@ jasypt:
 starcoin:
   seeds: ${STARCOIN_SEEDS}
   network: ${STARCOIN_NETWORK}
+  json-rpc-url: ${STARCOIN_JSON_RPC_URL}
 
 #elasticsearch:
 #  host: ${STARCOIN_ES_URL}
@@ -85,6 +86,7 @@ logging:
 
       starcoin:
         starswap:
+          api: DEBUG
           subscribe:
             handler: DEBUG
 

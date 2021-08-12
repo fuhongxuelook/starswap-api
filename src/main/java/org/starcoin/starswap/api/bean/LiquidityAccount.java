@@ -2,6 +2,7 @@ package org.starcoin.starswap.api.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -12,6 +13,7 @@ import java.math.BigInteger;
 @Entity
 @Table(name = "liquidity_account")
 @DynamicInsert
+@DynamicUpdate
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
 public class LiquidityAccount {
 
@@ -28,7 +30,7 @@ public class LiquidityAccount {
     /**
      * 账号提供的流动性数量。
      */
-    @Column
+    @Column(precision = 21, scale = 0)
     private BigInteger liquidity;
 
     /**
