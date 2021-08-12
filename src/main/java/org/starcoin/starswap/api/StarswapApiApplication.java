@@ -10,10 +10,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.starcoin.starswap.api.service.HandleEventService;
-import org.starcoin.starswap.api.service.LiquidityAccountService;
-import org.starcoin.starswap.api.service.TokenService;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 import org.starcoin.starswap.subscribe.handler.EventsSubscribeHandler;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @SpringBootApplication
 @EnableOpenApi

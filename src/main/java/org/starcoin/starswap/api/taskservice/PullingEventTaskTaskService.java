@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Service
 public class PullingEventTaskTaskService {
-    private static Logger LOG = LoggerFactory.getLogger(PullingEventTaskTaskService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PullingEventTaskTaskService.class);
 
     private static final int PULLING_BLOCK_MAX_COUNT = 32;
 
