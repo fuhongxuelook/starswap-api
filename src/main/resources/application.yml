@@ -77,8 +77,15 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+
       # 输出数据库模型（开发阶段）
       hibernate:
         tool:
           hbm2ddl: DEBUG
+
+      starcoin:
+        starswap:
+          subscribe:
+            handler: DEBUG
+
 

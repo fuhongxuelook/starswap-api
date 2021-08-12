@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.starcoin.starswap.api.service.HandleEventService;
 import org.starcoin.starswap.api.service.LiquidityAccountService;
 import org.starcoin.starswap.api.service.TokenService;
 import springfox.documentation.oas.annotations.EnableOpenApi;
@@ -27,10 +28,7 @@ public class StarswapApiApplication {
     private String network;
 
     @Autowired
-    private LiquidityAccountService liquidityAccountService;
-
-    @Autowired
-    private TokenService tokenService;
+    private HandleEventService handleEventService;
 
     public static void main(String[] args) {
         SpringApplication.run(StarswapApiApplication.class, args);
@@ -42,7 +40,7 @@ public class StarswapApiApplication {
         //LOG.info("es url is " + esUrl);
         for (String seed : seeds) {
             Thread handlerThread = new Thread(new EventsSubscribeHandler(seed, network,
-                    liquidityAccountService, tokenService));
+                    handleEventService));
             //Thread handlerThread = new Thread(new SubscribeHandler(seed, network, elasticSearchHandler));
             handlerThread.start();
         }

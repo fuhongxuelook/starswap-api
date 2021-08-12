@@ -8,6 +8,7 @@ import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.response.EthSubscribe;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,9 +32,10 @@ public class StarcoinSubscriber {
 //    }
 
 
-    public Flowable<EventNotification> newEventsNotifications() {
+    public Flowable<EventNotification> newEventNotifications() {
         Map<String, Object> eventFilter = new HashMap<>();
-        //eventFilter.put("from_block", 0);
+//        eventFilter.put("from_block", 100);
+//        eventFilter.put("to_block", 3);
         return web3jService.subscribe(
                 new Request<>(
                         "starcoin_subscribe",
