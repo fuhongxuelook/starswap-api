@@ -27,11 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.starcoin.starswap.api.bean.PullingEventTask.PULLING_BLOCK_MAX_COUNT;
+
 @Service
 public class PullingEventTaskTaskService {
     private static final Logger LOG = LoggerFactory.getLogger(PullingEventTaskTaskService.class);
-
-    private static final int PULLING_BLOCK_MAX_COUNT = 32;
 
     private String jsonRpcUrl;
 

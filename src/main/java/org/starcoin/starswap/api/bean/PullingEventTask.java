@@ -12,6 +12,8 @@ import java.math.BigInteger;
 @DynamicInsert
 @DynamicUpdate
 public class PullingEventTask {
+    public static final int PULLING_BLOCK_MAX_COUNT = 32;
+
     public static final String STATUS_CREATED = "CREATED";
     public static final String STATUS_DONE = "DONE";
 
@@ -62,6 +64,9 @@ public class PullingEventTask {
     }
 
     public void done() {
+        if (!STATUS_CREATED.equals(this.status)) {
+            throw new RuntimeException("Status error.");
+        }
         this.status = STATUS_DONE;
     }
 
