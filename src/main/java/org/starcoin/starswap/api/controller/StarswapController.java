@@ -29,9 +29,8 @@ public class StarswapController {
     @Resource
     private LiquidityAccountService liquidityAccountService;
 
-//    @Resource
-//    private ContractService contractService;
-
+    @Resource
+    private PullingEventTaskService pullingEventTaskService;
 
     @GetMapping(path = "tokens")
     public List<Token> getTokens() {
@@ -81,5 +80,11 @@ public class StarswapController {
             @RequestParam(value = "accountAddress", required = true) String accountAddress) {
         return liquidityAccountService.findByAccountAddress(accountAddress);
     }
+
+    @PostMapping(path = "pullingEventTasks")
+    public void postPullingEventTask(@RequestBody PullingEventTask pullingEventTask) {
+        pullingEventTaskService.createPullingEventTask(pullingEventTask);
+    }
+
 
 }
