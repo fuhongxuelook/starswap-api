@@ -1,8 +1,8 @@
-package org.starcoin.starswap.api.dao;
+package org.starcoin.starswap.api.data.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.starcoin.starswap.api.bean.LiquidityAccount;
-import org.starcoin.starswap.api.bean.LiquidityAccountId;
+import org.starcoin.starswap.api.data.model.LiquidityAccount;
+import org.starcoin.starswap.api.data.model.LiquidityAccountId;
 
 import java.util.List;
 

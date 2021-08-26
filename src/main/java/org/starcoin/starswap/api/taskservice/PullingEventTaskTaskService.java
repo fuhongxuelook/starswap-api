@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
-import org.starcoin.starswap.api.bean.PullingEventTask;
-import org.starcoin.starswap.api.dao.PullingEventTaskRepository;
+import org.starcoin.starswap.api.data.model.PullingEventTask;
+import org.starcoin.starswap.api.data.repo.PullingEventTaskRepository;
 import org.starcoin.starswap.api.service.HandleEventService;
 
 import javax.transaction.Transactional;
@@ -22,11 +22,11 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.starcoin.starswap.api.bean.PullingEventTask.PULLING_BLOCK_MAX_COUNT;
+import static org.starcoin.starswap.api.data.model.PullingEventTask.PULLING_BLOCK_MAX_COUNT;
+import static org.starcoin.starswap.subscribe.StarcoinEventSubscriber.createEventFilterMap;
 
 @Service
 public class PullingEventTaskTaskService {
@@ -92,7 +92,7 @@ public class PullingEventTaskTaskService {
 
     private Event[] rpcGetEvents(BigInteger fromBlockNumber, BigInteger toBlockNumber) {
         String method = "chain.get_events";
-        Map<String, Object> eventFilter = new HashMap<>();
+        Map<String, Object> eventFilter = createEventFilterMap();
         eventFilter.put("from_block", fromBlockNumber);
         eventFilter.put("to_block", toBlockNumber);
         JSONRPC2Request request = new JSONRPC2Request(method, Arrays.asList(eventFilter), System.currentTimeMillis());

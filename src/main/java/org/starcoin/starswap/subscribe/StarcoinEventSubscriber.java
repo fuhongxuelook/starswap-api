@@ -12,11 +12,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StarcoinSubscriber {
+public class StarcoinEventSubscriber {
 
     private final Web3jService web3jService;
 
-    public StarcoinSubscriber(Web3jService web3jService) {
+    public StarcoinEventSubscriber(Web3jService web3jService) {
         this.web3jService = web3jService;
     }
 
@@ -31,11 +31,13 @@ public class StarcoinSubscriber {
 //                PendingTransactionNotification.class);
 //    }
 
+    public static final String FROM_ADDRESS = "0xcCF1ADEdf0Ba6f9BdB9A6905173A5d72";
 
-    public Flowable<EventNotification> newEventNotifications() {
-        Map<String, Object> eventFilter = new HashMap<>();
-//        eventFilter.put("from_block", 100);
-//        eventFilter.put("to_block", 3);
+    public static final String ADD_LIQUIDITY_EVENT_TYPE_TAG = "xxxxxxxxx::xxx::AddLiquidityEvent";
+
+
+    public Flowable<EventNotification> eventNotificationFlowable() {
+        Map<String, Object> eventFilter = createEventFilterMap();
         return web3jService.subscribe(
                 new Request<>(
                         "starcoin_subscribe",
@@ -46,6 +48,13 @@ public class StarcoinSubscriber {
                 EventNotification.class);
     }
 
+    public static Map<String, Object> createEventFilterMap() {
+        Map<String, Object> eventFilter = new HashMap<>();
+        //eventFilter.put("addr", FROM_ADDRESS);
+        //eventFilter.put("type_tags", Collections.singletonList(ADD_LIQUIDITY_EVENT_TYPE_TAG));
+        //eventFilter.put("decode", false);
+        return eventFilter;
+    }
 
 
 }

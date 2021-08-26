@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.starcoin.starswap.api.bean.LiquidityAccount;
-import org.starcoin.starswap.api.bean.LiquidityAccountId;
-import org.starcoin.starswap.api.dao.LiquidityAccountRepository;
+import org.starcoin.starswap.api.data.model.LiquidityAccount;
+import org.starcoin.starswap.api.data.model.LiquidityAccountId;
+import org.starcoin.starswap.api.data.repo.LiquidityAccountRepository;
 
 import javax.transaction.Transactional;
 import java.math.BigInteger;

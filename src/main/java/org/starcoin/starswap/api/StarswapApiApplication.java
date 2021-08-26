@@ -10,7 +10,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.starcoin.starswap.api.service.HandleEventService;
-import org.starcoin.starswap.subscribe.handler.EventsSubscribeHandler;
+import org.starcoin.starswap.subscribe.handler.StarcoinEventSubscribeHandler;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @SpringBootApplication
@@ -39,7 +39,7 @@ public class StarswapApiApplication {
         LOG.info("EXECUTING : EventsSubscribeHandler");
         //LOG.info("es url is " + esUrl);
         for (String seed : seeds) {
-            Thread handlerThread = new Thread(new EventsSubscribeHandler(seed, network,
+            Thread handlerThread = new Thread(new StarcoinEventSubscribeHandler(seed, network,
                     handleEventService));
             //Thread handlerThread = new Thread(new SubscribeHandler(seed, network, elasticSearchHandler));
             handlerThread.start();

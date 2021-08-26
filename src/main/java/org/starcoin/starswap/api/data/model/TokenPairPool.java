@@ -1,4 +1,4 @@
-package org.starcoin.starswap.api.bean;
+package org.starcoin.starswap.api.data.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicInsert;
@@ -6,30 +6,24 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
+/**
+ * Token Pair 池子。
+ */
 @Entity
-@Table(name = "token", uniqueConstraints = {
-        @UniqueConstraint(name = "UniqueTokenCode", columnNames = {"token_struct_address", "token_struct_module", "token_struct_name"})
-})
+@Table(name = "token_pair_pool")
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
-public class Token {
+public class TokenPairPool {
 
     /**
-     * Token 的 Id。一般应该是缩写，同样的缩写只应该允许注册一次，防止混淆。
+     * 池子 Id（领域键）。
      */
-    @Id
-    @Column(length = 50, nullable = false, unique = true)
-    private String tokenId;
-
-    @Embedded
-    @AttributeOverride(name="address", column=@Column(name="token_struct_address", nullable = false))
-    @AttributeOverride(name="module", column=@Column(name="token_struct_module", nullable = false))
-    @AttributeOverride(name="name", column=@Column(name="token_struct_name", nullable = false))
-    private StructType tokenStructType;
-
-    @Column(length = 1000, nullable = false)
-    private String iconUrl;
+    @EmbeddedId
+    @AttributeOverride(name="tokenXId", column=@Column(name="token_x_id", nullable = false))
+    @AttributeOverride(name="tokenYId", column=@Column(name="token_y_id", nullable = false))
+    @AttributeOverride(name="poolAddress", column=@Column(name="pool_address", nullable = false))
+    private TokenPairPoolId tokenPairPoolId;
 
     @Column(length = 1000, nullable = false)
     private String description;
@@ -58,29 +52,12 @@ public class Token {
     @Column(nullable = false)
     private Long updatedAt;
 
-
-    public String getTokenId() {
-        return tokenId;
+    public TokenPairPoolId getTokenPairPoolId() {
+        return tokenPairPoolId;
     }
 
-    public void setTokenId(String tokenId) {
-        this.tokenId = tokenId;
-    }
-
-    public StructType getTokenStructType() {
-        return tokenStructType;
-    }
-
-    public void setTokenStructType(StructType tokenStructType) {
-        this.tokenStructType = tokenStructType;
-    }
-
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
+    public void setTokenPairPoolId(TokenPairPoolId tokenPairPoolId) {
+        this.tokenPairPoolId = tokenPairPoolId;
     }
 
     public String getDescription() {
@@ -149,10 +126,8 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Token{" +
-                "tokenId='" + tokenId + '\'' +
-                ", tokenStructType=" + tokenStructType +
-                ", iconUrl='" + iconUrl + '\'' +
+        return "TokenPairPool{" +
+                "tokenPairPoolId=" + tokenPairPoolId +
                 ", description='" + description + '\'' +
                 ", descriptionEn='" + descriptionEn + '\'' +
                 ", sequenceNumber=" + sequenceNumber +

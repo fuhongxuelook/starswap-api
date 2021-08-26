@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import org.starcoin.starswap.api.bean.*;
+import org.starcoin.starswap.api.data.model.*;
 import org.starcoin.starswap.api.service.*;
 
 import javax.annotation.Resource;

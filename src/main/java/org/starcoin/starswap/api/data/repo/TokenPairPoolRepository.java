@@ -1,8 +1,8 @@
-package org.starcoin.starswap.api.dao;
+package org.starcoin.starswap.api.data.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.starcoin.starswap.api.bean.TokenPairPool;
-import org.starcoin.starswap.api.bean.TokenPairPoolId;
+import org.starcoin.starswap.api.data.model.TokenPairPool;
+import org.starcoin.starswap.api.data.model.TokenPairPoolId;
 
 import java.util.List;
 

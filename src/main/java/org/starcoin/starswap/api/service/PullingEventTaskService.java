@@ -2,8 +2,8 @@ package org.starcoin.starswap.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.starcoin.starswap.api.bean.PullingEventTask;
-import org.starcoin.starswap.api.dao.PullingEventTaskRepository;
+import org.starcoin.starswap.api.data.model.PullingEventTask;
+import org.starcoin.starswap.api.data.repo.PullingEventTaskRepository;
 import org.starcoin.utils.BeanUtils2;
 
 import javax.transaction.Transactional;

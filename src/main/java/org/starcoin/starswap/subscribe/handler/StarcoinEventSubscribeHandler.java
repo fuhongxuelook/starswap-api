@@ -6,14 +6,14 @@ import org.slf4j.LoggerFactory;
 import org.starcoin.bean.Event;
 import org.starcoin.bean.EventNotification;
 import org.starcoin.starswap.api.service.HandleEventService;
-import org.starcoin.starswap.subscribe.StarcoinSubscriber;
+import org.starcoin.starswap.subscribe.StarcoinEventSubscriber;
 import org.web3j.protocol.websocket.WebSocketService;
 
 import java.net.ConnectException;
 
-public class EventsSubscribeHandler implements Runnable {
+public class StarcoinEventSubscribeHandler implements Runnable {
 
-    private static Logger LOG = LoggerFactory.getLogger(EventsSubscribeHandler.class);
+    private static Logger LOG = LoggerFactory.getLogger(StarcoinEventSubscribeHandler.class);
 
     private String webSocketSeed;
 
@@ -21,10 +21,10 @@ public class EventsSubscribeHandler implements Runnable {
 
     private HandleEventService handleEventService;
 
-    public EventsSubscribeHandler(String seed, String network,
-                                  //LiquidityAccountService liquidityAccountService, TokenService tokenService
-                                  //, ElasticSearchHandler elasticSearchHandler
-                                  HandleEventService handleEventService
+    public StarcoinEventSubscribeHandler(String seed, String network,
+                                         //LiquidityAccountService liquidityAccountService, TokenService tokenService
+                                         //, ElasticSearchHandler elasticSearchHandler
+                                         HandleEventService handleEventService
     ) {
         this.webSocketSeed = seed;
         this.network = network;
@@ -49,8 +49,8 @@ public class EventsSubscribeHandler implements Runnable {
         try {
             WebSocketService service = new WebSocketService(getWebSocketSeed(), true);
             service.connect();
-            StarcoinSubscriber subscriber = new StarcoinSubscriber(service);
-            Flowable<EventNotification> flowableEvents = subscriber.newEventNotifications();
+            StarcoinEventSubscriber subscriber = new StarcoinEventSubscriber(service);
+            Flowable<EventNotification> flowableEvents = subscriber.eventNotificationFlowable();
 
             for (EventNotification notification : flowableEvents.blockingIterable()) {
                 if (notification.getParams() == null || notification.getParams().getResult() == null) {

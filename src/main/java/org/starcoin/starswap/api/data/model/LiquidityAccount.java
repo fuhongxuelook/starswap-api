@@ -1,4 +1,4 @@
-package org.starcoin.starswap.api.bean;
+package org.starcoin.starswap.api.data.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicInsert;

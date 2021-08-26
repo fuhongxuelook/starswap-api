@@ -1,4 +1,4 @@
-package org.starcoin.starswap.api.bean;
+package org.starcoin.starswap.api.data.model;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;

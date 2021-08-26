@@ -6,10 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
-import org.starcoin.starswap.api.bean.LiquidityAccountId;
-import org.starcoin.starswap.api.bean.Token;
-import org.starcoin.starswap.api.bean.TokenPairId;
-import org.starcoin.starswap.api.bean.TokenPairPoolId;
+import org.starcoin.starswap.api.data.model.LiquidityAccountId;
+import org.starcoin.starswap.api.data.model.Token;
+import org.starcoin.starswap.api.data.model.TokenPairId;
+import org.starcoin.starswap.api.data.model.TokenPairPoolId;
 import org.starcoin.starswap.types.AddLiquidityEvent;
 import org.starcoin.utils.CommonUtils;
 

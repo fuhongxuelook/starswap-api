@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.starcoin.starswap.api.bean.StructType;
-import org.starcoin.starswap.api.bean.Token;
-import org.starcoin.starswap.api.dao.TokenRepository;
+import org.starcoin.starswap.api.data.model.StructType;
+import org.starcoin.starswap.api.data.model.Token;
+import org.starcoin.starswap.api.data.repo.TokenRepository;
 
 import java.util.List;
 
