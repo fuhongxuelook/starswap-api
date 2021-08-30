@@ -1,4 +1,4 @@
-package org.starcoin.starswap.subscribe.handler;
+package org.starcoin.starswap.subscribe;
 
 import io.reactivex.Flowable;
 import org.slf4j.Logger;
@@ -6,24 +6,21 @@ import org.slf4j.LoggerFactory;
 import org.starcoin.bean.Event;
 import org.starcoin.bean.EventNotification;
 import org.starcoin.starswap.api.service.HandleEventService;
-import org.starcoin.starswap.subscribe.StarcoinEventSubscriber;
 import org.web3j.protocol.websocket.WebSocketService;
 
 import java.net.ConnectException;
 
 public class StarcoinEventSubscribeHandler implements Runnable {
 
-    private static Logger LOG = LoggerFactory.getLogger(StarcoinEventSubscribeHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StarcoinEventSubscribeHandler.class);
 
-    private String webSocketSeed;
+    private final String webSocketSeed;
 
-    private String network;
+    private final String network;
 
-    private HandleEventService handleEventService;
+    private final HandleEventService handleEventService;
 
     public StarcoinEventSubscribeHandler(String seed, String network,
-                                         //LiquidityAccountService liquidityAccountService, TokenService tokenService
-                                         //, ElasticSearchHandler elasticSearchHandler
                                          HandleEventService handleEventService
     ) {
         this.webSocketSeed = seed;

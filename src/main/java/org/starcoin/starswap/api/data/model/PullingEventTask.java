@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.math.BigInteger;
 
 @Entity
@@ -16,6 +17,7 @@ public class PullingEventTask {
 
     public static final String STATUS_CREATED = "CREATED";
     public static final String STATUS_DONE = "DONE";
+    public static final String STATUS_PROCESSING = "PROCESSING";
 
     @Id
     @Column(precision = 21, scale = 0)
@@ -38,6 +40,9 @@ public class PullingEventTask {
 
     @Column(nullable = false)
     private Long updatedAt;
+
+    @Version
+    private Long version;
 
     public BigInteger getFromBlockNumber() {
         return fromBlockNumber;
@@ -64,10 +69,17 @@ public class PullingEventTask {
     }
 
     public void done() {
-        if (!STATUS_CREATED.equals(this.status)) {
-            throw new RuntimeException("Status error.");
+        if (!STATUS_CREATED.equals(this.status) && !STATUS_PROCESSING.equals(this.status)) {
+            throw new RuntimeException("Source status error: " + this.status);
         }
         this.status = STATUS_DONE;
+    }
+
+    public void processing() {
+        if (!STATUS_CREATED.equals(this.status)) {
+            throw new RuntimeException("Source status error: " + this.status);
+        }
+        this.status = STATUS_PROCESSING;
     }
 
     public String getCreatedBy() {
@@ -101,4 +113,14 @@ public class PullingEventTask {
     public void setUpdatedAt(Long updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
 }

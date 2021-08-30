@@ -10,7 +10,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.starcoin.starswap.api.service.HandleEventService;
-import org.starcoin.starswap.subscribe.handler.StarcoinEventSubscribeHandler;
+import org.starcoin.starswap.subscribe.StarcoinEventSubscribeHandler;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @SpringBootApplication
@@ -18,8 +18,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableScheduling
 public class StarswapApiApplication {
 
-
-    private static Logger LOG = LoggerFactory.getLogger(StarswapApiApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StarswapApiApplication.class);
 
     @Value("${starcoin.seeds}")
     private String[] seeds;

@@ -8,6 +8,7 @@ import org.starcoin.utils.BeanUtils2;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,19 @@ public class PullingEventTaskService {
         targetEventTask.setUpdatedAt(targetEventTask.getCreatedAt());
         targetEventTask.setUpdatedBy(targetEventTask.getCreatedBy());
         pullingEventTaskRepository.save(targetEventTask);
+    }
+
+    @Transactional
+    public void updateStatusDone(PullingEventTask t) {
+        t.done();
+        t.setUpdatedBy("ADMIN");
+        t.setUpdatedAt(System.currentTimeMillis());
+        pullingEventTaskRepository.save(t);
+    }
+
+
+    public List<PullingEventTask> getPullingEventTaskToProcess() {
+        return pullingEventTaskRepository.findByStatusEquals(PullingEventTask.STATUS_CREATED);
     }
 
 }
