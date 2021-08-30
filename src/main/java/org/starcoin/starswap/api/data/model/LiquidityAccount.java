@@ -11,7 +11,7 @@ import java.math.BigInteger;
  * 流动性账号（用户提供的流动性）。
  */
 @Entity
-@Table(name = "liquidity_account")
+@Table
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
@@ -23,8 +23,9 @@ public class LiquidityAccount {
     @EmbeddedId
     @AttributeOverride(name="tokenXId", column=@Column(name="token_x_id", nullable = false))
     @AttributeOverride(name="tokenYId", column=@Column(name="token_y_id", nullable = false))
-    @AttributeOverride(name="poolAddress", column=@Column(name="pool_address", nullable = false))
-    @AttributeOverride(name="accountAddress", column = @Column(name = "account_address", nullable = false))
+    @AttributeOverride(name = "liquidityTokenAddress", column = @Column(name = "liquidity_token_address", length = 34, nullable = false))
+    @AttributeOverride(name="poolAddress", column=@Column(name="pool_address", length = 34, nullable = false))
+    @AttributeOverride(name="accountAddress", column = @Column(name = "account_address", length = 34, nullable = false))
     private LiquidityAccountId liquidityAccountId;
 
     /**

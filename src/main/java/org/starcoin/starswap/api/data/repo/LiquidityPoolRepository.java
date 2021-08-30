@@ -1,14 +1,14 @@
 package org.starcoin.starswap.api.data.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.starcoin.starswap.api.data.model.TokenPairPool;
-import org.starcoin.starswap.api.data.model.TokenPairPoolId;
+import org.starcoin.starswap.api.data.model.LiquidityPool;
+import org.starcoin.starswap.api.data.model.LiquidityPoolId;
 
 import java.util.List;
 
-public interface TokenPairPoolRepository extends JpaRepository<TokenPairPool, TokenPairPoolId> {
+public interface LiquidityPoolRepository extends JpaRepository<LiquidityPool, LiquidityPoolId> {
 
-    List<TokenPairPool> findByDeactivedIsFalse();
+    List<LiquidityPool> findByDeactivedIsFalse();
 
 //
 //    Page<Token> findByNetworkAndDeletedAtIsNull(String network, Pageable page);

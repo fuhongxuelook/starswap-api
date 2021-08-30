@@ -6,7 +6,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class StructType {
 
-    @Column(nullable = false)
+    @Column(length = 34, nullable = false)
     private String address;
 
     @Column(nullable = false)

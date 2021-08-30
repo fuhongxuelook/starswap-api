@@ -21,10 +21,10 @@ public class StarswapController {
     private TokenService tokenService;
 
     @Resource
-    private TokenPairService tokenPairService;
+    private LiquidityTokenService liquidityTokenService;
 
     @Resource
-    private TokenPairPoolService tokenPairPoolService;
+    private LiquidityPoolService liquidityPoolService;
 
     @Resource
     private LiquidityAccountService liquidityAccountService;
@@ -43,36 +43,29 @@ public class StarswapController {
         return token;
     }
 
-    @GetMapping(path = "tokenPairs")
-    public List<TokenPair> getTokenPairs() {
-        return tokenPairService.findByDeactivedIsFalse();
+    @GetMapping(path = "liquidityTokens")
+    public List<LiquidityToken> getLiquidityTokens() {
+        return liquidityTokenService.findByDeactivedIsFalse();
     }
 
-    @GetMapping(path = "tokenPairs/{tokenPairId}")
-    public TokenPair getTokenPair(@PathVariable(name = "tokenPairId") String tokenPairId) {
-        TokenPairId tokenPairIdObj = parseTokenPairId(tokenPairId);
-        return tokenPairService.getTokenPair(tokenPairIdObj);
+    @GetMapping(path = "liquidityTokens/{id}")
+    public LiquidityToken getLiquidityToken(@PathVariable(name = "id") String id) {
+        String[] tokenXYId = parseTokenIdPair(id);
+        return null;//todo //return liquidityTokenService.getLiquidityToken(liquidityTokenIdObj);
     }
 
-    private TokenPairId parseTokenPairId(String tokenPairId) {
-        String[] xy = tokenPairId.split(":");
-        if (xy.length < 2) throw new IllegalArgumentException();
-        TokenPairId tokenPairIdObj = new TokenPairId(xy[0], xy[1]);
-        return tokenPairIdObj;
+    @GetMapping(path = "liquidityPools")
+    public List<LiquidityPool> getLiquidityPools() {
+        return liquidityPoolService.findByDeactivedIsFalse();
     }
 
-    @GetMapping(path = "tokenPairPools")
-    public List<TokenPairPool> getTokenPairPools() {
-        return tokenPairPoolService.findByDeactivedIsFalse();
-    }
-
-    @GetMapping(path = "tokenPairPools/{tokenPairPoolId}")
-    public TokenPairPool getTokenPairPool(@PathVariable(name = "tokenPairPoolId") String tokenPairPoolId) {
-        String[] axy = tokenPairPoolId.split("::");
-        if (axy.length < 2) throw new IllegalArgumentException();
-        TokenPairId tokenPairIdObj = parseTokenPairId(axy[1]);
-        TokenPairPoolId tokenPairPoolIdObj = new TokenPairPoolId(tokenPairIdObj, axy[0]);
-        return tokenPairPoolService.getTokenPairPool(tokenPairPoolIdObj);
+    @GetMapping(path = "liquidityPools/{id}")
+    public LiquidityPool getLiquidityPool(@PathVariable(name = "id") String id) {
+        //String[] axy = poolId.split("::");
+        //if (axy.length < 2) throw new IllegalArgumentException();
+        String[] tokenXYId = parseTokenIdPair(id);
+        //LiquidityPoolId liquidityPoolIdObj = new LiquidityPoolId(liquidityTokenIdObj, axy[0]);
+        return null; //todo //return liquidityPoolService.getLiquidityPool();
     }
 
     @GetMapping(path = "liquidityAccounts")
@@ -84,6 +77,13 @@ public class StarswapController {
     @PostMapping(path = "pullingEventTasks")
     public void postPullingEventTask(@RequestBody PullingEventTask pullingEventTask) {
         pullingEventTaskService.createPullingEventTask(pullingEventTask);
+    }
+
+    private String[] parseTokenIdPair(String tokenPairId) {
+        String[] xy = tokenPairId.split(":");
+        if (xy.length < 2) throw new IllegalArgumentException();
+        return xy;
+        //LiquidityTokenId liquidityTokenIdObj = new LiquidityTokenId(xy[0], xy[1]);
     }
 
 

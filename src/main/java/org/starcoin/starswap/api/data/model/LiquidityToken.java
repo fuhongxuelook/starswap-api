@@ -7,29 +7,27 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "token", uniqueConstraints = {
-        @UniqueConstraint(name = "UniqueTokenCode", columnNames = {"token_struct_address", "token_struct_module", "token_struct_name"})
-})
+@Table
 @DynamicInsert
 @DynamicUpdate
-@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
-public class Token {
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
+public class LiquidityToken {
 
-    /**
-     * Token 的 Id。一般应该是缩写，同样的缩写只应该允许注册一次，防止混淆。
-     */
-    @Id
-    @Column(length = 50, nullable = false, unique = true)
-    private String tokenId;
+    @EmbeddedId
+    private LiquidityTokenId liquidityTokenId;
 
     @Embedded
-    @AttributeOverride(name="address", column=@Column(name="token_struct_address", length = 34, nullable = false))
-    @AttributeOverride(name="module", column=@Column(name="token_struct_module", nullable = false))
-    @AttributeOverride(name="name", column=@Column(name="token_struct_name", nullable = false))
-    private StructType tokenStructType;
+    @AttributeOverride(name = "address", column = @Column(name = "token_x_struct_address", length = 34, nullable = false))
+    @AttributeOverride(name = "module", column = @Column(name = "token_x_struct_module", nullable = false))
+    @AttributeOverride(name = "name", column = @Column(name = "token_x_struct_name", nullable = false))
+    private StructType tokenXStructType;
 
-    @Column(length = 1000, nullable = false)
-    private String iconUrl;
+
+    @Embedded
+    @AttributeOverride(name = "address", column = @Column(name = "token_y_struct_address", length = 34, nullable = false))
+    @AttributeOverride(name = "module", column = @Column(name = "token_y_struct_module", nullable = false))
+    @AttributeOverride(name = "name", column = @Column(name = "token_y_struct_name", nullable = false))
+    private StructType tokenYStructType;
 
     @Column(length = 1000, nullable = false)
     private String description;
@@ -58,29 +56,12 @@ public class Token {
     @Column(nullable = false)
     private Long updatedAt;
 
-
-    public String getTokenId() {
-        return tokenId;
+    public LiquidityTokenId getLiquidityTokenId() {
+        return liquidityTokenId;
     }
 
-    public void setTokenId(String tokenId) {
-        this.tokenId = tokenId;
-    }
-
-    public StructType getTokenStructType() {
-        return tokenStructType;
-    }
-
-    public void setTokenStructType(StructType tokenStructType) {
-        this.tokenStructType = tokenStructType;
-    }
-
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
+    public void setLiquidityTokenId(LiquidityTokenId liquidityTokenId) {
+        this.liquidityTokenId = liquidityTokenId;
     }
 
     public String getDescription() {
@@ -147,20 +128,20 @@ public class Token {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public String toString() {
-        return "Token{" +
-                "tokenId='" + tokenId + '\'' +
-                ", tokenStructType=" + tokenStructType +
-                ", iconUrl='" + iconUrl + '\'' +
-                ", description='" + description + '\'' +
-//                ", descriptionEn='" + descriptionEn + '\'' +
-                ", sequenceNumber=" + sequenceNumber +
-                ", deactived=" + deactived +
-                ", createdBy='" + createdBy + '\'' +
-                ", updatedBy='" + updatedBy + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+    public StructType getTokenXStructType() {
+        return tokenXStructType;
     }
+
+    public void setTokenXStructType(StructType tokenXStructType) {
+        this.tokenXStructType = tokenXStructType;
+    }
+
+    public StructType getTokenYStructType() {
+        return tokenYStructType;
+    }
+
+    public void setTokenYStructType(StructType tokenYStructType) {
+        this.tokenYStructType = tokenYStructType;
+    }
+
 }

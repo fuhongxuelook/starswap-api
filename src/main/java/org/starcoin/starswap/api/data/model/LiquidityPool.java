@@ -7,29 +7,30 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 
 /**
- * Token Pair 池子。
+ * 流动性池子。
  */
 @Entity
-@Table(name = "token_pair_pool")
+@Table
 @DynamicInsert
 @DynamicUpdate
-@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
-public class TokenPairPool {
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
+public class LiquidityPool {
 
     /**
      * 池子 Id（领域键）。
      */
     @EmbeddedId
-    @AttributeOverride(name="tokenXId", column=@Column(name="token_x_id", nullable = false))
-    @AttributeOverride(name="tokenYId", column=@Column(name="token_y_id", nullable = false))
-    @AttributeOverride(name="poolAddress", column=@Column(name="pool_address", nullable = false))
-    private TokenPairPoolId tokenPairPoolId;
+    @AttributeOverride(name = "tokenXId", column = @Column(name = "token_x_id", nullable = false))
+    @AttributeOverride(name = "tokenYId", column = @Column(name = "token_y_id", nullable = false))
+    @AttributeOverride(name = "liquidityTokenAddress", column = @Column(name = "liquidity_token_address", length = 34, nullable = false))
+    @AttributeOverride(name = "poolAddress", column = @Column(name = "pool_address", length = 34, nullable = false))
+    private LiquidityPoolId liquidityPoolId;
 
     @Column(length = 1000, nullable = false)
     private String description;
 
-    @Column(length = 1000, nullable = false)
-    private String descriptionEn;
+//    @Column(length = 1000, nullable = false)
+//    private String descriptionEn;
 
     @Column(nullable = false)
     private Integer sequenceNumber;
@@ -52,14 +53,6 @@ public class TokenPairPool {
     @Column(nullable = false)
     private Long updatedAt;
 
-    public TokenPairPoolId getTokenPairPoolId() {
-        return tokenPairPoolId;
-    }
-
-    public void setTokenPairPoolId(TokenPairPoolId tokenPairPoolId) {
-        this.tokenPairPoolId = tokenPairPoolId;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -68,13 +61,13 @@ public class TokenPairPool {
         this.description = description;
     }
 
-    public String getDescriptionEn() {
-        return descriptionEn;
-    }
-
-    public void setDescriptionEn(String descriptionEn) {
-        this.descriptionEn = descriptionEn;
-    }
+//    public String getDescriptionEn() {
+//        return descriptionEn;
+//    }
+//
+//    public void setDescriptionEn(String descriptionEn) {
+//        this.descriptionEn = descriptionEn;
+//    }
 
     public Integer getSequenceNumber() {
         return sequenceNumber;
@@ -124,18 +117,4 @@ public class TokenPairPool {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public String toString() {
-        return "TokenPairPool{" +
-                "tokenPairPoolId=" + tokenPairPoolId +
-                ", description='" + description + '\'' +
-                ", descriptionEn='" + descriptionEn + '\'' +
-                ", sequenceNumber=" + sequenceNumber +
-                ", deactived=" + deactived +
-                ", createdBy='" + createdBy + '\'' +
-                ", updatedBy='" + updatedBy + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

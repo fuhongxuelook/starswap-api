@@ -1,40 +1,59 @@
 package org.starcoin.starswap.api.data.model;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Embeddable
 public class LiquidityAccountId implements Serializable {
-    @Column(length = 50)
+    @Column(length = 34)
     private String accountAddress;
 
-    private TokenPairPoolId tokenPairPoolId = new TokenPairPoolId();
+    private LiquidityPoolId liquidityPoolId = new LiquidityPoolId();
 
-    @Column(length = 50)
+    public LiquidityAccountId() {
+    }
+
+    public LiquidityAccountId(String accountAddress, LiquidityPoolId liquidityPoolId) {
+        this.accountAddress = accountAddress;
+        this.liquidityPoolId = liquidityPoolId;
+    }
+
+    @Column(length = 34)
+    protected String getLiquidityTokenAddress() {
+        return getLiquidityPoolId().getLiquidityTokenAddress();
+    }
+
+    protected void setLiquidityTokenAddress(String address) {
+        this.getLiquidityPoolId().setLiquidityTokenAddress(address);
+    }
+
+    @Column(length = 34)
     protected String getPoolAddress() {
-        return getTokenPairPoolId().getPoolAddress();
+        return getLiquidityPoolId().getPoolAddress();
     }
 
     protected void setPoolAddress(String poolAddress) {
-        this.getTokenPairPoolId().setPoolAddress(poolAddress);
+        this.getLiquidityPoolId().setPoolAddress(poolAddress);
     }
 
     @Column(length = 50)
     protected String getTokenXId() {
-        return this.getTokenPairPoolId().getTokenPairId().getTokenXId();
+        return this.getLiquidityPoolId().getLiquidityTokenId().getTokenXId();
     }
 
     protected void setTokenXId(String tokenXId) {
-        this.getTokenPairPoolId().getTokenPairId().setTokenXId(tokenXId);
+        this.getLiquidityPoolId().getLiquidityTokenId().setTokenXId(tokenXId);
     }
 
     @Column(length = 50)
     protected String getTokenYId() {
-        return this.getTokenPairPoolId().getTokenPairId().getTokenYId();
+        return this.getLiquidityPoolId().getLiquidityTokenId().getTokenYId();
     }
 
     protected void setTokenYId(String tokenYId) {
-        this.getTokenPairPoolId().getTokenPairId().setTokenYId(tokenYId);
+        this.getLiquidityPoolId().getLiquidityTokenId().setTokenYId(tokenYId);
     }
 
     public String getAccountAddress() {
@@ -45,27 +64,19 @@ public class LiquidityAccountId implements Serializable {
         this.accountAddress = accountAddress;
     }
 
-    public TokenPairPoolId getTokenPairPoolId() {
-        return tokenPairPoolId;
+    public LiquidityPoolId getLiquidityPoolId() {
+        return liquidityPoolId;
     }
 
-    public void setTokenPairPoolId(TokenPairPoolId tokenPairPoolId) {
-        this.tokenPairPoolId = tokenPairPoolId;
-    }
-
-    public LiquidityAccountId() {
-    }
-
-    public LiquidityAccountId(String accountAddress, TokenPairPoolId tokenPairPoolId) {
-        this.accountAddress = accountAddress;
-        this.tokenPairPoolId = tokenPairPoolId;
+    public void setLiquidityPoolId(LiquidityPoolId liquidityPoolId) {
+        this.liquidityPoolId = liquidityPoolId;
     }
 
     @Override
     public String toString() {
         return "LiquidityAccountId{" +
                 "accountAddress='" + accountAddress + '\'' +
-                ", tokenPairPoolId=" + tokenPairPoolId +
+                ", liquidityPoolId=" + liquidityPoolId +
                 '}';
     }
 
@@ -74,11 +85,11 @@ public class LiquidityAccountId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LiquidityAccountId that = (LiquidityAccountId) o;
-        return Objects.equals(accountAddress, that.accountAddress) && Objects.equals(tokenPairPoolId, that.tokenPairPoolId);
+        return Objects.equals(accountAddress, that.accountAddress) && Objects.equals(liquidityPoolId, that.liquidityPoolId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountAddress, tokenPairPoolId);
+        return Objects.hash(accountAddress, liquidityPoolId);
     }
 }

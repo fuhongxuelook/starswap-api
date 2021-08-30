@@ -9,7 +9,7 @@ import com.thetransactioncompany.jsonrpc2.client.JSONRPC2SessionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.starcoin.bean.Event;
-import org.starcoin.starswap.api.service.TokenPairPoolService;
+import org.starcoin.starswap.api.service.LiquidityPoolService;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import static org.starcoin.starswap.subscribe.StarcoinEventSubscriber.createEven
 
 public class JsonRpcUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TokenPairPoolService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LiquidityPoolService.class);
 
 
     public static Event[] getEvents(JSONRPC2Session jsonRpcSession, BigInteger fromBlockNumber, BigInteger toBlockNumber) {
