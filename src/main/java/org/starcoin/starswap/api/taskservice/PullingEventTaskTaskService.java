@@ -31,22 +31,10 @@ import static org.starcoin.starswap.subscribe.StarcoinEventSubscriber.createEven
 @Service
 public class PullingEventTaskTaskService {
     private static final Logger LOG = LoggerFactory.getLogger(PullingEventTaskTaskService.class);
-
+    private final JSONRPC2Session jsonRpcSession;
+    private final PullingEventTaskRepository pullingEventTaskRepository;
+    private final HandleEventService handleEventService;
     private String jsonRpcUrl;
-
-    private JSONRPC2Session jsonRpcSession;
-
-    private PullingEventTaskRepository pullingEventTaskRepository;
-
-    private HandleEventService handleEventService;
-
-    public String getJsonRpcUrl() {
-        return jsonRpcUrl;
-    }
-
-    public void setJsonRpcUrl(String jsonRpcUrl) {
-        this.jsonRpcUrl = jsonRpcUrl;
-    }
 
     public PullingEventTaskTaskService(
             @Value("${starcoin.json-rpc-url}") String jsonRpcUrl,
@@ -58,6 +46,14 @@ public class PullingEventTaskTaskService {
         this.handleEventService = handleEventService;
     }
 
+    public String getJsonRpcUrl() {
+        return jsonRpcUrl;
+    }
+
+    public void setJsonRpcUrl(String jsonRpcUrl) {
+        this.jsonRpcUrl = jsonRpcUrl;
+    }
+
     @Scheduled(fixedDelay = 10000)
     @Transactional
     public void task() {
@@ -66,28 +62,36 @@ public class PullingEventTaskTaskService {
             return;
         }
         for (PullingEventTask t : pullingEventTasks) {
-            BigInteger fromBlockNumber = t.getFromBlockNumber();
-            while (fromBlockNumber.compareTo(t.getToBlockNumber()) < 0) {
-                BigInteger toBlockNumber = fromBlockNumber.add(BigInteger.valueOf(PULLING_BLOCK_MAX_COUNT));
-                if (toBlockNumber.compareTo(t.getToBlockNumber()) > 0) {
-                    toBlockNumber = t.getToBlockNumber();
-                }
-                LOG.debug("From block: " + fromBlockNumber + ", to block: " + toBlockNumber);
-                Event[] events = rpcGetEvents(fromBlockNumber, toBlockNumber);
-                if (events == null) {
-                    return;
-                }
-                for (Event e : events) {
-                    LOG.debug("JSON rpc get events: " + e);
-                    handleEventService.handleEvent(e);
-                }
-                fromBlockNumber = toBlockNumber;
-            }
-            t.done();
-            t.setUpdatedBy("ADMIN");
-            t.setUpdatedAt(System.currentTimeMillis());
-            pullingEventTaskRepository.save(t);
+            executeTask(t);
         }
+    }
+
+    private void executeTask(PullingEventTask t) {
+        BigInteger fromBlockNumber = t.getFromBlockNumber();
+        while (fromBlockNumber.compareTo(t.getToBlockNumber()) < 0) {
+            BigInteger toBlockNumber = fromBlockNumber.add(BigInteger.valueOf(PULLING_BLOCK_MAX_COUNT));
+            if (toBlockNumber.compareTo(t.getToBlockNumber()) > 0) {
+                toBlockNumber = t.getToBlockNumber();
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JSON RPC getting events... from block: " + fromBlockNumber + ", to block: " + toBlockNumber);
+            }
+            Event[] events = rpcGetEvents(fromBlockNumber, toBlockNumber);
+            if (events == null) {
+                break;
+            }
+            for (Event e : events) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Processing a event: " + e);
+                }
+                handleEventService.handleEvent(e);
+            }
+            fromBlockNumber = toBlockNumber;
+        }
+        t.done();
+        t.setUpdatedBy("ADMIN");
+        t.setUpdatedAt(System.currentTimeMillis());
+        pullingEventTaskRepository.save(t);
     }
 
     private Event[] rpcGetEvents(BigInteger fromBlockNumber, BigInteger toBlockNumber) {
@@ -110,12 +114,15 @@ public class PullingEventTaskTaskService {
                 try {
                     events = getObjectMapper().readValue(result.toString(), Event[].class);
                 } catch (JsonProcessingException e) {
-                    LOG.error("JSON rpc result parse error.", e);
-                    return null;
+                    LOG.error("JSON RPC parsing result error.", e);
+                    throw new RuntimeException("JSON RPC parsing result error.", e);
                 }
             }
+        } else {
+            LOG.error("JSON RPC chain.get_events error.");
+            throw new RuntimeException("JSON RPC chain.get_events error.");
         }
-        return events;
+        return events == null ? new Event[0] : events;
     }
 
     private ObjectMapper getObjectMapper() {
