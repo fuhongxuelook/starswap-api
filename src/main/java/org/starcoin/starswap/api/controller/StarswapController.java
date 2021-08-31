@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("v1/starswap")
 public class StarswapController {
 
-    private static final Logger logger = LoggerFactory.getLogger(StarswapController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StarswapController.class);
 
     @Resource
     private TokenService tokenService;
