@@ -1,4 +1,4 @@
-package org.starcoin.starswap.api.system;
+package org.starcoin.starswap.api.config;
 
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
@@ -14,9 +14,9 @@ import java.io.PrintWriter;
 @Component
 public class UrlFilter implements Filter {
 
-    private static final Logger logger = LoggerFactory.getLogger(Filter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Filter.class);
 
-    private final static String[] URI_NOT_FILTER = new String[]{"/v1/starswap", "swagger", "v3/api-docs"};
+    private final static String[] URI_NOT_FILTER = new String[]{"/v1/starswap", "/swagger", "/v3/api-docs", "/favicon.ico"};
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -25,11 +25,11 @@ public class UrlFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String uri = ((HttpServletRequest) request).getRequestURI();
-        if (isFilter(uri)) {
+        if (isLegalUri(uri)) {
             chain.doFilter(request, response);
         } else {
-            logger.info("拦截URI：{}", uri);
-            doResponse(response);
+            LOGGER.info("Intercepted URI：{}", uri);
+            doResponseFailure(response);
         }
     }
 
@@ -37,7 +37,7 @@ public class UrlFilter implements Filter {
     public void destroy() {
     }
 
-    private boolean isFilter(String uri) {
+    private boolean isLegalUri(String uri) {
         for (String str : URI_NOT_FILTER) {
             if (uri.indexOf(str) == 0) {
                 return true;
@@ -46,13 +46,14 @@ public class UrlFilter implements Filter {
         return false;
     }
 
-    private void doResponse(ServletResponse response) {
+    private void doResponseFailure(ServletResponse response) {
         try (PrintWriter writer = response.getWriter()) {
             writer.print(JSONObject.toJSONString(ResultUtils.failure()));
             response.setCharacterEncoding("UTF-8");
-            response.setContentType("text/html; charset=utf-8");
+            response.setContentType("application/json; charset=utf-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            LOGGER.error("Response error.", e);
         }
     }
 }

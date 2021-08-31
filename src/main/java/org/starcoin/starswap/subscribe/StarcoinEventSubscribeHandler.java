@@ -55,7 +55,7 @@ public class StarcoinEventSubscribeHandler implements Runnable {
                 }
                 Event event = notification.getParams().getResult();
                 LOG.debug("Received event: " + event);
-                handleEventService.handleEvent(event);
+                handleEventService.handleEvent(event, Event.getFromAddressFromEventKey(event.getEventKey()));//todo 从 eventKey 中获取地址？ or StarcoinEventSubscriber.FROM_ADDRESS?
             }
         } catch (ConnectException e) {// | MalformedURLException | JSONRPC2SessionException e) {
             LOG.info("handle subscribe exception", e);

@@ -1,4 +1,4 @@
-package org.starcoin.starswap.api.system;
+package org.starcoin.starswap.api.config;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.jasypt.encryption.StringEncryptor;

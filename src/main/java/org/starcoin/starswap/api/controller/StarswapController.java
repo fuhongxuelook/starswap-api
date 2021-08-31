@@ -51,7 +51,7 @@ public class StarswapController {
     @GetMapping(path = "liquidityTokens/{id}")
     public LiquidityToken getLiquidityToken(@PathVariable(name = "id") String id) {
         String[] tokenXYId = parseTokenIdPair(id);
-        return null;//todo //return liquidityTokenService.getLiquidityToken(liquidityTokenIdObj);
+        return liquidityTokenService.findOneByTokenIdPair(tokenXYId[0], tokenXYId[1]);
     }
 
     @GetMapping(path = "liquidityPools")
@@ -65,7 +65,7 @@ public class StarswapController {
         //if (axy.length < 2) throw new IllegalArgumentException();
         String[] tokenXYId = parseTokenIdPair(id);
         //LiquidityPoolId liquidityPoolIdObj = new LiquidityPoolId(liquidityTokenIdObj, axy[0]);
-        return null; //todo //return liquidityPoolService.getLiquidityPool();
+        return liquidityPoolService.findOneByTokenIdPair(tokenXYId[0], tokenXYId[1]);
     }
 
     @GetMapping(path = "liquidityAccounts")

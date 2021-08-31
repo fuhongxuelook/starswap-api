@@ -19,28 +19,28 @@ http://localhost:8600/v1/starswap/tokens
 http://localhost:8600/v1/starswap/tokens/Bot
 ```
 
-取 Token Pair 的列表：
+取 Liquidity Token 的列表：
 
 ```
-http://localhost:8600/v1/starswap/tokenPairs
+http://localhost:8600/v1/starswap/liquidityTokens
 ```
 
-取一个 TokenPair 的信息：
+取一个 Liquidity Token 的信息（目前一个 Token Pair 只支持对应一个 Liquidity Token，故可以使用参数 `{TokenId_X}:{TokenId_Y}` 获取）：
 
 ```
-http://localhost:8600/v1/starswap/tokenPairs/Bot:Ddd
+http://localhost:8600/v1/starswap/liquidityTokens/Bot:Ddd
 ```
 
-获取交易池子的列表：
+获取流动性池子的列表：
 
 ```
-http://localhost:8600/v1/starswap/tokenPairPools
+http://localhost:8600/v1/starswap/liquidityPools
 ```
 
-获得某个交易池子的信息（`{池子的地址}::{TokenId_X}:{TokenId_Y}`）：
+获得某个交易池子的信息（目前一个 Token Pair 只支持一个池子，故可以使用参数 `{TokenId_X}:{TokenId_Y}` 获取）：
 
 ```
-http://localhost:8600/v1/starswap/tokenPairPools/0x07fa08a855753f0ff7292fdcbe871216::Bot:Ddd
+http://localhost:8600/v1/starswap/liquidityPools/Bot:Ddd
 ```
 
 取得某个账号地址注入的流动性信息：
@@ -49,6 +49,11 @@ http://localhost:8600/v1/starswap/tokenPairPools/0x07fa08a855753f0ff7292fdcbe871
 http://localhost:8600/v1/starswap/liquidityAccounts?accountAddress=0x07fa08a855753f0ff7292fdcbe871216
 ```
 
+更多 API 见 Swagger UI：
+
+```
+http://localhost:8600/swagger-ui/index.html
+```
 
 ## 数据结构的序列化/反序列化
 

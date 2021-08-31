@@ -23,7 +23,7 @@ public class StarcoinEventSubscriber {
 
     public static Map<String, Object> createEventFilterMap() {
         Map<String, Object> eventFilter = new HashMap<>();
-        //eventFilter.put("addr", FROM_ADDRESS);
+        //eventFilter.put("addr", FROM_ADDRESS); //todo add filter properties
         //eventFilter.put("type_tags", Collections.singletonList(ADD_LIQUIDITY_EVENT_TYPE_TAG));
         //eventFilter.put("decode", false);
         return eventFilter;

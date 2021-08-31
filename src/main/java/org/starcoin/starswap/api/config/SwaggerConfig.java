@@ -1,4 +1,4 @@
-package org.starcoin.starswap.api.system;
+package org.starcoin.starswap.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
-@Profile("dev")
+//@Profile("dev")
 public class SwaggerConfig {
 
     @Bean
@@ -21,6 +21,6 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("投票服务接口文档").description("投票服务接口，包含管理服务API和前端API").version("1.0.0").build();
+        return new ApiInfoBuilder().title("Starswap API").description("Starswap API").version("1.0.0").build();
     }
 }

@@ -29,4 +29,15 @@ public class LiquidityPoolService {
     public LiquidityPool getLiquidityPool(LiquidityPoolId liquidityPoolId) {
         return liquidityPoolRepository.findById(liquidityPoolId).orElse(null);
     }
+
+    public LiquidityPool findOneByTokenIdPair(String tokenXId, String tokenYId) {
+        List<LiquidityPool> liquidityPools = liquidityPoolRepository.findByLiquidityPoolIdTokenXIdAndLiquidityPoolIdTokenYId(tokenXId, tokenYId);
+        if (liquidityPools.isEmpty()) {
+            return null;
+        }
+        if (liquidityPools.size() > 1) {
+            throw new RuntimeException("Find more than one LiquidityPool by: " + tokenXId + ":" + tokenYId);
+        }
+        return liquidityPools.get(0);
+    }
 }

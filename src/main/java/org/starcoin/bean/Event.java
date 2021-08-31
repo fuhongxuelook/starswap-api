@@ -4,35 +4,33 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Event {
+    private static final int ADDRESS_BYTE_LENGTH = 16;
     @JsonProperty("block_hash")
     @JSONField(name = "block_hash")
     String blockHash;
-
     @JSONField(name = "block_number")
     @JsonProperty("block_number")
     String blockNumber;
-
     @JSONField(name = "transaction_hash")
     @JsonProperty("transaction_hash")
     String transactionHash;
-
     @JSONField(name = "transaction_index")
     @JsonProperty("transaction_index")
     int transactionIndex;
-
     String data;
-
     @JSONField(name = "type_tag")
     @JsonProperty("type_tag")
     String typeTag;  //TypeTag typeTag;
-
     @JSONField(name = "event_key")
     @JsonProperty("event_key")
-    String eventKey;
-
+    String eventKey; // "0x0300000000000000ccf1adedf0ba6f9bdb9a6905173a5d72",
     @JSONField(name = "event_seq_number")
     @JsonProperty("event_seq_number")
     String eventSeqNumber;
+
+    public static String getFromAddressFromEventKey(String eventKey) {
+        return "0x" + eventKey.substring(eventKey.length() - ADDRESS_BYTE_LENGTH * 2);
+    }
 
     public String getBlockHash() {
         return blockHash;
@@ -73,7 +71,6 @@ public class Event {
     public void setData(String data) {
         this.data = data;
     }
-
 
     public String getTypeTag() {
         return typeTag;

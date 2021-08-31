@@ -78,7 +78,7 @@ public class PullingEventTaskTaskService {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Processing a event: " + e);
                 }
-                handleEventService.handleEvent(e);
+                handleEventService.handleEvent(e, Event.getFromAddressFromEventKey(e.getEventKey()));//todo get address from eventKey?
             }
             fromBlockNumber = toBlockNumber;
         }

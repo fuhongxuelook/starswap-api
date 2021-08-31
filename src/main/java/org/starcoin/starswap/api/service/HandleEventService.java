@@ -52,20 +52,19 @@ public class HandleEventService {
         return t;
     }
 
-    public void handleEvent(Event event) {
+    public void handleEvent(Event event, String eventFromAddress) {
         StructTag eventStructTag = tryParseStructTag(event.getTypeTag());
         if (eventStructTag == null) {
             return;
         }
-        // todo 就这样过滤事件？
+        // todo 这样过滤事件？
         if (!"AddLiquidityEvent".equals(eventStructTag.getName())) {
             return;
         }
-        // todo 先假设事件的结构的地址就是 LiquidityToken 以及池子的地址？
         String eventStructAddress = eventStructTag.getAddress();
         //System.out.println(eventStructAddress);
-        String liquidityTokenAddress = eventStructAddress;
-        String liquidityPollAddress = eventStructAddress;
+        String liquidityTokenAddress = eventStructAddress; // todo 事件的结构的地址就是 LiquidityToken 的地址？
+        String liquidityPollAddress = eventFromAddress;//eventStructAddress;
         // /////////////////////////////////////
         String eventData = event.getData();
         AddLiquidityEvent addLiquidityEvent = null;

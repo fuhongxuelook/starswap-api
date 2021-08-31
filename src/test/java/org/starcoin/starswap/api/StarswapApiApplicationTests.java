@@ -8,8 +8,11 @@ import org.starcoin.starswap.api.data.repo.LiquidityAccountRepository;
 import org.starcoin.starswap.api.data.repo.LiquidityPoolRepository;
 import org.starcoin.starswap.api.data.repo.LiquidityTokenRepository;
 import org.starcoin.starswap.api.data.repo.TokenRepository;
+import org.starcoin.starswap.api.service.LiquidityPoolService;
+import org.starcoin.starswap.api.service.LiquidityTokenService;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @SpringBootTest
 class StarswapApiApplicationTests {
@@ -25,6 +28,12 @@ class StarswapApiApplicationTests {
 
     @Autowired
     LiquidityAccountRepository liquidityAccountRepository;
+
+    @Autowired
+    LiquidityTokenService liquidityTokenService;
+
+    @Autowired
+    LiquidityPoolService liquidityPoolService;
 
     @Test
     void contextLoads() {
@@ -150,6 +159,10 @@ class StarswapApiApplicationTests {
         liquidityPool.setUpdatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
         liquidityPool.setUpdatedBy("admin");//  'admin'
         liquidityPoolRepository.save(liquidityPool);
+
+        List<LiquidityPool> liquidityPools = liquidityPoolRepository.findByLiquidityPoolIdTokenXIdAndLiquidityPoolIdTokenYId("Bot", "Ddd");
+        System.out.println("Get liquidity pools: " + liquidityPools.size());
+
 //  )
 //  ;
 //
@@ -183,7 +196,8 @@ class StarswapApiApplicationTests {
         liquidityAccountRepository.save(liquidityAccount);
 //  )
 //  ;
-//
+        System.out.println(liquidityTokenService.findOneByTokenIdPair("Bot", "Ddd"));
+        System.out.println(liquidityPoolService.findOneByTokenIdPair("Bot", "Ddd"));
 //
 // insert into pulling_event_task
 //	(from_block_number,

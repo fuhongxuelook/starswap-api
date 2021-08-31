@@ -1,4 +1,4 @@
-package org.starcoin.starswap.api.system;
+package org.starcoin.starswap.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

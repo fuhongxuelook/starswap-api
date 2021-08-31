@@ -7,6 +7,9 @@ import java.io.Serializable;
 @Embeddable
 public class LiquidityPoolId implements Serializable {
 
+    /**
+     * 池子的地址。（流动性存放在哪里。）
+     */
     @Column(length = 34)
     private String poolAddress;
 
