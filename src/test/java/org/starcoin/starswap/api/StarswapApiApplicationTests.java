@@ -3,12 +3,13 @@ package org.starcoin.starswap.api;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.starcoin.starswap.api.data.model.LiquidityToken;
-import org.starcoin.starswap.api.data.model.LiquidityTokenId;
-import org.starcoin.starswap.api.data.model.StructType;
-import org.starcoin.starswap.api.data.model.Token;
+import org.starcoin.starswap.api.data.model.*;
+import org.starcoin.starswap.api.data.repo.LiquidityAccountRepository;
+import org.starcoin.starswap.api.data.repo.LiquidityPoolRepository;
 import org.starcoin.starswap.api.data.repo.LiquidityTokenRepository;
 import org.starcoin.starswap.api.data.repo.TokenRepository;
+
+import java.math.BigInteger;
 
 @SpringBootTest
 class StarswapApiApplicationTests {
@@ -18,6 +19,12 @@ class StarswapApiApplicationTests {
 
     @Autowired
     LiquidityTokenRepository liquidityTokenRepository;
+
+    @Autowired
+    LiquidityPoolRepository liquidityPoolRepository;
+
+    @Autowired
+    LiquidityAccountRepository liquidityAccountRepository;
 
     @Test
     void contextLoads() {
@@ -130,17 +137,19 @@ class StarswapApiApplicationTests {
 //  `updated_at`,
 //  `updated_by`)
 //  values (
-//  '0x07fa08a855753f0ff7292fdcbe871216',
-//  'Bot',
-//  'Ddd',
-//  unix_timestamp(now()),
-//  'admin',
-//  false,
+        LiquidityPool liquidityPool = new LiquidityPool();
+        liquidityPool.setLiquidityPoolId(new LiquidityPoolId(
+                new LiquidityTokenId("Bot", "Ddd", "0x07fa08a855753f0ff7292fdcbe871216"),
+                "0x07fa08a855753f0ff7292fdcbe871216"));
+        liquidityPool.setCreatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
+        liquidityPool.setCreatedBy("admin");//  'admin',
+        liquidityPool.setDeactived(false);//  false,
+        liquidityPool.setDescription("Bot<->Ddd Pool");
 //  'Bot<->Ddd Pool',
-//  'Bot<->Ddd Pool',
-//  11,
-//  unix_timestamp(now()),
-//  'admin'
+        liquidityPool.setSequenceNumber(11);//  11,
+        liquidityPool.setUpdatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
+        liquidityPool.setUpdatedBy("admin");//  'admin'
+        liquidityPoolRepository.save(liquidityPool);
 //  )
 //  ;
 //
@@ -157,17 +166,21 @@ class StarswapApiApplicationTests {
 //  `updated_at`,
 //  `updated_by`
 //  )
-//  values (
-//  '0x07fa08a855753f0ff7292fdcbe871216',
+        LiquidityAccount liquidityAccount = new LiquidityAccount();//  values (
+        liquidityAccount.setLiquidityAccountId(new LiquidityAccountId(
+                "0x07fa08a855753f0ff7292fdcbe871216", new LiquidityPoolId(
+                new LiquidityTokenId("Bot", "Ddd", "0x07fa08a855753f0ff7292fdcbe871216"),
+                "0x07fa08a855753f0ff7292fdcbe871216")));//  '0x07fa08a855753f0ff7292fdcbe871216',
 //  '0x07fa08a855753f0ff7292fdcbe871216',
 //  'Bot',
 //  'Ddd',
-//  unix_timestamp(now()),
-//  'admin',
-//  false,
-//  10000000,
-//  unix_timestamp(now()),
-//  'admin'
+        liquidityAccount.setCreatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
+        liquidityAccount.setCreatedBy("admin");//  'admin',
+        liquidityAccount.setDeactived(false);//  false,
+        liquidityAccount.setLiquidity(BigInteger.valueOf(1000000L));//  10000000,
+        liquidityAccount.setUpdatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
+        liquidityAccount.setUpdatedBy("admin");//  'admin'
+        liquidityAccountRepository.save(liquidityAccount);
 //  )
 //  ;
 //

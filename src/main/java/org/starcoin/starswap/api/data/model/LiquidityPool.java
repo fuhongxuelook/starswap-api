@@ -53,6 +53,14 @@ public class LiquidityPool {
     @Column(nullable = false)
     private Long updatedAt;
 
+    public LiquidityPoolId getLiquidityPoolId() {
+        return liquidityPoolId;
+    }
+
+    public void setLiquidityPoolId(LiquidityPoolId liquidityPoolId) {
+        this.liquidityPoolId = liquidityPoolId;
+    }
+
     public String getDescription() {
         return description;
     }
