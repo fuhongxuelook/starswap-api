@@ -10,10 +10,10 @@ import java.io.Serializable;
 @Embeddable
 public class LiquidityTokenId implements Serializable {
 
-    @Column(name = "token_x_id", length = 50, nullable = false)
+    @Column(name = "token_x_id", length = 15, nullable = false)
     private String tokenXId;
 
-    @Column(name = "token_y_id", length = 50, nullable = false)
+    @Column(name = "token_y_id", length = 15, nullable = false)
     private String tokenYId;
 
     @Column(name = "liquidity_token_address", length = 34, nullable = false)

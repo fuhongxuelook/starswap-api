@@ -28,7 +28,7 @@ public class LiquidityPoolId implements Serializable {
         this.poolAddress = poolAddress;
     }
 
-    @Column(length = 50)
+    @Column(length = 15)
     protected String getTokenXId() {
         return this.getLiquidityTokenId().getTokenXId();
     }
@@ -37,7 +37,7 @@ public class LiquidityPoolId implements Serializable {
         this.getLiquidityTokenId().setTokenXId(tokenXId);
     }
 
-    @Column(length = 50)
+    @Column(length = 15)
     protected String getTokenYId() {
         return this.getLiquidityTokenId().getTokenYId();
     }
