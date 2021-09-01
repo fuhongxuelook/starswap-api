@@ -5,37 +5,36 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 
-/**
- * 流动性账号（用户提供的流动性）。
- */
+
 @Entity
 @Table
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
-public class LiquidityAccount {
+public class LiquidityTokenFarm {
 
     /**
-     * 账号 Id（领域键）。
+     * Farm Id（领域键）。
      */
     @EmbeddedId
     @AttributeOverride(name = "tokenXId", column = @Column(name = "token_x_id", nullable = false))
     @AttributeOverride(name = "tokenYId", column = @Column(name = "token_y_id", nullable = false))
     @AttributeOverride(name = "liquidityTokenAddress", column = @Column(name = "liquidity_token_address", length = 34, nullable = false))
-    @AttributeOverride(name = "poolAddress", column = @Column(name = "pool_address", length = 34, nullable = false))
-    @AttributeOverride(name = "accountAddress", column = @Column(name = "account_address", length = 34, nullable = false))
-    private LiquidityAccountId liquidityAccountId;
+    @AttributeOverride(name = "farmAddress", column = @Column(name = "farm_address", length = 34, nullable = false))
+    private LiquidityTokenFarmId liquidityTokenFarmId;
+
+    @Column(length = 1000, nullable = false)
+    private String description;
+
+//    @Column(length = 1000, nullable = false)
+//    private String descriptionEn;
+
+    @Column(nullable = false)
+    private Integer sequenceNumber;
 
     /**
-     * 账号提供的流动性数量。
-     */
-    @Column(precision = 21, scale = 0)
-    private BigInteger liquidity;
-
-    /**
-     * 是否已不再使用。
+     * 是否已禁用。
      */
     @Column(nullable = false)
     private Boolean deactived;
@@ -55,20 +54,36 @@ public class LiquidityAccount {
     @Version
     private Long version;
 
-    public LiquidityAccountId getLiquidityAccountId() {
-        return liquidityAccountId;
+    public LiquidityTokenFarmId getLiquidityTokenFarmId() {
+        return liquidityTokenFarmId;
     }
 
-    public void setLiquidityAccountId(LiquidityAccountId liquidityAccountId) {
-        this.liquidityAccountId = liquidityAccountId;
+    public void setLiquidityTokenFarmId(LiquidityTokenFarmId liquidityTokenFarmId) {
+        this.liquidityTokenFarmId = liquidityTokenFarmId;
     }
 
-    public BigInteger getLiquidity() {
-        return liquidity;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLiquidity(BigInteger liquidity) {
-        this.liquidity = liquidity;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+//    public String getDescriptionEn() {
+//        return descriptionEn;
+//    }
+//
+//    public void setDescriptionEn(String descriptionEn) {
+//        this.descriptionEn = descriptionEn;
+//    }
+
+    public Integer getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 
     public Boolean getDeactived() {
@@ -111,16 +126,4 @@ public class LiquidityAccount {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public String toString() {
-        return "LiquidityAccount{" +
-                "liquidityAccountId=" + liquidityAccountId +
-                ", liquidity=" + liquidity +
-                ", deactived=" + deactived +
-                ", createdBy='" + createdBy + '\'' +
-                ", updatedBy='" + updatedBy + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

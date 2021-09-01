@@ -56,6 +56,9 @@ public class LiquidityToken {
     @Column(nullable = false)
     private Long updatedAt;
 
+    @Version
+    private Long version;
+
     public LiquidityTokenId getLiquidityTokenId() {
         return liquidityTokenId;
     }

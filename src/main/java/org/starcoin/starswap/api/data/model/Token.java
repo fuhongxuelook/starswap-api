@@ -12,7 +12,7 @@ import javax.persistence.*;
 })
 @DynamicInsert
 @DynamicUpdate
-@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"})
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Token {
 
     /**
@@ -23,9 +23,9 @@ public class Token {
     private String tokenId;
 
     @Embedded
-    @AttributeOverride(name="address", column=@Column(name="token_struct_address", length = 34, nullable = false))
-    @AttributeOverride(name="module", column=@Column(name="token_struct_module", nullable = false))
-    @AttributeOverride(name="name", column=@Column(name="token_struct_name", nullable = false))
+    @AttributeOverride(name = "address", column = @Column(name = "token_struct_address", length = 34, nullable = false))
+    @AttributeOverride(name = "module", column = @Column(name = "token_struct_module", nullable = false))
+    @AttributeOverride(name = "name", column = @Column(name = "token_struct_name", nullable = false))
     private StructType tokenStructType;
 
     @Column(length = 1000, nullable = false)
@@ -58,6 +58,8 @@ public class Token {
     @Column(nullable = false)
     private Long updatedAt;
 
+    @Version
+    private Long version;
 
     public String getTokenId() {
         return tokenId;

@@ -7,15 +7,13 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.math.BigInteger;
 
-/**
- * 流动性账号（用户提供的流动性）。
- */
+
 @Entity
 @Table
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
-public class LiquidityAccount {
+public class FarmAccount {
 
     /**
      * 账号 Id（领域键）。
@@ -24,15 +22,12 @@ public class LiquidityAccount {
     @AttributeOverride(name = "tokenXId", column = @Column(name = "token_x_id", nullable = false))
     @AttributeOverride(name = "tokenYId", column = @Column(name = "token_y_id", nullable = false))
     @AttributeOverride(name = "liquidityTokenAddress", column = @Column(name = "liquidity_token_address", length = 34, nullable = false))
-    @AttributeOverride(name = "poolAddress", column = @Column(name = "pool_address", length = 34, nullable = false))
+    @AttributeOverride(name = "farmAddress", column = @Column(name = "farm_address", length = 34, nullable = false))
     @AttributeOverride(name = "accountAddress", column = @Column(name = "account_address", length = 34, nullable = false))
-    private LiquidityAccountId liquidityAccountId;
+    private FarmAccountId farmAccountId;
 
-    /**
-     * 账号提供的流动性数量。
-     */
     @Column(precision = 21, scale = 0)
-    private BigInteger liquidity;
+    private BigInteger stakedAmount;
 
     /**
      * 是否已不再使用。
@@ -55,20 +50,20 @@ public class LiquidityAccount {
     @Version
     private Long version;
 
-    public LiquidityAccountId getLiquidityAccountId() {
-        return liquidityAccountId;
+    public BigInteger getStakedAmount() {
+        return stakedAmount;
     }
 
-    public void setLiquidityAccountId(LiquidityAccountId liquidityAccountId) {
-        this.liquidityAccountId = liquidityAccountId;
+    public void setStakedAmount(BigInteger stakedAmount) {
+        this.stakedAmount = stakedAmount;
     }
 
-    public BigInteger getLiquidity() {
-        return liquidity;
+    public FarmAccountId getFarmAccountId() {
+        return farmAccountId;
     }
 
-    public void setLiquidity(BigInteger liquidity) {
-        this.liquidity = liquidity;
+    public void setFarmAccountId(FarmAccountId farmAccountId) {
+        this.farmAccountId = farmAccountId;
     }
 
     public Boolean getDeactived() {
@@ -113,9 +108,9 @@ public class LiquidityAccount {
 
     @Override
     public String toString() {
-        return "LiquidityAccount{" +
-                "liquidityAccountId=" + liquidityAccountId +
-                ", liquidity=" + liquidity +
+        return "FarmAccount{" +
+                "farmAccountId=" + farmAccountId +
+                ", stakedAmount=" + stakedAmount +
                 ", deactived=" + deactived +
                 ", createdBy='" + createdBy + '\'' +
                 ", updatedBy='" + updatedBy + '\'' +

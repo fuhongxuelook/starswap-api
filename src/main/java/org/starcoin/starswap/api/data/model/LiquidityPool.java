@@ -53,6 +53,9 @@ public class LiquidityPool {
     @Column(nullable = false)
     private Long updatedAt;
 
+    @Version
+    private Long version;
+
     public LiquidityPoolId getLiquidityPoolId() {
         return liquidityPoolId;
     }
