@@ -65,7 +65,9 @@ class StarswapApiApplicationTests {
                 "Ddd"));
         ddd.setUpdatedAt(System.currentTimeMillis());//  UNIX_TIMESTAMP(now()),
         ddd.setUpdatedBy("admin");//  'admin')
+        //ddd.setVersion(2L);
         tokenRepository.save(ddd);
+        //if (true) return;
 
 //insert into token (
 //  `token_id`,

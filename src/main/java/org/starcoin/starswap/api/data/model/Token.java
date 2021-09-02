@@ -149,6 +149,14 @@ public class Token {
         this.updatedAt = updatedAt;
     }
 
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "Token{" +
@@ -156,13 +164,13 @@ public class Token {
                 ", tokenStructType=" + tokenStructType +
                 ", iconUrl='" + iconUrl + '\'' +
                 ", description='" + description + '\'' +
-//                ", descriptionEn='" + descriptionEn + '\'' +
                 ", sequenceNumber=" + sequenceNumber +
                 ", deactived=" + deactived +
                 ", createdBy='" + createdBy + '\'' +
                 ", updatedBy='" + updatedBy + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", version=" + version +
                 '}';
     }
 }
