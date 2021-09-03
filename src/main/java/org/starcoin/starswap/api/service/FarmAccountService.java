@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.starcoin.starswap.api.data.model.FarmAccount;
-import org.starcoin.starswap.api.data.model.FarmAccountId;
+import org.starcoin.starswap.api.data.model.LiquidityTokenFarmAccount;
+import org.starcoin.starswap.api.data.model.LiquidityTokenFarmAccountId;
 import org.starcoin.starswap.api.data.repo.FarmAccountRepository;
 
 import javax.transaction.Transactional;
@@ -22,15 +22,15 @@ public class FarmAccountService {
     private FarmAccountRepository farmAccountRepository;
 
 
-    public List<FarmAccount> findByAccountAddress(String accountAddress) {
+    public List<LiquidityTokenFarmAccount> findByAccountAddress(String accountAddress) {
         return farmAccountRepository.findByFarmAccountIdAccountAddress(accountAddress);
     }
 
     @Transactional
-    public FarmAccount activeFarmAccount(FarmAccountId farmAccountId) {
-        FarmAccount farmAccount = this.farmAccountRepository.findById(farmAccountId).orElse(null);
+    public LiquidityTokenFarmAccount activeFarmAccount(LiquidityTokenFarmAccountId farmAccountId) {
+        LiquidityTokenFarmAccount farmAccount = this.farmAccountRepository.findById(farmAccountId).orElse(null);
         if (farmAccount == null) {
-            farmAccount = new FarmAccount();
+            farmAccount = new LiquidityTokenFarmAccount();
             farmAccount.setFarmAccountId(farmAccountId);
             farmAccount.setStakeAmount(BigInteger.ZERO);//todo ???
             farmAccount.setDeactived(false);

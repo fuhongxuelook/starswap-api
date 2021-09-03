@@ -69,8 +69,8 @@ class StarswapApiApplicationTests {
     }
 
     private void addTestFarmAccount() {
-        FarmAccount farmAccount = new FarmAccount();//  values (
-        farmAccount.setFarmAccountId(new FarmAccountId(
+        LiquidityTokenFarmAccount farmAccount = new LiquidityTokenFarmAccount();//  values (
+        farmAccount.setFarmAccountId(new LiquidityTokenFarmAccountId(
                 "0x07fa08a855753f0ff7292fdcbe871216", new LiquidityTokenFarmId(
                 new LiquidityTokenId("Bot", "Ddd", "0x07fa08a855753f0ff7292fdcbe871216"),
                 "0x07fa08a855753f0ff7292fdcbe871216")));//  '0x07fa08a855753f0ff7292fdcbe871216',

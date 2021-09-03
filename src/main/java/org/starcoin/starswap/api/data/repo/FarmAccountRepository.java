@@ -1,15 +1,15 @@
 package org.starcoin.starswap.api.data.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.starcoin.starswap.api.data.model.FarmAccount;
-import org.starcoin.starswap.api.data.model.FarmAccountId;
+import org.starcoin.starswap.api.data.model.LiquidityTokenFarmAccount;
+import org.starcoin.starswap.api.data.model.LiquidityTokenFarmAccountId;
 
 import java.util.List;
 
-public interface FarmAccountRepository extends JpaRepository<FarmAccount, FarmAccountId> {
+public interface FarmAccountRepository extends JpaRepository<LiquidityTokenFarmAccount, LiquidityTokenFarmAccountId> {
 
-    List<FarmAccount> findByDeactivedIsFalse();
+    List<LiquidityTokenFarmAccount> findByDeactivedIsFalse();
 
-    List<FarmAccount> findByFarmAccountIdAccountAddress(String accountAddress);
+    List<LiquidityTokenFarmAccount> findByFarmAccountIdAccountAddress(String accountAddress);
 
 }

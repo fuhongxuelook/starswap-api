@@ -13,7 +13,7 @@ import java.math.BigInteger;
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
-public class FarmAccount {
+public class LiquidityTokenFarmAccount {
 
     /**
      * 账号 Id（领域键）。
@@ -24,7 +24,7 @@ public class FarmAccount {
     @AttributeOverride(name = "liquidityTokenAddress", column = @Column(name = "liquidity_token_address", length = 34, nullable = false))
     @AttributeOverride(name = "farmAddress", column = @Column(name = "farm_address", length = 34, nullable = false))
     @AttributeOverride(name = "accountAddress", column = @Column(name = "account_address", length = 34, nullable = false))
-    private FarmAccountId farmAccountId;
+    private LiquidityTokenFarmAccountId farmAccountId;
 
     @Column(precision = 31, scale = 0)
     private BigInteger stakeAmount;
@@ -58,11 +58,11 @@ public class FarmAccount {
         this.stakeAmount = stakeAmount;
     }
 
-    public FarmAccountId getFarmAccountId() {
+    public LiquidityTokenFarmAccountId getFarmAccountId() {
         return farmAccountId;
     }
 
-    public void setFarmAccountId(FarmAccountId farmAccountId) {
+    public void setFarmAccountId(LiquidityTokenFarmAccountId farmAccountId) {
         this.farmAccountId = farmAccountId;
     }
 

@@ -6,16 +6,16 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class FarmAccountId implements Serializable {
+public class LiquidityTokenFarmAccountId implements Serializable {
     @Column(length = 34)
     private String accountAddress;
 
     private LiquidityTokenFarmId liquidityTokenFarmId = new LiquidityTokenFarmId();
 
-    public FarmAccountId() {
+    public LiquidityTokenFarmAccountId() {
     }
 
-    public FarmAccountId(String accountAddress, LiquidityTokenFarmId liquidityTokenFarmId) {
+    public LiquidityTokenFarmAccountId(String accountAddress, LiquidityTokenFarmId liquidityTokenFarmId) {
         this.accountAddress = accountAddress;
         this.liquidityTokenFarmId = liquidityTokenFarmId;
     }
@@ -84,7 +84,7 @@ public class FarmAccountId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FarmAccountId that = (FarmAccountId) o;
+        LiquidityTokenFarmAccountId that = (LiquidityTokenFarmAccountId) o;
         return Objects.equals(accountAddress, that.accountAddress) && Objects.equals(liquidityTokenFarmId, that.liquidityTokenFarmId);
     }
 

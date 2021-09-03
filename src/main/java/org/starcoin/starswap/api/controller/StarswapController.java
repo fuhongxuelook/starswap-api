@@ -1,6 +1,8 @@
 package org.starcoin.starswap.api.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +57,7 @@ public class StarswapController {
     }
 
     @GetMapping(path = "liquidityTokens/{id}")
-    public LiquidityToken getLiquidityToken(@PathVariable(name = "id") String id) {
+    public LiquidityToken getLiquidityToken(@PathVariable(name = "id") @ApiParam("Token pair Id., for example 'BTC:STC'") String id) {
         String[] tokenXYId = parseTokenIdPair(id);
         return liquidityTokenService.findOneByTokenIdPair(tokenXYId[0], tokenXYId[1]);
     }
@@ -66,7 +68,7 @@ public class StarswapController {
     }
 
     @GetMapping(path = "liquidityPools/{id}")
-    public LiquidityPool getLiquidityPool(@PathVariable(name = "id") String id) {
+    public LiquidityPool getLiquidityPool(@PathVariable(name = "id") @ApiParam("Pool Id., for example 'BTC:STC'") String id) {
         //String[] axy = poolId.split("::");
         //if (axy.length < 2) throw new IllegalArgumentException();
         String[] tokenXYId = parseTokenIdPair(id);
@@ -74,13 +76,15 @@ public class StarswapController {
         return liquidityPoolService.findOneByTokenIdPair(tokenXYId[0], tokenXYId[1]);
     }
 
-    @GetMapping(path = "farms")
+    @ApiOperation("Get LP Token farm list")
+    @GetMapping(path = "lpTokenFarms")
     public List<LiquidityTokenFarm> getLiquidityTokenFarms() {
         return liquidityTokenFarmService.findByDeactivedIsFalse();
     }
 
-    @GetMapping(path = "farms/{id}")
-    public LiquidityTokenFarm getLiquidityTokenFarms(@PathVariable(name = "id") String id) {
+    @ApiOperation("Get LP Token farm info.")
+    @GetMapping(path = "lpTokenFarms/{id}")
+    public LiquidityTokenFarm getLiquidityTokenFarms(@PathVariable(name = "id") @ApiParam("Farm Id., for example 'BTC:STC'") String id) {
         String[] tokenXYId = parseTokenIdPair(id);
         return liquidityTokenFarmService.findOneByTokenIdPair(tokenXYId[0], tokenXYId[1]);
     }
@@ -91,8 +95,8 @@ public class StarswapController {
         return liquidityAccountService.findByAccountAddress(accountAddress);
     }
 
-    @GetMapping(path = "farmAccounts")
-    public List<FarmAccount> getFarmAccounts(
+    @GetMapping(path = "lpTokenFarmAccounts")
+    public List<LiquidityTokenFarmAccount> getFarmAccounts(
             @RequestParam(value = "accountAddress", required = true) String accountAddress) {
         return farmAccountService.findByAccountAddress(accountAddress);
     }
