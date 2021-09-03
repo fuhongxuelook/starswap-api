@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-starcoin-docker:
-    name: build starcooin-starswap-api docker
+    name: build starcoin-starswap-api docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
