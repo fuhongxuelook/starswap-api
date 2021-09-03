@@ -1,15 +1,13 @@
 package org.starcoin.starswap.api.config;
 
-import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.starcoin.starswap.api.vo.ResultUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @Component
 public class UrlFilter implements Filter {
@@ -29,7 +27,7 @@ public class UrlFilter implements Filter {
             chain.doFilter(request, response);
         } else {
             LOG.info("Intercepted URI：{}", uri);
-            doResponseFailure(response);
+            doResponseFailure(response, uri);
         }
     }
 
@@ -46,14 +44,12 @@ public class UrlFilter implements Filter {
         return false;
     }
 
-    private void doResponseFailure(ServletResponse response) {
-        try (PrintWriter writer = response.getWriter()) {
-            writer.print(JSONObject.toJSONString(ResultUtils.failure()));
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/json; charset=utf-8");
-        } catch (IOException e) {
-            //e.printStackTrace();
-            LOG.error("Response error.", e);
+    private void doResponseFailure(ServletResponse servletResponse, String uri) {
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        try {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        } catch (IOException exception) {
+            LOG.error("Response sendError error. Request URI: " + uri, exception);
         }
     }
 }

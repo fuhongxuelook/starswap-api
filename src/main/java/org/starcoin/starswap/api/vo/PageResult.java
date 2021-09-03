@@ -5,19 +5,19 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-@ApiModel(value = "页码数据")
+@ApiModel(value = "Page result")
 public class PageResult<T> {
 
-    @ApiModelProperty("总页码")
+    @ApiModelProperty("Total page")
     private int totalPage = 0;
 
-    @ApiModelProperty("当前页")
+    @ApiModelProperty("Current page No.")
     private int currentPage = 0;
 
-    @ApiModelProperty("总条数")
+    @ApiModelProperty("Total elements")
     private long totalElements = 0;
 
-    @ApiModelProperty("列表数据")
+    @ApiModelProperty("Data list")
     private List<T> list = null;
 
     public int getTotalPage() {
