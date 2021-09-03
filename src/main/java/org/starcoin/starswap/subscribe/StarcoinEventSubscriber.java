@@ -14,7 +14,7 @@ import java.util.Map;
 public class StarcoinEventSubscriber {
 
     public static final String FROM_ADDRESS = "0xcCF1ADEdf0Ba6f9BdB9A6905173A5d72";
-    public static final String ADD_LIQUIDITY_EVENT_TYPE_TAG = "xxxxxxxxx::xxx::AddLiquidityEvent";
+    public static final String ADD_LIQUIDITY_EVENT_TYPE_TAG = "0x81144d60492982a45ba93fba47cae988::TokenSwap::AddLiquidityEvent";
     private final Web3jService web3jService;
 
     public StarcoinEventSubscriber(Web3jService web3jService) {
