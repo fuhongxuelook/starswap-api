@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ContractService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ContractService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContractService.class);
 
     private static final String URL = "https://main-seed.starcoin.org";
 
@@ -82,9 +82,9 @@ public class ContractService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
-        logger.info("post_request：{} , params：{}", URL, JSONObject.toJSONString(params));
+        LOGGER.info("post_request：{} , params：{}", URL, JSONObject.toJSONString(params));
         JSONObject result = restTemplate.postForObject(URL, new HttpEntity<>(params, headers), JSONObject.class);
-        logger.info("post_response：" + JSONObject.toJSONString(result));
+        LOGGER.info("post_response：" + JSONObject.toJSONString(result));
         return result;
     }
 }

@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 @Component
 public class UrlFilter implements Filter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Filter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Filter.class);
 
     private final static String[] URI_NOT_FILTER = new String[]{"/v1/starswap", "/swagger", "/v3/api-docs", "/favicon.ico"};
 
@@ -28,7 +28,7 @@ public class UrlFilter implements Filter {
         if (isLegalUri(uri)) {
             chain.doFilter(request, response);
         } else {
-            LOGGER.info("Intercepted URI：{}", uri);
+            LOG.info("Intercepted URI：{}", uri);
             doResponseFailure(response);
         }
     }
@@ -53,7 +53,7 @@ public class UrlFilter implements Filter {
             response.setContentType("application/json; charset=utf-8");
         } catch (IOException e) {
             //e.printStackTrace();
-            LOGGER.error("Response error.", e);
+            LOG.error("Response error.", e);
         }
     }
 }

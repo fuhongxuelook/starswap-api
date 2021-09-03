@@ -32,6 +32,12 @@ public class StarswapController {
     @Resource
     private PullingEventTaskService pullingEventTaskService;
 
+    @Resource
+    private LiquidityTokenFarmService liquidityTokenFarmService;
+
+    @Resource
+    private FarmAccountService farmAccountService;
+
     @GetMapping(path = "tokens")
     public List<Token> getTokens() {
         return tokenService.findByDeactivedIsFalse();
@@ -68,10 +74,27 @@ public class StarswapController {
         return liquidityPoolService.findOneByTokenIdPair(tokenXYId[0], tokenXYId[1]);
     }
 
+    @GetMapping(path = "farms")
+    public List<LiquidityTokenFarm> getLiquidityTokenFarms() {
+        return liquidityTokenFarmService.findByDeactivedIsFalse();
+    }
+
+    @GetMapping(path = "farms/{id}")
+    public LiquidityTokenFarm getLiquidityTokenFarms(@PathVariable(name = "id") String id) {
+        String[] tokenXYId = parseTokenIdPair(id);
+        return liquidityTokenFarmService.findOneByTokenIdPair(tokenXYId[0], tokenXYId[1]);
+    }
+
     @GetMapping(path = "liquidityAccounts")
     public List<LiquidityAccount> getLiquidityAccounts(
             @RequestParam(value = "accountAddress", required = true) String accountAddress) {
         return liquidityAccountService.findByAccountAddress(accountAddress);
+    }
+
+    @GetMapping(path = "farmAccounts")
+    public List<FarmAccount> getFarmAccounts(
+            @RequestParam(value = "accountAddress", required = true) String accountAddress) {
+        return farmAccountService.findByAccountAddress(accountAddress);
     }
 
     @PostMapping(path = "pullingEventTasks")

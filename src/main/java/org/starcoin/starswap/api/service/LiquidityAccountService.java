@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class LiquidityAccountService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LiquidityAccountService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LiquidityAccountService.class);
 
     private final LiquidityAccountRepository liquidityAccountRepository;
 

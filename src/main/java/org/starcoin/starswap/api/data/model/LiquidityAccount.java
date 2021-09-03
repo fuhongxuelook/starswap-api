@@ -31,7 +31,7 @@ public class LiquidityAccount {
     /**
      * 账号提供的流动性数量。
      */
-    @Column(precision = 21, scale = 0)
+    @Column(precision = 31, scale = 0)
     private BigInteger liquidity;
 
     /**

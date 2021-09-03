@@ -26,8 +26,8 @@ public class FarmAccount {
     @AttributeOverride(name = "accountAddress", column = @Column(name = "account_address", length = 34, nullable = false))
     private FarmAccountId farmAccountId;
 
-    @Column(precision = 21, scale = 0)
-    private BigInteger stakedAmount;
+    @Column(precision = 31, scale = 0)
+    private BigInteger stakeAmount;
 
     /**
      * 是否已不再使用。
@@ -50,12 +50,12 @@ public class FarmAccount {
     @Version
     private Long version;
 
-    public BigInteger getStakedAmount() {
-        return stakedAmount;
+    public BigInteger getStakeAmount() {
+        return stakeAmount;
     }
 
-    public void setStakedAmount(BigInteger stakedAmount) {
-        this.stakedAmount = stakedAmount;
+    public void setStakeAmount(BigInteger stakeAmount) {
+        this.stakeAmount = stakeAmount;
     }
 
     public FarmAccountId getFarmAccountId() {
@@ -110,7 +110,7 @@ public class FarmAccount {
     public String toString() {
         return "FarmAccount{" +
                 "farmAccountId=" + farmAccountId +
-                ", stakedAmount=" + stakedAmount +
+                ", stakedAmount=" + stakeAmount +
                 ", deactived=" + deactived +
                 ", createdBy='" + createdBy + '\'' +
                 ", updatedBy='" + updatedBy + '\'' +

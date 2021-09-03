@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class TokenService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
 
     private final TokenRepository tokenRepository;
 

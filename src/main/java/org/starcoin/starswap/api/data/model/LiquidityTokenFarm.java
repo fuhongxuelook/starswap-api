@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 
 @Entity
@@ -32,6 +33,9 @@ public class LiquidityTokenFarm {
 
     @Column(nullable = false)
     private Integer sequenceNumber;
+
+    @Column(precision = 31, scale = 0)
+    private BigInteger totalStakeAmount;
 
     /**
      * 是否已禁用。
@@ -126,4 +130,11 @@ public class LiquidityTokenFarm {
         this.updatedAt = updatedAt;
     }
 
+    public BigInteger getTotalStakeAmount() {
+        return totalStakeAmount;
+    }
+
+    public void setTotalStakeAmount(BigInteger totalStakeAmount) {
+        this.totalStakeAmount = totalStakeAmount;
+    }
 }
