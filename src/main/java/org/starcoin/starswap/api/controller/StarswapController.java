@@ -38,7 +38,7 @@ public class StarswapController {
     private LiquidityTokenFarmService liquidityTokenFarmService;
 
     @Resource
-    private FarmAccountService farmAccountService;
+    private LiquidityTokenFarmAccountService liquidityTokenFarmAccountService;
 
     @GetMapping(path = "tokens")
     public List<Token> getTokens() {
@@ -98,7 +98,7 @@ public class StarswapController {
     @GetMapping(path = "lpTokenFarmAccounts")
     public List<LiquidityTokenFarmAccount> getFarmAccounts(
             @RequestParam(value = "accountAddress", required = true) String accountAddress) {
-        return farmAccountService.findByAccountAddress(accountAddress);
+        return liquidityTokenFarmAccountService.findByAccountAddress(accountAddress);
     }
 
     @PostMapping(path = "pullingEventTasks")

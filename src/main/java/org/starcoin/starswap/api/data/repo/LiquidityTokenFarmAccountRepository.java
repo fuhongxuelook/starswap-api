@@ -6,7 +6,7 @@ import org.starcoin.starswap.api.data.model.LiquidityTokenFarmAccountId;
 
 import java.util.List;
 
-public interface FarmAccountRepository extends JpaRepository<LiquidityTokenFarmAccount, LiquidityTokenFarmAccountId> {
+public interface LiquidityTokenFarmAccountRepository extends JpaRepository<LiquidityTokenFarmAccount, LiquidityTokenFarmAccountId> {
 
     List<LiquidityTokenFarmAccount> findByDeactivedIsFalse();
 

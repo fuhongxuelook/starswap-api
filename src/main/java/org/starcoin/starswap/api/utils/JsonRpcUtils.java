@@ -13,10 +13,7 @@ import org.starcoin.bean.Event;
 import org.starcoin.starswap.api.service.LiquidityPoolService;
 
 import java.math.BigInteger;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static org.starcoin.starswap.subscribe.StarcoinEventSubscriber.createEventFilterMap;
@@ -39,7 +36,10 @@ public class JsonRpcUtils {
 
     //public fun query_total_stake<TokenX: store, TokenY: store>() : u128
     public static BigInteger tokenSwapFarmQueryTotalStake(JSONRPC2Session jsonRpcSession, String farmAddress, String tokenX, String tokenY) {
-        return null;//todo //contractCallV2()
+        List<String> resultFields = contractCallV2(jsonRpcSession, farmAddress + "::TokenSwapFarmScript::query_total_stake",
+                Arrays.asList(tokenX, tokenY), Collections.emptyList(), new TypeReference<List<String>>() {
+                });
+        return new BigInteger(resultFields.get(0)); //todo Is this ok? need test...
     }
 
     /**

@@ -58,4 +58,8 @@ public class StructType {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    public String toTypeTagString() {
+        return address + "::" + module + "::" + name;
+    }
 }

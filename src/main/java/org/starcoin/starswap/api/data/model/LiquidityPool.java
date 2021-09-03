@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 /**
  * 流动性池子。
@@ -34,6 +35,9 @@ public class LiquidityPool {
 
     @Column(nullable = false)
     private Integer sequenceNumber;
+
+    @Column(precision = 31, scale = 0)
+    private BigInteger totalLiquidity;
 
     /**
      * 是否已禁用。
@@ -128,4 +132,11 @@ public class LiquidityPool {
         this.updatedAt = updatedAt;
     }
 
+    public BigInteger getTotalLiquidity() {
+        return totalLiquidity;
+    }
+
+    public void setTotalLiquidity(BigInteger totalLiquidity) {
+        this.totalLiquidity = totalLiquidity;
+    }
 }

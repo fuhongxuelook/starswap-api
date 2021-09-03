@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.starcoin.starswap.api.data.model.LiquidityTokenFarmAccount;
 import org.starcoin.starswap.api.data.model.LiquidityTokenFarmAccountId;
-import org.starcoin.starswap.api.data.repo.FarmAccountRepository;
+import org.starcoin.starswap.api.data.repo.LiquidityTokenFarmAccountRepository;
 
 import javax.transaction.Transactional;
 import java.math.BigInteger;
@@ -14,21 +14,21 @@ import java.time.Instant;
 import java.util.List;
 
 @Service
-public class FarmAccountService {
+public class LiquidityTokenFarmAccountService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FarmAccountService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LiquidityTokenFarmAccountService.class);
 
     @Autowired
-    private FarmAccountRepository farmAccountRepository;
+    private LiquidityTokenFarmAccountRepository liquidityTokenFarmAccountRepository;
 
 
     public List<LiquidityTokenFarmAccount> findByAccountAddress(String accountAddress) {
-        return farmAccountRepository.findByFarmAccountIdAccountAddress(accountAddress);
+        return liquidityTokenFarmAccountRepository.findByFarmAccountIdAccountAddress(accountAddress);
     }
 
     @Transactional
     public LiquidityTokenFarmAccount activeFarmAccount(LiquidityTokenFarmAccountId farmAccountId) {
-        LiquidityTokenFarmAccount farmAccount = this.farmAccountRepository.findById(farmAccountId).orElse(null);
+        LiquidityTokenFarmAccount farmAccount = this.liquidityTokenFarmAccountRepository.findById(farmAccountId).orElse(null);
         if (farmAccount == null) {
             farmAccount = new LiquidityTokenFarmAccount();
             farmAccount.setFarmAccountId(farmAccountId);
@@ -43,7 +43,7 @@ public class FarmAccountService {
             farmAccount.setUpdatedBy("admin");
             farmAccount.setDeactived(false);
         }
-        this.farmAccountRepository.save(farmAccount);
+        this.liquidityTokenFarmAccountRepository.save(farmAccount);
         return farmAccount;
     }
 

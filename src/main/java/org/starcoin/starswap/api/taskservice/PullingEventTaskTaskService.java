@@ -1,6 +1,5 @@
 package org.starcoin.starswap.api.taskservice;
 
-import com.thetransactioncompany.jsonrpc2.client.JSONRPC2Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,44 +10,32 @@ import org.starcoin.bean.Event;
 import org.starcoin.starswap.api.data.model.PullingEventTask;
 import org.starcoin.starswap.api.service.HandleEventService;
 import org.starcoin.starswap.api.service.PullingEventTaskService;
+import org.starcoin.starswap.api.utils.JsonRpcClient;
 
-import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import static org.starcoin.starswap.api.data.model.PullingEventTask.PULLING_BLOCK_MAX_COUNT;
-import static org.starcoin.starswap.api.utils.JsonRpcUtils.getEvents;
 
 @Service
 public class PullingEventTaskTaskService {
     private static final Logger LOG = LoggerFactory.getLogger(PullingEventTaskTaskService.class);
-    private final JSONRPC2Session jsonRpcSession;
+
     private final PullingEventTaskService pullingEventTaskService;
     private final HandleEventService handleEventService;
-    private String jsonRpcUrl;
+    private final JsonRpcClient jsonRpcClient;
 
     public PullingEventTaskTaskService(
             @Value("${starcoin.json-rpc-url}") String jsonRpcUrl,
             @Autowired PullingEventTaskService pullingEventTaskService,
             @Autowired HandleEventService handleEventService) throws MalformedURLException {
-        this.jsonRpcUrl = jsonRpcUrl;
-        this.jsonRpcSession = new JSONRPC2Session(new URL(this.jsonRpcUrl));
+        this.jsonRpcClient = new JsonRpcClient(jsonRpcUrl);
         this.pullingEventTaskService = pullingEventTaskService;
         this.handleEventService = handleEventService;
     }
 
-    public String getJsonRpcUrl() {
-        return jsonRpcUrl;
-    }
-
-    public void setJsonRpcUrl(String jsonRpcUrl) {
-        this.jsonRpcUrl = jsonRpcUrl;
-    }
-
-    @Scheduled(fixedDelay = 10000)
-    @Transactional
+    @Scheduled(fixedDelay = 10000) //todo config
     public void task() {
         List<PullingEventTask> pullingEventTasks = pullingEventTaskService.getPullingEventTaskToProcess();
         if (pullingEventTasks == null || pullingEventTasks.isEmpty()) {
@@ -58,7 +45,6 @@ public class PullingEventTaskTaskService {
             executeTask(t);
         }
     }
-
 
     private void executeTask(PullingEventTask t) {
         BigInteger fromBlockNumber = t.getFromBlockNumber();
@@ -70,7 +56,7 @@ public class PullingEventTaskTaskService {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("JSON RPC getting events... from block: " + fromBlockNumber + ", to block: " + toBlockNumber);
             }
-            Event[] events = getEvents(jsonRpcSession, fromBlockNumber, toBlockNumber);
+            Event[] events = jsonRpcClient.getEvents(fromBlockNumber, toBlockNumber);
             if (events == null) {
                 break;
             }

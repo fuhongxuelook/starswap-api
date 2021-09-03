@@ -9,6 +9,7 @@ import org.starcoin.starswap.api.data.model.Token;
 import org.starcoin.starswap.api.data.repo.TokenRepository;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Service
 public class TokenService {
@@ -27,7 +28,11 @@ public class TokenService {
     }
 
     public Token getToken(String tokenId) {
-       return tokenRepository.findById(tokenId).orElse(null);
+        return tokenRepository.findById(tokenId).orElse(null);
+    }
+
+    public Token getTokenOrElseThrow(String tokenId, Supplier<RuntimeException> exceptionSupplier) {
+        return tokenRepository.findById(tokenId).orElseThrow(exceptionSupplier);
     }
 
     public Token getTokenByStructType(String address, String module, String name) {

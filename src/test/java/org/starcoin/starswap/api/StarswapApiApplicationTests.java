@@ -36,7 +36,7 @@ class StarswapApiApplicationTests {
     LiquidityTokenFarmRepository liquidityTokenFarmRepository;
 
     @Autowired
-    FarmAccountRepository farmAccountRepository;
+    LiquidityTokenFarmAccountRepository liquidityTokenFarmAccountRepository;
 
     @Test
     void contextLoads() {
@@ -83,7 +83,7 @@ class StarswapApiApplicationTests {
         farmAccount.setStakeAmount(BigInteger.valueOf(1000000L));//  10000000,
         farmAccount.setUpdatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
         farmAccount.setUpdatedBy("admin");//  'admin'
-        farmAccountRepository.save(farmAccount);
+        liquidityTokenFarmAccountRepository.save(farmAccount);
         //  )
         //  ;
     }
