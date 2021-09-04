@@ -7,9 +7,11 @@ import org.starcoin.starswap.api.data.model.*;
 import org.starcoin.starswap.api.data.repo.*;
 import org.starcoin.starswap.api.service.LiquidityPoolService;
 import org.starcoin.starswap.api.service.LiquidityTokenService;
+import org.starcoin.starswap.api.service.NodeHeartbeatService;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootTest
 class StarswapApiApplicationTests {
@@ -38,8 +40,16 @@ class StarswapApiApplicationTests {
     @Autowired
     LiquidityTokenFarmAccountRepository liquidityTokenFarmAccountRepository;
 
+    @Autowired
+    NodeHeartbeatRepository nodeHeartbeatRepository;
+
+    @Autowired
+    NodeHeartbeatService nodeHeartbeatService;
+
     @Test
     void contextLoads() {
+        addTestNodeHeartbeats();
+        if (true) return;
 
         tryRun(() -> addTestToken("Bot", 90));
 
@@ -58,6 +68,55 @@ class StarswapApiApplicationTests {
         // test queries...
         System.out.println(liquidityTokenService.findOneByTokenIdPair("Bot", "Ddd"));
         System.out.println(liquidityPoolService.findOneByTokenIdPair("Bot", "Ddd"));
+    }
+
+    private void addTestNodeHeartbeats() {
+        NodeHeartbeat b7 = new NodeHeartbeat();
+        b7.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
+        b7.setStartedAt(BigInteger.valueOf(79));
+        b7.setBeatenAt(BigInteger.valueOf(92));
+        nodeHeartbeatRepository.save(b7);
+
+        NodeHeartbeat b6 = new NodeHeartbeat();
+        b6.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
+        b6.setStartedAt(BigInteger.valueOf(91));
+        b6.setBeatenAt(BigInteger.valueOf(100));
+        nodeHeartbeatRepository.save(b6);
+
+        NodeHeartbeat b5 = new NodeHeartbeat();
+        b5.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
+        b5.setStartedAt(BigInteger.valueOf(60));
+        b5.setBeatenAt(BigInteger.valueOf(71));
+        nodeHeartbeatRepository.save(b5);
+
+        NodeHeartbeat b4 = new NodeHeartbeat();
+        b4.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
+        b4.setStartedAt(BigInteger.valueOf(71));
+        b4.setBeatenAt(BigInteger.valueOf(80));
+        nodeHeartbeatRepository.save(b4);
+
+        NodeHeartbeat b3 = new NodeHeartbeat();
+        b3.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
+        b3.setStartedAt(BigInteger.valueOf(51));
+        b3.setBeatenAt(BigInteger.valueOf(60));
+        nodeHeartbeatRepository.save(b3);
+
+        NodeHeartbeat b2 = new NodeHeartbeat();
+        b2.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
+        b2.setStartedAt(BigInteger.valueOf(21));
+        b2.setBeatenAt(BigInteger.valueOf(30));
+        nodeHeartbeatRepository.save(b2);
+
+        NodeHeartbeat b1 = new NodeHeartbeat();
+        b1.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
+        b1.setStartedAt(BigInteger.valueOf(1));
+        b1.setBeatenAt(BigInteger.valueOf(10));
+        nodeHeartbeatRepository.save(b1);
+
+        List<Object[]> breakpoints = nodeHeartbeatRepository.findBreakpoints();
+        breakpoints.forEach(p -> System.out.println(p[0] + "\t" + p[1]));
+
+        System.out.println(nodeHeartbeatService.findBreakIntervals());
     }
 
     private void tryRun(Runnable runnable) {
