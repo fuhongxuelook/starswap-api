@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 
@@ -36,6 +37,12 @@ public class LiquidityTokenFarm {
 
     @Column(precision = 31, scale = 0)
     private BigInteger totalStakeAmount;
+
+    /**
+     * Estimated annual percentage yield.
+     */
+    @Column(precision = 31, scale = 10)
+    private BigDecimal estimatedApy;
 
     /**
      * 是否已禁用。
@@ -136,5 +143,21 @@ public class LiquidityTokenFarm {
 
     public void setTotalStakeAmount(BigInteger totalStakeAmount) {
         this.totalStakeAmount = totalStakeAmount;
+    }
+
+    public BigDecimal getEstimatedApy() {
+        return estimatedApy;
+    }
+
+    public void setEstimatedApy(BigDecimal estimatedApy) {
+        this.estimatedApy = estimatedApy;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
