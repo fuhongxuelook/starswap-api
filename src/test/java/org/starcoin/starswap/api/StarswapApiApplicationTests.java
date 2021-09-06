@@ -8,7 +8,9 @@ import org.starcoin.starswap.api.data.repo.*;
 import org.starcoin.starswap.api.service.LiquidityPoolService;
 import org.starcoin.starswap.api.service.LiquidityTokenService;
 import org.starcoin.starswap.api.service.NodeHeartbeatService;
+import org.starcoin.starswap.api.service.OnChainService;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
@@ -46,16 +48,26 @@ class StarswapApiApplicationTests {
     @Autowired
     NodeHeartbeatService nodeHeartbeatService;
 
+    @Autowired
+    OnChainService onChainService;
+
     @Test
     void contextLoads() {
-        addTestNodeHeartbeats();
+        BigDecimal exchangeRate = onChainService.getToUsdExchangeRate("0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot");
+        System.out.println(exchangeRate);
         if (true) return;
+
+        addTestNodeHeartbeats();
+        //if (true) return;
 
         tryRun(() -> addTestToken("Bot", 90));
 
         tryRun(() -> addTestToken("Ddd", 99));
 
-        tryRun(this::addTestTokenPair);
+        tryRun(() -> addTestToken("Usdx", 99));
+
+        tryRun(() -> addTestLiquidityToken("Bot", "Ddd"));
+        tryRun(() -> addTestLiquidityToken("Bot", "Usdx"));
 
         tryRun(this::addTestLiquidityPool);
 
@@ -257,7 +269,7 @@ class StarswapApiApplicationTests {
         //
     }
 
-    private void addTestTokenPair() {
+    private void addTestLiquidityToken(String tokenXId, String tokenYId) {
         //-- token pair
         //insert into token_pair (  `token_x_id`, `token_y_id`,
         //  `created_at`,
@@ -276,11 +288,11 @@ class StarswapApiApplicationTests {
         //  `updated_at`,
         //  `updated_by`)
         LiquidityToken botDdd = new LiquidityToken();
-        botDdd.setLiquidityTokenId(new LiquidityTokenId("Bot", "Ddd", "0x07fa08a855753f0ff7292fdcbe871216"));//  values ( 'Bot', 'Ddd',
+        botDdd.setLiquidityTokenId(new LiquidityTokenId(tokenXId, tokenYId, "0x07fa08a855753f0ff7292fdcbe871216"));//  values ( 'Bot', 'Ddd',
         botDdd.setCreatedAt(System.currentTimeMillis());//  UNIX_TIMESTAMP(now()),
         botDdd.setCreatedBy("admin");//  'admin',
         botDdd.setDeactived(false);//  false,
-        botDdd.setDescription("Bot<->Ddd");
+        botDdd.setDescription(tokenXId + "<->" + tokenYId);
         botDdd.setSequenceNumber(99);
         botDdd.setTokenXStructType(new StructType("0x07fa08a855753f0ff7292fdcbe871216", "Bot", "Bot"));
         botDdd.setTokenYStructType(new StructType("0x07fa08a855753f0ff7292fdcbe871216", "Ddd", "Ddd"));

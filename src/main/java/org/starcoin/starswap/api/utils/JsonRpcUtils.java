@@ -1,6 +1,5 @@
 package org.starcoin.starswap.api.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
@@ -10,6 +9,7 @@ import com.thetransactioncompany.jsonrpc2.client.JSONRPC2SessionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.starcoin.bean.Event;
+import org.starcoin.starswap.api.data.model.Pair;
 import org.starcoin.starswap.api.service.LiquidityPoolService;
 
 import java.math.BigInteger;
@@ -33,6 +33,33 @@ public class JsonRpcUtils {
         return events == null ? new Event[0] : events;
     }
 
+    // public fun scaling_factor<TokenType: store>(): u128
+    public static BigInteger tokenGetScalingFactor(JSONRPC2Session jsonRpcSession, String token) {
+        List<BigInteger> resultFields = contractCallV2(jsonRpcSession, "0x1::Token::scaling_factor",
+                Arrays.asList(token), Collections.emptyList(), new TypeReference<List<BigInteger>>() {
+                });
+        return resultFields.get(0);
+    }
+
+    // public fun get_reserves<X: store, Y: store>(): (u128, u128)
+    public static Pair<BigInteger, BigInteger> tokenSwapRouterGetReserves(JSONRPC2Session jsonRpcSession, String lpTokenAddress, String tokenX, String tokenY) {
+        List<String> resultFields = contractCallV2(jsonRpcSession, lpTokenAddress + "::TokenSwapRouter::get_reserves",
+                Arrays.asList(tokenX, tokenY), Collections.emptyList(), new TypeReference<List<String>>() {
+                });
+        return new Pair<>(new BigInteger(resultFields.get(0)), new BigInteger(resultFields.get(1)));
+    }
+
+    // public fun get_amount_out(amount_in: u128, reserve_in: u128, reserve_out: u128): u128
+    public static BigInteger tokenSwapRouterGetAmountOut(JSONRPC2Session jsonRpcSession, String lpTokenAddress, BigInteger amountIn, BigInteger reserveIn, BigInteger reserveOut) {
+        List<String> resultFields = contractCallV2(jsonRpcSession, lpTokenAddress + "::TokenSwapRouter::get_amount_out",
+                Collections.emptyList(), Arrays.asList(
+                        amountIn.toString() + "u128",
+                        reserveIn.toString() + "u128",
+                        reserveOut.toString() + "u128"
+                ), new TypeReference<List<String>>() {
+                });
+        return new BigInteger(resultFields.get(0));
+    }
 
     //public fun query_total_stake<TokenX: store, TokenY: store>() : u128
     public static BigInteger tokenSwapFarmQueryTotalStake(JSONRPC2Session jsonRpcSession, String farmAddress, String tokenX, String tokenY) {
@@ -73,30 +100,20 @@ public class JsonRpcUtils {
 
     private static <T> T callForObject(JSONRPC2Session jsonRpcSession, String method, List<Object> params, TypeReference<T> typeRef) {
         return callForObject(jsonRpcSession, method, params, (result) -> {
-            try {
-                return getObjectMapper().readValue(result.toString(), typeRef);
-            } catch (JsonProcessingException e) {
-                LOG.error("JSON RPC parsing result error.", e);
-                throw new RuntimeException("JSON RPC parsing result error.", e);
-            }
+            return getObjectMapper().convertValue(result, typeRef);
         });
     }
 
     @SuppressWarnings("unchecked")
     private static <T> T callForObject(JSONRPC2Session jsonRpcSession, String method, List<Object> params, Class<T> objectClass) {
         return callForObject(jsonRpcSession, method, params, (result) -> {
-            try {
-                if (objectClass.isAssignableFrom(result.getClass())) {
-                    return (T) result;
-                }
-                if (objectClass.isAssignableFrom(String.class)) {
-                    return (T) result.toString();
-                }
-                return getObjectMapper().readValue(result.toString(), objectClass);
-            } catch (JsonProcessingException e) {
-                LOG.error("JSON RPC parsing result error.", e);
-                throw new RuntimeException("JSON RPC parsing result error.", e);
+            if (objectClass.isAssignableFrom(result.getClass())) {
+                return (T) result;
             }
+            if (objectClass.isAssignableFrom(String.class)) {
+                return (T) result.toString();
+            }
+            return getObjectMapper().convertValue(result, objectClass);
         });
     }
 

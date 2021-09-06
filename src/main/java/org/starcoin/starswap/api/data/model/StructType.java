@@ -62,4 +62,12 @@ public class StructType {
     public String toTypeTagString() {
         return address + "::" + module + "::" + name;
     }
+
+    public static StructType parse(String s) {
+        String[] fs = s.split("::");
+        if (fs.length != 3) {
+            throw new RuntimeException("Illegal string format.");
+        }
+        return new StructType(fs[0], fs[1], fs[2]);
+    }
 }

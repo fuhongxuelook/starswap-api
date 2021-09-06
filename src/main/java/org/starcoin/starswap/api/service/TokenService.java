@@ -38,4 +38,8 @@ public class TokenService {
     public Token getTokenByStructType(String address, String module, String name) {
         return tokenRepository.findFirstByTokenStructType(new StructType(address, module, name));
     }
+
+    public Token getTokenByStructType(StructType structType) {
+        return tokenRepository.findFirstByTokenStructType(structType);
+    }
 }
