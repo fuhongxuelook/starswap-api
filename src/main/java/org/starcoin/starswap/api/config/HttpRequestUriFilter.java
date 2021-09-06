@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class UrlFilter implements Filter {
+public class HttpRequestUriFilter implements Filter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Filter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HttpRequestUriFilter.class);
 
-    private final static String[] URI_NOT_FILTER = new String[]{"/v1/starswap", "/swagger", "/v3/api-docs", "/favicon.ico"};
+    private final static String[] ALLOWED_PATHS = new String[]{"/v1/starswap", "/swagger", "/v3/api-docs", "/favicon.ico"};
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -23,7 +23,8 @@ public class UrlFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String uri = ((HttpServletRequest) request).getRequestURI();
-        if (isLegalUri(uri)) {
+        String contextPath = ((HttpServletRequest) request).getContextPath();
+        if (isLegalUri(contextPath, uri)) {
             chain.doFilter(request, response);
         } else {
             LOG.info("Intercepted URI：{}", uri);
@@ -35,9 +36,9 @@ public class UrlFilter implements Filter {
     public void destroy() {
     }
 
-    private boolean isLegalUri(String uri) {
-        for (String str : URI_NOT_FILTER) {
-            if (uri.indexOf(str) == 0) {
+    private boolean isLegalUri(String contextPath, String uri) {
+        for (String allowedPath : ALLOWED_PATHS) {
+            if (uri.indexOf(contextPath + allowedPath) == 0) {
                 return true;
             }
         }
