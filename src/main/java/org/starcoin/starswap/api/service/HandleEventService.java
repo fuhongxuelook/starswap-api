@@ -21,6 +21,10 @@ public class HandleEventService {
 
     private final TokenService tokenService;
 
+    private final LiquidityTokenService liquidityTokenService;
+
+    private final LiquidityTokenFarmAccountService liquidityTokenFarmAccountService;
+
     public HandleEventService(@Autowired LiquidityAccountService liquidityAccountService,
                               @Autowired TokenService tokenService) {
         this.liquidityAccountService = liquidityAccountService;
@@ -81,7 +85,16 @@ public class HandleEventService {
 
     private void handleStakeEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
         System.out.println(event);
-        //todo
+        if (true) return;//todo
+        String accountAddress = null;  //todo
+        String farmAddress = null;  //todo
+        String tokenXId = null;//todo
+        String tokenYId = null;//todo
+        String liquidityTokenAddress = null;//todo
+        LiquidityTokenId liquidityTokenId = new LiquidityTokenId(tokenXId, tokenYId, liquidityTokenAddress);
+        LiquidityTokenFarmId liquidityTokenFarmId = new LiquidityTokenFarmId(liquidityTokenId, farmAddress);
+        LiquidityTokenFarmAccountId farmAccountId = new LiquidityTokenFarmAccountId(accountAddress, liquidityTokenFarmId);
+        liquidityTokenFarmAccountService.activeFarmAccount(farmAccountId);
     }
 
     private void handleAddFarmEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
@@ -89,6 +102,7 @@ public class HandleEventService {
         //todo
     }
 
+    @SuppressWarnings("unchecked")
     private void handleAddLiquidityEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
         String eventStructAddress = eventTypeTagStruct.getAddress();
         //System.out.println(eventStructAddress);
