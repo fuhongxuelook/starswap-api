@@ -37,12 +37,12 @@ public class LiquidityAccountService {
             liquidityAccount.setLiquidityAccountId(liquidityAccountId);
             liquidityAccount.setLiquidity(BigInteger.ZERO);//todo ???
             liquidityAccount.setDeactived(false);
-            liquidityAccount.setCreatedAt(Instant.now().getEpochSecond());
+            liquidityAccount.setCreatedAt(System.currentTimeMillis());
             liquidityAccount.setCreatedBy("admin");
             liquidityAccount.setUpdatedAt(liquidityAccount.getCreatedAt());
             liquidityAccount.setUpdatedBy("admin");
         } else {
-            liquidityAccount.setUpdatedAt(Instant.now().getEpochSecond());
+            liquidityAccount.setUpdatedAt(System.currentTimeMillis());
             liquidityAccount.setUpdatedBy("admin");
             liquidityAccount.setDeactived(false);
         }

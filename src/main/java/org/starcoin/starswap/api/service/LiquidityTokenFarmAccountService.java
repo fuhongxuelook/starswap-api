@@ -34,12 +34,12 @@ public class LiquidityTokenFarmAccountService {
             farmAccount.setFarmAccountId(farmAccountId);
             farmAccount.setStakeAmount(BigInteger.ZERO);//todo ???
             farmAccount.setDeactived(false);
-            farmAccount.setCreatedAt(Instant.now().getEpochSecond());
+            farmAccount.setCreatedAt(System.currentTimeMillis());
             farmAccount.setCreatedBy("admin");
             farmAccount.setUpdatedAt(farmAccount.getCreatedAt());
             farmAccount.setUpdatedBy("admin");
         } else {
-            farmAccount.setUpdatedAt(Instant.now().getEpochSecond());
+            farmAccount.setUpdatedAt(System.currentTimeMillis());
             farmAccount.setUpdatedBy("admin");
             farmAccount.setDeactived(false);
         }

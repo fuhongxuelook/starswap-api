@@ -25,13 +25,17 @@ public class HandleEventService {
 
     private final LiquidityTokenFarmAccountService liquidityTokenFarmAccountService;
 
+    private final LiquidityTokenFarmService liquidityTokenFarmService;
+
     public HandleEventService(@Autowired LiquidityAccountService liquidityAccountService,
                               @Autowired TokenService tokenService,
                               @Autowired LiquidityTokenService liquidityTokenService,
+                              @Autowired LiquidityTokenFarmService liquidityTokenFarmService,
                               @Autowired LiquidityTokenFarmAccountService liquidityTokenFarmAccountService) {
         this.liquidityAccountService = liquidityAccountService;
         this.tokenService = tokenService;
         this.liquidityTokenService = liquidityTokenService;
+        this.liquidityTokenFarmService = liquidityTokenFarmService;
         this.liquidityTokenFarmAccountService = liquidityTokenFarmAccountService;
     }
 
@@ -88,13 +92,36 @@ public class HandleEventService {
     }
 
     private void handleStakeEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
-        System.out.println(event);
-        if (true) return;//todo
-        String accountAddress = null;  //todo
-        String farmAddress = null;  //todo
-        String tokenXId = null;//todo
-        String tokenYId = null;//todo
-        String liquidityTokenAddress = null;//todo
+        // decodeEventData={
+        // x_token_code={addr=0x598b8cbfd4536ecbe88aa1cfaffa7a62, module_name=0x426f74, name=0x426f74},
+        // y_token_code={addr=0x598b8cbfd4536ecbe88aa1cfaffa7a62, module_name=0x446464, name=0x446464},
+        // signer=0x598b8cbfd4536ecbe88aa1cfaffa7a62,
+        // amount=1000,
+        // admin=0x598b8cbfd4536ecbe88aa1cfaffa7a62
+        // }
+        StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
+        StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
+        String xTokenTypeAddress = xTokenType.getAddress();
+        String xTokenTypeModule = xTokenType.getModule();
+        String xTokenTypeName = xTokenType.getName();
+        String yTokenTypeAddress = yTokenType.getAddress();
+        String yTokenTypeModule = yTokenType.getModule();
+        String yTokenTypeName = yTokenType.getName();
+        String accountAddress = event.getDecodeEventData().get("signer").toString();
+        Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
+        if (xToken == null) {
+            LOG.info("Cannot get token by struct type.");
+            return;
+        }
+        Token yToken = tokenService.getTokenByStructType(yTokenTypeAddress, yTokenTypeModule, yTokenTypeName);
+        if (yToken == null) {
+            LOG.info("Cannot get token by struct type.");
+            return;
+        }
+        String farmAddress = eventFromAddress;// todo Farm 池子的地址就是 event 的来源地址？
+        String tokenXId = xToken.getTokenId();
+        String tokenYId = yToken.getTokenId();
+        String liquidityTokenAddress = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenYId).getLiquidityTokenId().getLiquidityTokenAddress();//todo 通过查询得到 LiquidityToken 的地址？
         LiquidityTokenId liquidityTokenId = new LiquidityTokenId(tokenXId, tokenYId, liquidityTokenAddress);
         LiquidityTokenFarmId liquidityTokenFarmId = new LiquidityTokenFarmId(liquidityTokenId, farmAddress);
         LiquidityTokenFarmAccountId farmAccountId = new LiquidityTokenFarmAccountId(accountAddress, liquidityTokenFarmId);
@@ -103,7 +130,17 @@ public class HandleEventService {
 
     private void handleAddFarmEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
         System.out.println(event);
-        //todo
+        if (true) return;//todo
+        String farmAddress = null;  //todo
+        String tokenXId = null;//todo
+        String tokenYId = null;//todo
+        String liquidityTokenAddress = null;//todo
+        LiquidityTokenId liquidityTokenId = new LiquidityTokenId(tokenXId, tokenYId, liquidityTokenAddress);
+        LiquidityTokenFarmId liquidityTokenFarmId = new LiquidityTokenFarmId(liquidityTokenId, farmAddress);
+
+        LiquidityTokenFarm liquidityTokenFarm = new LiquidityTokenFarm();
+        liquidityTokenFarm.setLiquidityTokenFarmId(liquidityTokenFarmId);
+        liquidityTokenFarmService.addFarm(liquidityTokenFarmId);
     }
 
     @SuppressWarnings("unchecked")
