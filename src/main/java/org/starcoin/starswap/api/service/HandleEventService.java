@@ -26,14 +26,18 @@ public class HandleEventService {
     private final LiquidityTokenFarmAccountService liquidityTokenFarmAccountService;
 
     public HandleEventService(@Autowired LiquidityAccountService liquidityAccountService,
-                              @Autowired TokenService tokenService) {
+                              @Autowired TokenService tokenService,
+                              @Autowired LiquidityTokenService liquidityTokenService,
+                              @Autowired LiquidityTokenFarmAccountService liquidityTokenFarmAccountService) {
         this.liquidityAccountService = liquidityAccountService;
         this.tokenService = tokenService;
+        this.liquidityTokenService = liquidityTokenService;
+        this.liquidityTokenFarmAccountService = liquidityTokenFarmAccountService;
     }
 
     private static TypeTagStruct tryParseTypeTagStruct(String s) {
         // TypeTag example:
-        // 0x00000000000000000000000000000001::Oracle::OracleUpdateEvent<0x07fa08a855753f0ff7292fdcbe871216::YFI_USD::YFI_USD, u128>
+        // 0x00000000000000000000000000000001::Oracle::OracleUpdateEvent<0x598b8cbfd4536ecbe88aa1cfaffa7a62::YFI_USD::YFI_USD, u128>
         String[] fs = s.split("::", 3);
         if (fs.length != 3) {
             return null;
@@ -52,7 +56,7 @@ public class HandleEventService {
         return t;
     }
 
-    // token_code={addr=0x07fa08a855753f0ff7292fdcbe871216, module_name=0x426f74, name=0x426f74}
+    // token_code={addr=0x598b8cbfd4536ecbe88aa1cfaffa7a62, module_name=0x426f74, name=0x426f74}
     public static StructType tokenCodeMapToStructType(Map<String, Object> m) {
         String addr = m.get("addr").toString();
         String moduleName = m.get("module_name").toString();

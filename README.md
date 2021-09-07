@@ -46,7 +46,7 @@ http://localhost:8600/v1/starswap/liquidityPools/Bot:Ddd
 取得某个账号地址注入的流动性列表：
 
 ```
-http://localhost:8600/v1/starswap/liquidityAccounts?accountAddress=0x07fa08a855753f0ff7292fdcbe871216
+http://localhost:8600/v1/starswap/liquidityAccounts?accountAddress=0x598b8cbfd4536ecbe88aa1cfaffa7a62
 ```
 
 取得 Farm 的列表：
@@ -64,7 +64,7 @@ http://localhost:8600/v1/starswap/lpTokenFarms/Bot:Ddd
 取得某个账号地址抵押的 Farm 的列表：
 
 ```
-http://localhost:8600/v1/starswap/lpTokenFarmAccounts?accountAddress=0x07fa08a855753f0ff7292fdcbe871216
+http://localhost:8600/v1/starswap/lpTokenFarmAccounts?accountAddress=0x598b8cbfd4536ecbe88aa1cfaffa7a62
 ```
 
 更多 API 见 Swagger UI：

@@ -53,9 +53,6 @@ class StarswapApiApplicationTests {
 
     @Test
     void contextLoads() {
-        BigDecimal exchangeRate = onChainService.getToUsdExchangeRate("0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot");
-        System.out.println(exchangeRate);
-        if (true) return;
 
         addTestNodeHeartbeats();
         //if (true) return;
@@ -76,6 +73,11 @@ class StarswapApiApplicationTests {
         tryRun(this::addTestLiquidityTokenFarm);
 
         tryRun(this::addTestFarmAccount);
+
+        //
+        BigDecimal exchangeRate = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot");
+        System.out.println(exchangeRate);
+        //if (true) return;
 
         // test queries...
         System.out.println(liquidityTokenService.findOneByTokenIdPair("Bot", "Ddd"));
@@ -142,10 +144,10 @@ class StarswapApiApplicationTests {
     private void addTestFarmAccount() {
         LiquidityTokenFarmAccount farmAccount = new LiquidityTokenFarmAccount();//  values (
         farmAccount.setFarmAccountId(new LiquidityTokenFarmAccountId(
-                "0x07fa08a855753f0ff7292fdcbe871216", new LiquidityTokenFarmId(
-                new LiquidityTokenId("Bot", "Ddd", "0x07fa08a855753f0ff7292fdcbe871216"),
-                "0x07fa08a855753f0ff7292fdcbe871216")));//  '0x07fa08a855753f0ff7292fdcbe871216',
-        //  '0x07fa08a855753f0ff7292fdcbe871216',
+                "0x598b8cbfd4536ecbe88aa1cfaffa7a62", new LiquidityTokenFarmId(
+                new LiquidityTokenId("Bot", "Ddd", "0x598b8cbfd4536ecbe88aa1cfaffa7a62"),
+                "0x598b8cbfd4536ecbe88aa1cfaffa7a62")));//  '0x598b8cbfd4536ecbe88aa1cfaffa7a62',
+        //  '0x598b8cbfd4536ecbe88aa1cfaffa7a62',
         //  'Bot',
         //  'Ddd',
         farmAccount.setCreatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
@@ -182,8 +184,8 @@ class StarswapApiApplicationTests {
 
         LiquidityTokenFarm liquidityTokenFarm = new LiquidityTokenFarm();
         liquidityTokenFarm.setLiquidityTokenFarmId(new LiquidityTokenFarmId(
-                new LiquidityTokenId("Bot", "Ddd", "0x07fa08a855753f0ff7292fdcbe871216"),
-                "0x07fa08a855753f0ff7292fdcbe871216"));
+                new LiquidityTokenId("Bot", "Ddd", "0x598b8cbfd4536ecbe88aa1cfaffa7a62"),
+                "0x598b8cbfd4536ecbe88aa1cfaffa7a62"));
         liquidityTokenFarm.setCreatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
         liquidityTokenFarm.setCreatedBy("admin");//  'admin',
         liquidityTokenFarm.setDeactived(false);//  false,
@@ -214,10 +216,10 @@ class StarswapApiApplicationTests {
         //  )
         LiquidityAccount liquidityAccount = new LiquidityAccount();//  values (
         liquidityAccount.setLiquidityAccountId(new LiquidityAccountId(
-                "0x07fa08a855753f0ff7292fdcbe871216", new LiquidityPoolId(
-                new LiquidityTokenId("Bot", "Ddd", "0x07fa08a855753f0ff7292fdcbe871216"),
-                "0x07fa08a855753f0ff7292fdcbe871216")));//  '0x07fa08a855753f0ff7292fdcbe871216',
-        //  '0x07fa08a855753f0ff7292fdcbe871216',
+                "0x598b8cbfd4536ecbe88aa1cfaffa7a62", new LiquidityPoolId(
+                new LiquidityTokenId("Bot", "Ddd", "0x598b8cbfd4536ecbe88aa1cfaffa7a62"),
+                "0x598b8cbfd4536ecbe88aa1cfaffa7a62")));//  '0x598b8cbfd4536ecbe88aa1cfaffa7a62',
+        //  '0x598b8cbfd4536ecbe88aa1cfaffa7a62',
         //  'Bot',
         //  'Ddd',
         liquidityAccount.setCreatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
@@ -249,8 +251,8 @@ class StarswapApiApplicationTests {
         //  values (
         LiquidityPool liquidityPool = new LiquidityPool();
         liquidityPool.setLiquidityPoolId(new LiquidityPoolId(
-                new LiquidityTokenId("Bot", "Ddd", "0x07fa08a855753f0ff7292fdcbe871216"),
-                "0x07fa08a855753f0ff7292fdcbe871216"));
+                new LiquidityTokenId("Bot", "Ddd", "0x598b8cbfd4536ecbe88aa1cfaffa7a62"),
+                "0x598b8cbfd4536ecbe88aa1cfaffa7a62"));
         liquidityPool.setCreatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
         liquidityPool.setCreatedBy("admin");//  'admin',
         liquidityPool.setDeactived(false);//  false,
@@ -288,18 +290,18 @@ class StarswapApiApplicationTests {
         //  `updated_at`,
         //  `updated_by`)
         LiquidityToken botDdd = new LiquidityToken();
-        botDdd.setLiquidityTokenId(new LiquidityTokenId(tokenXId, tokenYId, "0x07fa08a855753f0ff7292fdcbe871216"));//  values ( 'Bot', 'Ddd',
+        botDdd.setLiquidityTokenId(new LiquidityTokenId(tokenXId, tokenYId, "0x598b8cbfd4536ecbe88aa1cfaffa7a62"));//  values ( 'Bot', 'Ddd',
         botDdd.setCreatedAt(System.currentTimeMillis());//  UNIX_TIMESTAMP(now()),
         botDdd.setCreatedBy("admin");//  'admin',
         botDdd.setDeactived(false);//  false,
         botDdd.setDescription(tokenXId + "<->" + tokenYId);
         botDdd.setSequenceNumber(99);
-        botDdd.setTokenXStructType(new StructType("0x07fa08a855753f0ff7292fdcbe871216", "Bot", "Bot"));
-        botDdd.setTokenYStructType(new StructType("0x07fa08a855753f0ff7292fdcbe871216", "Ddd", "Ddd"));
-        //  '0x07fa08a855753f0ff7292fdcbe871216',
+        botDdd.setTokenXStructType(new StructType("0x598b8cbfd4536ecbe88aa1cfaffa7a62", "Bot", "Bot"));
+        botDdd.setTokenYStructType(new StructType("0x598b8cbfd4536ecbe88aa1cfaffa7a62", "Ddd", "Ddd"));
+        //  '0x598b8cbfd4536ecbe88aa1cfaffa7a62',
         //  'Bot',
         //  'Bot',
-        //  '0x07fa08a855753f0ff7292fdcbe871216',
+        //  '0x598b8cbfd4536ecbe88aa1cfaffa7a62',
         //  'Ddd',
         //  'Ddd',
         botDdd.setUpdatedAt(System.currentTimeMillis());//  UNIX_TIMESTAMP(now()),
@@ -331,7 +333,7 @@ class StarswapApiApplicationTests {
         ddd.setDescription(tokenId);//  'Ddd',
         ddd.setIconUrl("http://starcoin.org/unknown-token-icon.jpg");
         ddd.setSequenceNumber(seqNumber);//  99,
-        ddd.setTokenStructType(new StructType("0x07fa08a855753f0ff7292fdcbe871216",
+        ddd.setTokenStructType(new StructType("0x598b8cbfd4536ecbe88aa1cfaffa7a62",
                 tokenId,
                 tokenId));
         ddd.setUpdatedAt(System.currentTimeMillis());//  UNIX_TIMESTAMP(now()),

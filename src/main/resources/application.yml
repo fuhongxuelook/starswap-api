@@ -41,7 +41,7 @@ spring:
     # 设置 spring.flyway.baseline-on-migrate 为 true 后，flyway 将在需要 baseline 的时候, 自动执行一次 baseline。
     baselineVersion: 0.0.1
     cleanDisabled: true # flyway 的 clean 命令会删除指定 schema 下的所有 table，应该禁掉
-    enabled: true # 启用或禁用 flyway
+    enabled: false # 启用或禁用 flyway
     locations: classpath:db/migration # 设定 SQL 脚本的目录，比如取值为 classpath:db/migration,filesystem:/sql-migrations
     outOfOrder: false # 生产环境关闭 outOfOrder
     #spring.flyway.encoding=
@@ -62,10 +62,10 @@ starcoin:
   network: ${STARCOIN_NETWORK}
   json-rpc-url: ${STARCOIN_JSON_RPC_URL}
   event-filter:
-    from-address: "0x07fa08a855753f0ff7292fdcbe871216"
-    add-liquidity-event-type-tag: "0x07fa08a855753f0ff7292fdcbe871216::TokenSwap::AddLiquidityEvent"
-    add-farm-event-type-tag: "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::AddFarmEvent"
-    stake-event-type-tag: "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::StakeEvent"
+    from-address: "0x598b8cbfd4536ecbe88aa1cfaffa7a62"
+    add-liquidity-event-type-tag: "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwap::AddLiquidityEvent"
+    add-farm-event-type-tag: "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarm::AddFarmEvent"
+    stake-event-type-tag: "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarm::StakeEvent"
 
 #elasticsearch:
 #  host: ${STARCOIN_ES_URL}

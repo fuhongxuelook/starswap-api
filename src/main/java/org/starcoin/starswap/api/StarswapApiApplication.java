@@ -30,13 +30,13 @@ public class StarswapApiApplication {
     private HandleEventService handleEventService;
 
     @Value("${starcoin.event-filter.from-address}")
-    private String fromAddress;// = "0x07fa08a855753f0ff7292fdcbe871216";
+    private String fromAddress;// = "0x598b8cbfd4536ecbe88aa1cfaffa7a62";
     @Value("${starcoin.event-filter.add-liquidity-event-type-tag}")
-    private String addLiquidityEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwap::AddLiquidityEvent";
+    private String addLiquidityEventTypeTag;// = "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwap::AddLiquidityEvent";
     @Value("${starcoin.event-filter.add-farm-event-type-tag}")
-    private String addFarmEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::AddFarmEvent";
+    private String addFarmEventTypeTag;// = "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarm::AddFarmEvent";
     @Value("${starcoin.event-filter.stake-event-type-tag}")
-    private String stakeEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::StakeEvent";
+    private String stakeEventTypeTag;// = "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarm::StakeEvent";
 
     public static void main(String[] args) {
         SpringApplication.run(StarswapApiApplication.class, args);
