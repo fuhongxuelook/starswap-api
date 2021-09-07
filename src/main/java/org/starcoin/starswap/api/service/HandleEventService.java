@@ -91,6 +91,7 @@ public class HandleEventService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void handleStakeEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
         // decodeEventData={
         // x_token_code={addr=0x598b8cbfd4536ecbe88aa1cfaffa7a62, module_name=0x426f74, name=0x426f74},
@@ -128,13 +129,37 @@ public class HandleEventService {
         liquidityTokenFarmAccountService.activeFarmAccount(farmAccountId);
     }
 
+    @SuppressWarnings("unchecked")
     private void handleAddFarmEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
-        System.out.println(event);
-        if (true) return;//todo
-        String farmAddress = null;  //todo
-        String tokenXId = null;//todo
-        String tokenYId = null;//todo
-        String liquidityTokenAddress = null;//todo
+        //System.out.println(event);
+        //decodeEventData={
+        // x_token_code={addr=0x598b8cbfd4536ecbe88aa1cfaffa7a62, module_name=0x55736478, name=0x55736478},
+        // y_token_code={addr=0x598b8cbfd4536ecbe88aa1cfaffa7a62, module_name=0x426f74, name=0x426f74},
+        // signer=0x598b8cbfd4536ecbe88aa1cfaffa7a62,
+        // admin=0x598b8cbfd4536ecbe88aa1cfaffa7a62
+        // }
+        StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
+        StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
+        String xTokenTypeAddress = xTokenType.getAddress();
+        String xTokenTypeModule = xTokenType.getModule();
+        String xTokenTypeName = xTokenType.getName();
+        String yTokenTypeAddress = yTokenType.getAddress();
+        String yTokenTypeModule = yTokenType.getModule();
+        String yTokenTypeName = yTokenType.getName();
+        Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
+        if (xToken == null) {
+            LOG.info("Cannot get token by struct type.");
+            return;
+        }
+        Token yToken = tokenService.getTokenByStructType(yTokenTypeAddress, yTokenTypeModule, yTokenTypeName);
+        if (yToken == null) {
+            LOG.info("Cannot get token by struct type.");
+            return;
+        }
+        String farmAddress = eventFromAddress;// todo Farm 池子的地址就是 event 的来源地址？
+        String tokenXId = xToken.getTokenId();
+        String tokenYId = yToken.getTokenId();
+        String liquidityTokenAddress = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenYId).getLiquidityTokenId().getLiquidityTokenAddress();//todo 通过查询得到 LiquidityToken 的地址？
         LiquidityTokenId liquidityTokenId = new LiquidityTokenId(tokenXId, tokenYId, liquidityTokenAddress);
         LiquidityTokenFarmId liquidityTokenFarmId = new LiquidityTokenFarmId(liquidityTokenId, farmAddress);
 

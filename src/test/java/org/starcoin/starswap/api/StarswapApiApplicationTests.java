@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.starcoin.starswap.api.data.model.*;
 import org.starcoin.starswap.api.data.repo.*;
-import org.starcoin.starswap.api.service.LiquidityPoolService;
-import org.starcoin.starswap.api.service.LiquidityTokenService;
-import org.starcoin.starswap.api.service.NodeHeartbeatService;
-import org.starcoin.starswap.api.service.OnChainService;
+import org.starcoin.starswap.api.service.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -51,8 +48,13 @@ class StarswapApiApplicationTests {
     @Autowired
     OnChainService onChainService;
 
+    @Autowired
+    PullingEventTaskService pullingEventTaskService;
+
     @Test
     void contextLoads() {
+        pullingEventTaskService.updatePullingEventTask(BigInteger.valueOf(42), BigInteger.valueOf(42));
+        //if (true) return;
 
         addTestNodeHeartbeats();
         //if (true) return;

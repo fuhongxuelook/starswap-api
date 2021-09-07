@@ -7,6 +7,7 @@ import org.starcoin.starswap.api.data.repo.PullingEventTaskRepository;
 import org.starcoin.utils.BeanUtils2;
 
 import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,26 @@ public class PullingEventTaskService {
         targetEventTask.setCreatedBy("ADMIN");
         targetEventTask.setUpdatedAt(targetEventTask.getCreatedAt());
         targetEventTask.setUpdatedBy(targetEventTask.getCreatedBy());
+        pullingEventTaskRepository.save(targetEventTask);
+    }
+
+    @Transactional
+    public void updatePullingEventTask(BigInteger fromBlockNumber, BigInteger toBlockNumber) {
+        PullingEventTask targetEventTask = pullingEventTaskRepository.findById(fromBlockNumber).orElse(null);
+        if (targetEventTask == null) {
+            targetEventTask = new PullingEventTask();
+            targetEventTask.setFromBlockNumber(fromBlockNumber);
+            targetEventTask.setToBlockNumber(toBlockNumber);
+            targetEventTask.setCreatedAt(System.currentTimeMillis());
+            targetEventTask.setCreatedBy("ADMIN");
+            targetEventTask.setUpdatedAt(targetEventTask.getCreatedAt());
+            targetEventTask.setUpdatedBy(targetEventTask.getCreatedBy());
+        } else {
+            targetEventTask.setToBlockNumber(toBlockNumber);
+            targetEventTask.setUpdatedAt(System.currentTimeMillis());
+            targetEventTask.setUpdatedBy("ADMIN");
+            targetEventTask.resetStatus();
+        }
         pullingEventTaskRepository.save(targetEventTask);
     }
 

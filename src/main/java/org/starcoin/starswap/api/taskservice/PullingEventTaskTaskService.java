@@ -14,10 +14,7 @@ import org.starcoin.starswap.api.utils.JsonRpcClient;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.starcoin.starswap.api.data.model.PullingEventTask.PULLING_BLOCK_MAX_COUNT;
 
@@ -92,9 +89,10 @@ public class PullingEventTaskTaskService {
 
     private Map<String, Object> createEventFilterMap(BigInteger fromBlockNumber, BigInteger toBlockNumber) {
         Map<String, Object> eventFilter = new HashMap<>();
-        eventFilter.put("addr", fromAddress);
+        // params: `from_block`, `to_block`, `event_keys`, `addrs`, `type_tags`, `limit`.
+        eventFilter.put("addrs", Collections.singletonList(fromAddress));
         eventFilter.put("type_tags", Arrays.asList(addLiquidityEventTypeTag, addFarmEventTypeTag, stakeEventTypeTag));
-        eventFilter.put("decode", true);
+        //eventFilter.put("decode", true);
         eventFilter.put("from_block", fromBlockNumber);
         eventFilter.put("to_block", toBlockNumber);
         return eventFilter;

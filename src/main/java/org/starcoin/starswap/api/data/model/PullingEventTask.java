@@ -123,4 +123,7 @@ public class PullingEventTask {
         this.version = version;
     }
 
+    public void resetStatus() {
+        this.status = STATUS_CREATED;
+    }
 }
