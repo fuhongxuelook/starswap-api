@@ -31,7 +31,7 @@ public class Token {
     @Column(length = 1000, nullable = false)
     private String iconUrl;
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = 1000, nullable = true)
     private String description;
 
 //    @Column(length = 1000, nullable = false)

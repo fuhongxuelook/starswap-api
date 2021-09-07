@@ -23,13 +23,13 @@ public class LiquidityTokenId implements Serializable {
     }
 
     public LiquidityTokenId(String tokenXId, String tokenYId, String liquidityTokenAddress) {
-        this.tokenXId = tokenXId;
-        this.tokenYId = tokenYId;
+        TokenIdPair tokenIdPair = new TokenIdPair(tokenXId, tokenYId);
+        this.tokenXId = tokenIdPair.tokenXId();
+        this.tokenYId = tokenIdPair.tokenYId();
         this.liquidityTokenAddress = liquidityTokenAddress;
     }
 
     public String getLiquidityTokenAddress() {
-
         return liquidityTokenAddress;
     }
 

@@ -29,7 +29,7 @@ public class LiquidityToken {
     @AttributeOverride(name = "name", column = @Column(name = "token_y_struct_name", nullable = false))
     private StructType tokenYStructType;
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = 1000, nullable = true)
     private String description;
 
 //    @Column(length = 1000, nullable = false)

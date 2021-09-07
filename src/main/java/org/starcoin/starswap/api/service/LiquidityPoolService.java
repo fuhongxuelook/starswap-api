@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.starcoin.starswap.api.data.model.LiquidityPool;
 import org.starcoin.starswap.api.data.model.LiquidityPoolId;
+import org.starcoin.starswap.api.data.model.TokenIdPair;
 import org.starcoin.starswap.api.data.repo.LiquidityPoolRepository;
 
 import java.util.List;
@@ -31,7 +32,9 @@ public class LiquidityPoolService {
     }
 
     public LiquidityPool findOneByTokenIdPair(String tokenXId, String tokenYId) {
-        List<LiquidityPool> liquidityPools = liquidityPoolRepository.findByLiquidityPoolIdTokenXIdAndLiquidityPoolIdTokenYId(tokenXId, tokenYId);
+        TokenIdPair tokenIdPair = new TokenIdPair(tokenXId, tokenYId);
+        List<LiquidityPool> liquidityPools = liquidityPoolRepository.findByLiquidityPoolIdTokenXIdAndLiquidityPoolIdTokenYId(
+                tokenIdPair.tokenXId(), tokenIdPair.tokenYId());
         if (liquidityPools.isEmpty()) {
             return null;
         }

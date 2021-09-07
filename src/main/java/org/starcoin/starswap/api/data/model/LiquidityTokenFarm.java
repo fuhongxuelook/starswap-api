@@ -26,7 +26,7 @@ public class LiquidityTokenFarm {
     @AttributeOverride(name = "farmAddress", column = @Column(name = "farm_address", length = 34, nullable = false))
     private LiquidityTokenFarmId liquidityTokenFarmId;
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = 1000, nullable = true)
     private String description;
 
 //    @Column(length = 1000, nullable = false)

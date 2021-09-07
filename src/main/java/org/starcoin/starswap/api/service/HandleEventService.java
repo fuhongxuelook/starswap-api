@@ -1,13 +1,18 @@
 package org.starcoin.starswap.api.service;
 
+import com.novi.serde.DeserializationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
 import org.starcoin.starswap.api.data.model.*;
+import org.starcoin.starswap.types.AddFarmEvent;
+import org.starcoin.starswap.types.AddLiquidityEvent;
+import org.starcoin.starswap.types.StakeEvent;
 import org.starcoin.utils.CommonUtils;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -100,15 +105,36 @@ public class HandleEventService {
         // amount=1000,
         // admin=0x598b8cbfd4536ecbe88aa1cfaffa7a62
         // }
-        StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
-        StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
-        String xTokenTypeAddress = xTokenType.getAddress();
-        String xTokenTypeModule = xTokenType.getModule();
-        String xTokenTypeName = xTokenType.getName();
-        String yTokenTypeAddress = yTokenType.getAddress();
-        String yTokenTypeModule = yTokenType.getModule();
-        String yTokenTypeName = yTokenType.getName();
-        String accountAddress = event.getDecodeEventData().get("signer").toString();
+//        StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
+//        StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
+//        String xTokenTypeAddress = xTokenType.getAddress();
+//        String xTokenTypeModule = xTokenType.getModule();
+//        String xTokenTypeName = xTokenType.getName();
+//        String yTokenTypeAddress = yTokenType.getAddress();
+//        String yTokenTypeModule = yTokenType.getModule();
+//        String yTokenTypeName = yTokenType.getName();
+//        String accountAddress = event.getDecodeEventData().get("signer").toString();
+
+        // /////////////////////////////////////
+        String eventData = event.getData();
+        StakeEvent stakeEvent;
+        try {
+            stakeEvent = StakeEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
+        } catch (DeserializationError deserializationError) {
+            //deserializationError.printStackTrace();
+            LOG.error("StakeEvent.bcsDeserialize error.", deserializationError);
+            //todo ???
+            return;
+        }
+        //System.out.println(addLiquidityEvent);
+        String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(stakeEvent.x_token_code.address.value);
+        String xTokenTypeModule = stakeEvent.x_token_code.module;
+        String xTokenTypeName = stakeEvent.x_token_code.name;
+        String yTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(stakeEvent.y_token_code.address.value);
+        String yTokenTypeModule = stakeEvent.y_token_code.module;
+        String yTokenTypeName = stakeEvent.y_token_code.name;
+        String accountAddress = CommonUtils.byteListToHexWithPrefix(stakeEvent.signer.value);
+
         Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
         if (xToken == null) {
             LOG.info("Cannot get token by struct type.");
@@ -138,14 +164,34 @@ public class HandleEventService {
         // signer=0x598b8cbfd4536ecbe88aa1cfaffa7a62,
         // admin=0x598b8cbfd4536ecbe88aa1cfaffa7a62
         // }
-        StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
-        StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
-        String xTokenTypeAddress = xTokenType.getAddress();
-        String xTokenTypeModule = xTokenType.getModule();
-        String xTokenTypeName = xTokenType.getName();
-        String yTokenTypeAddress = yTokenType.getAddress();
-        String yTokenTypeModule = yTokenType.getModule();
-        String yTokenTypeName = yTokenType.getName();
+        //StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
+        //StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
+//        String xTokenTypeAddress = xTokenType.getAddress();
+//        String xTokenTypeModule = xTokenType.getModule();
+//        String xTokenTypeName = xTokenType.getName();
+//        String yTokenTypeAddress = yTokenType.getAddress();
+//        String yTokenTypeModule = yTokenType.getModule();
+//        String yTokenTypeName = yTokenType.getName();
+
+        String eventData = event.getData();
+        AddFarmEvent addFarmEvent;
+        try {
+            addFarmEvent = AddFarmEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
+        } catch (DeserializationError deserializationError) {
+            //deserializationError.printStackTrace();
+            LOG.error("AddFarmEvent.bcsDeserialize error.", deserializationError);
+            //todo ???
+            return;
+        }
+        //System.out.println(addLiquidityEvent);
+        String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addFarmEvent.x_token_code.address.value);
+        String xTokenTypeModule = addFarmEvent.x_token_code.module;
+        String xTokenTypeName = addFarmEvent.x_token_code.name;
+        String yTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addFarmEvent.y_token_code.address.value);
+        String yTokenTypeModule = addFarmEvent.y_token_code.module;
+        String yTokenTypeName = addFarmEvent.y_token_code.name;
+        //String accountAddress = CommonUtils.byteListToHexWithPrefix(addFarmEvent.signer.value);
+
         Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
         if (xToken == null) {
             LOG.info("Cannot get token by struct type.");
@@ -170,40 +216,39 @@ public class HandleEventService {
 
     @SuppressWarnings("unchecked")
     private void handleAddLiquidityEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
-        String eventStructAddress = eventTypeTagStruct.getAddress();
-        //System.out.println(eventStructAddress);
-        String liquidityTokenAddress = eventStructAddress; // todo LiquidityToken 的地址就是事件的结构的地址？
-        String liquidityPollAddress = eventFromAddress;// todo 池子的地址就是 event 的来源地址？
-        // /////////////////////////////////////
-        //String eventData = event.getData();
-        //AddLiquidityEvent addLiquidityEvent = null;
-//        try {
-//            addLiquidityEvent = AddLiquidityEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
-//        } catch (DeserializationError deserializationError) {
-//            //deserializationError.printStackTrace();
-//            LOG.error("AddLiquidityEvent.bcsDeserialize error.", deserializationError);
-//            return;
-//        }
+        String eventData = event.getData();
+        AddLiquidityEvent addLiquidityEvent;
+        try {
+            addLiquidityEvent = AddLiquidityEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
+        } catch (DeserializationError deserializationError) {
+            //deserializationError.printStackTrace();
+            LOG.error("AddLiquidityEvent.bcsDeserialize error.", deserializationError);
+            //todo ???
+            return;
+        }
         //System.out.println(addLiquidityEvent);
-//        String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.x_token_code.address.value);
-//        String xTokenTypeModule = addLiquidityEvent.x_token_code.module;
-//        String xTokenTypeName = addLiquidityEvent.x_token_code.name;
-//        String yTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.y_token_code.address.value);
-//        String yTokenTypeModule = addLiquidityEvent.y_token_code.module;
-//        String yTokenTypeName = addLiquidityEvent.y_token_code.name;
-//        String accountAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.signer.value);
-//        BigInteger liquidity = addLiquidityEvent.liquidity;
-        StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
-        StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
+        String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.x_token_code.address.value);
+        String xTokenTypeModule = addLiquidityEvent.x_token_code.module;
+        String xTokenTypeName = addLiquidityEvent.x_token_code.name;
+        String yTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.y_token_code.address.value);
+        String yTokenTypeModule = addLiquidityEvent.y_token_code.module;
+        String yTokenTypeName = addLiquidityEvent.y_token_code.name;
+        String accountAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.signer.value);
+        BigInteger liquidity = addLiquidityEvent.liquidity;
 
-        String xTokenTypeAddress = xTokenType.getAddress();
-        String xTokenTypeModule = xTokenType.getModule();
-        String xTokenTypeName = xTokenType.getName();
-        String yTokenTypeAddress = yTokenType.getAddress();
-        String yTokenTypeModule = yTokenType.getModule();
-        String yTokenTypeName = yTokenType.getName();
-        String accountAddress = event.getDecodeEventData().get("signer").toString();
-        //BigInteger liquidity = new BigInteger(event.getDecodeEventData().get("liquidity").toString());
+        // /////////////////////////////////////
+//        StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
+//        StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
+//        String accountAddress = event.getDecodeEventData().get("signer").toString();
+//        String xTokenTypeAddress = xTokenType.getAddress();
+//        String xTokenTypeModule = xTokenType.getModule();
+//        String xTokenTypeName = xTokenType.getName();
+//        String yTokenTypeAddress = yTokenType.getAddress();
+//        String yTokenTypeModule = yTokenType.getModule();
+//        String yTokenTypeName = yTokenType.getName();
+//        BigInteger liquidity = new BigInteger(event.getDecodeEventData().get("liquidity").toString());
+        // /////////////////////////////////////
+
         Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
         if (xToken == null) {
             LOG.info("Cannot get token by struct type.");
@@ -214,6 +259,10 @@ public class HandleEventService {
             LOG.info("Cannot get token by struct type.");
             return;
         }
+        String eventStructAddress = eventTypeTagStruct.getAddress();
+        //System.out.println(eventStructAddress);
+        String liquidityTokenAddress = eventStructAddress; // todo LiquidityToken 的地址就是事件的结构的地址？
+        String liquidityPollAddress = eventFromAddress;// todo 池子的地址就是 event 的来源地址？
         LiquidityAccountId liquidityAccountId = new LiquidityAccountId(accountAddress,
                 new LiquidityPoolId(
                         new LiquidityTokenId(xToken.getTokenId(), yToken.getTokenId(), liquidityTokenAddress),

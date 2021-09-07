@@ -27,7 +27,7 @@ public class LiquidityPool {
     @AttributeOverride(name = "poolAddress", column = @Column(name = "pool_address", length = 34, nullable = false))
     private LiquidityPoolId liquidityPoolId;
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = 1000, nullable = true)
     private String description;
 
 //    @Column(length = 1000, nullable = false)

@@ -33,7 +33,7 @@ public class StarcoinEventSubscriber {
         Map<String, Object> eventFilter = new HashMap<>();
         eventFilter.put("addr", fromAddress);
         eventFilter.put("type_tags", Arrays.asList(addLiquidityEventTypeTag, addFarmEventTypeTag, stakeEventTypeTag));
-        eventFilter.put("decode", true);
+        //eventFilter.put("decode", true);
         return eventFilter;
     }
 
