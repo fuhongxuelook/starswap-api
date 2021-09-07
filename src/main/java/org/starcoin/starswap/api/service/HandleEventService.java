@@ -1,20 +1,16 @@
 package org.starcoin.starswap.api.service;
 
-import com.novi.serde.DeserializationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
-import org.starcoin.starswap.api.data.model.LiquidityAccountId;
-import org.starcoin.starswap.api.data.model.LiquidityPoolId;
-import org.starcoin.starswap.api.data.model.LiquidityTokenId;
-import org.starcoin.starswap.api.data.model.Token;
-import org.starcoin.starswap.types.AddLiquidityEvent;
+import org.starcoin.starswap.api.data.model.*;
 import org.starcoin.utils.CommonUtils;
 
-import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class HandleEventService {
@@ -31,14 +27,14 @@ public class HandleEventService {
         this.tokenService = tokenService;
     }
 
-    private static StructTag tryParseStructTag(String s) {
+    private static TypeTagStruct tryParseTypeTagStruct(String s) {
         // TypeTag example:
         // 0x00000000000000000000000000000001::Oracle::OracleUpdateEvent<0x07fa08a855753f0ff7292fdcbe871216::YFI_USD::YFI_USD, u128>
         String[] fs = s.split("::", 3);
         if (fs.length != 3) {
             return null;
         }
-        StructTag t = new StructTag();
+        TypeTagStruct t = new TypeTagStruct();
         t.setAddress(fs[0]);
         t.setModule(fs[1]);
         int idxOfLT = fs[2].indexOf("<");
@@ -52,38 +48,82 @@ public class HandleEventService {
         return t;
     }
 
+    // token_code={addr=0x07fa08a855753f0ff7292fdcbe871216, module_name=0x426f74, name=0x426f74}
+    public static StructType tokenCodeMapToStructType(Map<String, Object> m) {
+        String addr = m.get("addr").toString();
+        String moduleName = m.get("module_name").toString();
+        String name = m.get("name").toString();
+        if (moduleName.startsWith("0x")) {
+            moduleName = new String(CommonUtils.hexToByteArray(moduleName), StandardCharsets.UTF_8);
+        }
+        if (name.startsWith("0x")) {
+            name = new String(CommonUtils.hexToByteArray(name), StandardCharsets.UTF_8);
+        }
+        return new StructType(addr, moduleName, name);
+    }
+
     public void handleEvent(Event event, String eventFromAddress) {
-        StructTag eventStructTag = tryParseStructTag(event.getTypeTag());
-        if (eventStructTag == null) {
+        TypeTagStruct eventTypeTagStruct = tryParseTypeTagStruct(event.getTypeTag());
+        if (eventTypeTagStruct == null) {
             return;
         }
         // todo 这样过滤事件？
-        if (!"AddLiquidityEvent".equals(eventStructTag.getName())) {
-            return;
+        if ("TokenSwap".equals(eventTypeTagStruct.getModule()) && "AddLiquidityEvent".equals(eventTypeTagStruct.getName())) {
+            handleAddLiquidityEvent(event, eventFromAddress, eventTypeTagStruct);
+        } else if ("TokenSwapFarm".equals(eventTypeTagStruct.getModule()) && "AddFarmEvent".equals(eventTypeTagStruct.getName())) {
+            handleAddFarmEvent(event, eventFromAddress, eventTypeTagStruct);
+        } else if ("TokenSwapFarm".equals(eventTypeTagStruct.getModule()) && "StakeEvent".equals(eventTypeTagStruct.getName())) {
+            handleStakeEvent(event, eventFromAddress, eventTypeTagStruct);
+        } else {
+            throw new RuntimeException("Unknown event type: " + event);
         }
-        String eventStructAddress = eventStructTag.getAddress();
+    }
+
+    private void handleStakeEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
+        System.out.println(event);
+        //todo
+    }
+
+    private void handleAddFarmEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
+        System.out.println(event);
+        //todo
+    }
+
+    private void handleAddLiquidityEvent(Event event, String eventFromAddress, TypeTagStruct eventTypeTagStruct) {
+        String eventStructAddress = eventTypeTagStruct.getAddress();
         //System.out.println(eventStructAddress);
-        String liquidityTokenAddress = eventStructAddress; // todo 事件的结构的地址就是 LiquidityToken 的地址？
-        String liquidityPollAddress = eventFromAddress;//eventStructAddress;
+        String liquidityTokenAddress = eventStructAddress; // todo LiquidityToken 的地址就是事件的结构的地址？
+        String liquidityPollAddress = eventFromAddress;// todo 池子的地址就是 event 的来源地址？
         // /////////////////////////////////////
-        String eventData = event.getData();
-        AddLiquidityEvent addLiquidityEvent = null;
-        try {
-            addLiquidityEvent = AddLiquidityEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
-        } catch (DeserializationError deserializationError) {
-            //deserializationError.printStackTrace();
-            LOG.error("AddLiquidityEvent.bcsDeserialize error.", deserializationError);
-            return;
-        }
+        //String eventData = event.getData();
+        //AddLiquidityEvent addLiquidityEvent = null;
+//        try {
+//            addLiquidityEvent = AddLiquidityEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
+//        } catch (DeserializationError deserializationError) {
+//            //deserializationError.printStackTrace();
+//            LOG.error("AddLiquidityEvent.bcsDeserialize error.", deserializationError);
+//            return;
+//        }
         //System.out.println(addLiquidityEvent);
-        String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.x_token_code.address.value);
-        String xTokenTypeModule = addLiquidityEvent.x_token_code.module;
-        String xTokenTypeName = addLiquidityEvent.x_token_code.name;
-        String yTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.y_token_code.address.value);
-        String yTokenTypeModule = addLiquidityEvent.y_token_code.module;
-        String yTokenTypeName = addLiquidityEvent.y_token_code.name;
-        String accountAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.signer.value);
-        BigInteger liquidity = addLiquidityEvent.liquidity;
+//        String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.x_token_code.address.value);
+//        String xTokenTypeModule = addLiquidityEvent.x_token_code.module;
+//        String xTokenTypeName = addLiquidityEvent.x_token_code.name;
+//        String yTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.y_token_code.address.value);
+//        String yTokenTypeModule = addLiquidityEvent.y_token_code.module;
+//        String yTokenTypeName = addLiquidityEvent.y_token_code.name;
+//        String accountAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.signer.value);
+//        BigInteger liquidity = addLiquidityEvent.liquidity;
+        StructType xTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("x_token_code"));
+        StructType yTokenType = tokenCodeMapToStructType((Map<String, Object>) event.getDecodeEventData().get("y_token_code"));
+
+        String xTokenTypeAddress = xTokenType.getAddress();
+        String xTokenTypeModule = xTokenType.getModule();
+        String xTokenTypeName = xTokenType.getName();
+        String yTokenTypeAddress = yTokenType.getAddress();
+        String yTokenTypeModule = yTokenType.getModule();
+        String yTokenTypeName = yTokenType.getName();
+        String accountAddress = event.getDecodeEventData().get("signer").toString();
+        //BigInteger liquidity = new BigInteger(event.getDecodeEventData().get("liquidity").toString());
         Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
         if (xToken == null) {
             LOG.info("Cannot get token by struct type.");
@@ -101,7 +141,7 @@ public class HandleEventService {
         this.liquidityAccountService.activeLiquidityAccount(liquidityAccountId);
     }
 
-    public static class StructTag {
+    public static class TypeTagStruct {
         /*
               "type_tag": {
               "Struct": {

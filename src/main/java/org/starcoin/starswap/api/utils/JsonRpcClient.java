@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 public class JsonRpcClient {
 
@@ -25,8 +26,8 @@ public class JsonRpcClient {
         return jsonRpcUrl;
     }
 
-    public Event[] getEvents(BigInteger fromBlockNumber, BigInteger toBlockNumber) {
-        return JsonRpcUtils.getEvents(this.jsonRpcSession, fromBlockNumber, toBlockNumber);
+    public Event[] getEvents(Map<String, Object> eventFilter) {
+        return JsonRpcUtils.getEvents(this.jsonRpcSession, eventFilter);
     }
 
     public BigInteger tokenSwapFarmQueryTotalStake(String farmAddress, String tokenX, String tokenY) {

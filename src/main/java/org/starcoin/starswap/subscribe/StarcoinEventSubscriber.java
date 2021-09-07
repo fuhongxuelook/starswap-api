@@ -13,19 +13,27 @@ import java.util.Map;
 
 public class StarcoinEventSubscriber {
 
-    public static final String FROM_ADDRESS = "0xcCF1ADEdf0Ba6f9BdB9A6905173A5d72";
-    public static final String ADD_LIQUIDITY_EVENT_TYPE_TAG = "0x81144d60492982a45ba93fba47cae988::TokenSwap::AddLiquidityEvent";
+    private final String fromAddress;// = "0x07fa08a855753f0ff7292fdcbe871216";
+    private final String addLiquidityEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwap::AddLiquidityEvent";
+    private final String addFarmEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::AddFarmEvent";
+    private final String stakeEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::StakeEvent";
+
+
     private final Web3jService web3jService;
 
-    public StarcoinEventSubscriber(Web3jService web3jService) {
+    public StarcoinEventSubscriber(Web3jService web3jService, String fromAddress, String addLiquidityEventTypeTag, String addFarmEventTypeTag, String stakeEventTypeTag) {
+        this.fromAddress = fromAddress;
+        this.addLiquidityEventTypeTag = addLiquidityEventTypeTag;
+        this.addFarmEventTypeTag = addFarmEventTypeTag;
+        this.stakeEventTypeTag = stakeEventTypeTag;
         this.web3jService = web3jService;
     }
 
-    public static Map<String, Object> createEventFilterMap() {
+    private Map<String, Object> createEventFilterMap() {
         Map<String, Object> eventFilter = new HashMap<>();
-        //eventFilter.put("addr", FROM_ADDRESS); //todo add filter properties
-        //eventFilter.put("type_tags", Collections.singletonList(ADD_LIQUIDITY_EVENT_TYPE_TAG));
-        //eventFilter.put("decode", false);
+        eventFilter.put("addr", fromAddress);
+        eventFilter.put("type_tags", Arrays.asList(addLiquidityEventTypeTag, addFarmEventTypeTag, stakeEventTypeTag));
+        eventFilter.put("decode", true);
         return eventFilter;
     }
 

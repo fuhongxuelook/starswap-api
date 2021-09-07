@@ -16,16 +16,27 @@ public class StarcoinEventSubscribeHandler implements Runnable {
 
     private final String webSocketSeed;
 
-    private final String network;
+    //private final String network;
 
     private final HandleEventService handleEventService;
 
-    public StarcoinEventSubscribeHandler(String seed, String network,
-                                         HandleEventService handleEventService
-    ) {
+    private final String fromAddress;// = "0x07fa08a855753f0ff7292fdcbe871216";
+    private final String addLiquidityEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwap::AddLiquidityEvent";
+    private final String addFarmEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::AddFarmEvent";
+    private final String stakeEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::StakeEvent";
+
+    public StarcoinEventSubscribeHandler(String seed, //String network,
+                                         HandleEventService handleEventService,
+                                         String fromAddress,
+                                         String addLiquidityEventTypeTag,
+                                         String addFarmEventTypeTag, String stakeEventTypeTag) {
         this.webSocketSeed = seed;
-        this.network = network;
+        //this.network = network;
         this.handleEventService = handleEventService;
+        this.fromAddress = fromAddress;
+        this.addLiquidityEventTypeTag = addLiquidityEventTypeTag;
+        this.addFarmEventTypeTag = addFarmEventTypeTag;
+        this.stakeEventTypeTag = stakeEventTypeTag;
     }
 
     private String getWebSocketSeed() {
@@ -46,7 +57,7 @@ public class StarcoinEventSubscribeHandler implements Runnable {
         try {
             WebSocketService service = new WebSocketService(getWebSocketSeed(), true);
             service.connect();
-            StarcoinEventSubscriber subscriber = new StarcoinEventSubscriber(service);
+            StarcoinEventSubscriber subscriber = new StarcoinEventSubscriber(service, fromAddress, addLiquidityEventTypeTag, addFarmEventTypeTag, stakeEventTypeTag);
             Flowable<EventNotification> flowableEvents = subscriber.eventNotificationFlowable();
 
             for (EventNotification notification : flowableEvents.blockingIterable()) {

@@ -14,7 +14,10 @@ import org.starcoin.starswap.api.utils.JsonRpcClient;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.starcoin.starswap.api.data.model.PullingEventTask.PULLING_BLOCK_MAX_COUNT;
 
@@ -26,13 +29,27 @@ public class PullingEventTaskTaskService {
     private final HandleEventService handleEventService;
     private final JsonRpcClient jsonRpcClient;
 
+    private final String fromAddress;// = "0x07fa08a855753f0ff7292fdcbe871216";
+    private final String addLiquidityEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwap::AddLiquidityEvent";
+    private final String addFarmEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::AddFarmEvent";
+    private final String stakeEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::StakeEvent";
+
+
     public PullingEventTaskTaskService(
             @Value("${starcoin.json-rpc-url}") String jsonRpcUrl,
             @Autowired PullingEventTaskService pullingEventTaskService,
-            @Autowired HandleEventService handleEventService) throws MalformedURLException {
+            @Autowired HandleEventService handleEventService,
+            @Value("${starcoin.event-filter.from-address}") String fromAddress,
+            @Value("${starcoin.event-filter.add-liquidity-event-type-tag}") String addLiquidityEventTypeTag,
+            @Value("${starcoin.event-filter.add-farm-event-type-tag}") String addFarmEventTypeTag,
+            @Value("${starcoin.event-filter.stake-event-type-tag}") String stakeEventTypeTag) throws MalformedURLException {
         this.jsonRpcClient = new JsonRpcClient(jsonRpcUrl);
         this.pullingEventTaskService = pullingEventTaskService;
         this.handleEventService = handleEventService;
+        this.fromAddress = fromAddress;
+        this.addLiquidityEventTypeTag = addLiquidityEventTypeTag;
+        this.addFarmEventTypeTag = addFarmEventTypeTag;
+        this.stakeEventTypeTag = stakeEventTypeTag;
     }
 
     @Scheduled(fixedDelay = 10000) //todo config
@@ -56,7 +73,8 @@ public class PullingEventTaskTaskService {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("JSON RPC getting events... from block: " + fromBlockNumber + ", to block: " + toBlockNumber);
             }
-            Event[] events = jsonRpcClient.getEvents(fromBlockNumber, toBlockNumber);
+            Map<String, Object> eventFilter = createEventFilterMap(fromBlockNumber, toBlockNumber);
+            Event[] events = jsonRpcClient.getEvents(eventFilter);
             if (events == null) {
                 break;
             }
@@ -71,4 +89,14 @@ public class PullingEventTaskTaskService {
         pullingEventTaskService.updateStatusDone(t);
     }
 
+
+    private Map<String, Object> createEventFilterMap(BigInteger fromBlockNumber, BigInteger toBlockNumber) {
+        Map<String, Object> eventFilter = new HashMap<>();
+        eventFilter.put("addr", fromAddress);
+        eventFilter.put("type_tags", Arrays.asList(addLiquidityEventTypeTag, addFarmEventTypeTag, stakeEventTypeTag));
+        eventFilter.put("decode", true);
+        eventFilter.put("from_block", fromBlockNumber);
+        eventFilter.put("to_block", toBlockNumber);
+        return eventFilter;
+    }
 }

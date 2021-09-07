@@ -21,9 +21,8 @@ public class DevNetworkInteractApp {
         Process process = null;
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(
-                    new String[]{shellPath, "-c", starcoinCmd}
                     //new String[] {starcoinCmd, "-n", "dev", "console"}
-            );
+                    shellPath, "-c", starcoinCmd);
             processBuilder.directory(new File(moveProjectDir));
             //processBuilder.inheritIO();
             processBuilder.redirectErrorStream(true);
@@ -35,110 +34,117 @@ public class DevNetworkInteractApp {
         if (process == null) {
             throw new NullPointerException();
         }
-
+        boolean init = false;
         CommandLineInteractor commandLineInteractor = new CommandLineInteractor(process);
-        commandLineInteractor.expect("Start console,", 30)
-                // 导入账户，部署合约
-                .sendLine("account import -i " + firstPrivateKey)
-                .expect("\"ok\":", 10)
-                .sendLine("account import -i " + secondPrivateKey)
-                .expect("\"ok\":", 10)
-                .sendLine("account default 0x07fa08a855753f0ff7292fdcbe871216")
-                .expect("\"ok\":", 10)
-                .sendLine("account unlock 0x07fa08a855753f0ff7292fdcbe871216")
-                .expect("\"ok\":", 10)
-                .sendLine("account unlock 0xff2794187d72cc3a9240198ca98ac7b6")
-                .expect("\"ok\":", 10)
-                .sendLine("dev get-coin 0x07fa08a855753f0ff7292fdcbe871216")
-                .expect("\"ok\":", 10)
-                .sendLine("dev get-coin 0xff2794187d72cc3a9240198ca98ac7b6")
-                .expect("\"ok\":", 10)
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwap.mv -b")
-                .expect("\"ok\":", 10)
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapRouter.mv -b")
-                .expect("\"ok\":", 10)
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapScripts.mv -b")
-                .expect("\"ok\":", 10)
+        commandLineInteractor.expect("Start console,", 30);
+        if (init) {
+            // 导入账户，部署合约
+            commandLineInteractor.sendLine("account import -i " + firstPrivateKey)
+                    .expect("\"ok\":", 10)
+                    .sendLine("account import -i " + secondPrivateKey)
+                    .expect("\"ok\":", 10)
+                    .sendLine("account default 0x07fa08a855753f0ff7292fdcbe871216")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account unlock 0x07fa08a855753f0ff7292fdcbe871216")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account unlock 0xff2794187d72cc3a9240198ca98ac7b6")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev get-coin 0x07fa08a855753f0ff7292fdcbe871216")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev get-coin 0xff2794187d72cc3a9240198ca98ac7b6")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwap.mv -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapRouter.mv -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapScripts.mv -b")
+                    .expect("\"ok\":", 10)
 
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TBD.mv -b")
-                .expect("\"ok\":", 10)
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapFarm.mv -b")
-                .expect("\"ok\":", 10)
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapGovPoolType.mv -b")
-                .expect("\"ok\":", 10)
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapGov.mv -b")
-                .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TBD.mv -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapFarm.mv -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapGovPoolType.mv -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapGov.mv -b")
+                    .expect("\"ok\":", 10)
 
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapFarmScript.mv -b") //todo XxxxScripts???
-                .expect("\"ok\":", 10)
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapGovScript.mv -b")
-                .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapFarmScript.mv -b") //todo XxxxScripts???
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/TokenSwapGovScript.mv -b")
+                    .expect("\"ok\":", 10)
 
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/Bot.mv -b")
-                .expect("\"ok\":", 10)
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/Ddd.mv -b")
-                .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/Bot.mv -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/Ddd.mv -b")
+                    .expect("\"ok\":", 10)
 
-                .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/Usdx.mv -b")
-                .expect("\"ok\":", 10)
+                    .sendLine("dev deploy storage/0x07fa08a855753f0ff7292fdcbe871216/modules/Usdx.mv -b")
+                    .expect("\"ok\":", 10)
 
-                // 注册代币资源、发币
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Ddd::init -b")
-                .expect("\"ok\":", 10)
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Ddd::mint --arg 1000000000999u128 -b")
-                .expect("\"ok\":", 10)
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Bot::init -b")
-                .expect("\"ok\":", 10)
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Bot::mint --arg 1000000000999u128 -b")
-                .expect("\"ok\":", 10)
+                    // 注册代币资源、发币
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Ddd::init -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Ddd::mint --arg 1000000000999u128 -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Bot::init -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Bot::mint --arg 1000000000999u128 -b")
+                    .expect("\"ok\":", 10)
 
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Usdx::init -b")
-                .expect("\"ok\":", 10)
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Usdx::mint --arg 1500000000999u128 -b")
-                .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Usdx::init -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::Usdx::mint --arg 1500000000999u128 -b")
+                    .expect("\"ok\":", 10)
 
 
-                // 转一部分币给账户2
-                .sendLine("account default 0xff2794187d72cc3a9240198ca98ac7b6")
+                    // 转一部分币给账户2
+                    .sendLine("account default 0xff2794187d72cc3a9240198ca98ac7b6")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account unlock")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -b")
+                    .expect("\"ok\":", 10)
+                    //.waitSeconds(10)// or -b
+                    .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd -b")
+                    .expect("\"ok\":", 10)
+                    //.waitSeconds(10)
+                    .sendLine("account show")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account default 0x07fa08a855753f0ff7292fdcbe871216")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account unlock")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account show")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x1::TransferScripts::peer_to_peer_v2 -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot --arg 0xff2794187d72cc3a9240198ca98ac7b6 --arg 100000u128 -b")
+                    .expect("\"ok\":", 10)
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x1::TransferScripts::peer_to_peer_v2 -t 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd --arg 0xff2794187d72cc3a9240198ca98ac7b6 --arg 100000u128 -b")
+                    .expect("\"ok\":", 10)
+                    // 注册交易对
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::register_swap_pair -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -t 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd -b")
+                    .expect("\"ok\":", 10)
+                    // 注册STC&lt;-&gt;BOT交易对
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::register_swap_pair -t 0x1::STC::STC -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -b")
+                    .expect("\"ok\":", 10)
+                    // 增加流动性
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::add_liquidity -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -t 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd --arg 10000u128 --arg 100000u128 --arg 5000u128 --arg 50000u128 -b")
+                    .expect("\"ok\":", 10)
+
+                    // /////////// usdx ////////////////
+                    // 注册交易对
+                    .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::register_swap_pair -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -t 0x07fa08a855753f0ff7292fdcbe871216::Usdx::Usdx -b")
+                    .expect("\"ok\":", 10)
+            ;
+        }
+        // 增加流动性
+        commandLineInteractor.sendLine("account default 0x07fa08a855753f0ff7292fdcbe871216")
                 .expect("\"ok\":", 10)
                 .sendLine("account unlock")
                 .expect("\"ok\":", 10)
-                .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -b")
-                .expect("\"ok\":", 10)
-                //.waitSeconds(10)// or -b
-                .sendLine("account accept-token 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd -b")
-                .expect("\"ok\":", 10)
-                //.waitSeconds(10)
-                .sendLine("account show")
-                .expect("\"ok\":", 10)
-                .sendLine("account default 0x07fa08a855753f0ff7292fdcbe871216")
-                .expect("\"ok\":", 10)
-                .sendLine("account unlock")
-                .expect("\"ok\":", 10)
-                .sendLine("account show")
-                .expect("\"ok\":", 10)
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x1::TransferScripts::peer_to_peer_v2 -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot --arg 0xff2794187d72cc3a9240198ca98ac7b6 --arg 100000u128 -b")
-                .expect("\"ok\":", 10)
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x1::TransferScripts::peer_to_peer_v2 -t 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd --arg 0xff2794187d72cc3a9240198ca98ac7b6 --arg 100000u128 -b")
-                .expect("\"ok\":", 10)
-                // 注册交易对
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::register_swap_pair -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -t 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd -b")
-                .expect("\"ok\":", 10)
-                // 注册STC&lt;-&gt;BOT交易对
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::register_swap_pair -t 0x1::STC::STC -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -b")
-                .expect("\"ok\":", 10)
-                // 增加流动性
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::add_liquidity -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -t 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd --arg 10000u128 --arg 100000u128 --arg 5000u128 --arg 50000u128 -b")
-                .expect("\"ok\":", 10)
-
-                // /////////// usdx ////////////////
-                // 注册交易对
-                .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::register_swap_pair -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -t 0x07fa08a855753f0ff7292fdcbe871216::Usdx::Usdx -b")
-                .expect("\"ok\":", 10)
-                // 增加流动性
                 .sendLine("account execute-function -s 0x07fa08a855753f0ff7292fdcbe871216 --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapScripts::add_liquidity -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -t 0x07fa08a855753f0ff7292fdcbe871216::Usdx::Usdx --arg 100000000000u128 --arg 150000000000u128 --arg 50000000000u128 --arg 75000000000u128 -b")
                 .expect("\"ok\":", 10)
-                // //////////////////////////////////
+                // ///////////////// usdx /////////////////
 
                 // 查询整体流动性
                 .sendLine("dev call --function 0x07fa08a855753f0ff7292fdcbe871216::TokenSwapRouter::total_liquidity -t 0x07fa08a855753f0ff7292fdcbe871216::Bot::Bot -t 0x07fa08a855753f0ff7292fdcbe871216::Ddd::Ddd")

@@ -16,18 +16,14 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Function;
 
-import static org.starcoin.starswap.subscribe.StarcoinEventSubscriber.createEventFilterMap;
 
 public class JsonRpcUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(LiquidityPoolService.class);
 
 
-    public static Event[] getEvents(JSONRPC2Session jsonRpcSession, BigInteger fromBlockNumber, BigInteger toBlockNumber) {
+    public static Event[] getEvents(JSONRPC2Session jsonRpcSession, Map<String, Object> eventFilter) {
         String method = "chain.get_events";
-        Map<String, Object> eventFilter = createEventFilterMap();
-        eventFilter.put("from_block", fromBlockNumber);
-        eventFilter.put("to_block", toBlockNumber);
         Class<Event[]> objectClass = Event[].class;
         Event[] events = callForObject(jsonRpcSession, method, Collections.singletonList(eventFilter), objectClass);
         return events == null ? new Event[0] : events;

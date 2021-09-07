@@ -29,6 +29,15 @@ public class StarswapApiApplication {
     @Autowired
     private HandleEventService handleEventService;
 
+    @Value("${starcoin.event-filter.from-address}")
+    private String fromAddress;// = "0x07fa08a855753f0ff7292fdcbe871216";
+    @Value("${starcoin.event-filter.add-liquidity-event-type-tag}")
+    private String addLiquidityEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwap::AddLiquidityEvent";
+    @Value("${starcoin.event-filter.add-farm-event-type-tag}")
+    private String addFarmEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::AddFarmEvent";
+    @Value("${starcoin.event-filter.stake-event-type-tag}")
+    private String stakeEventTypeTag;// = "0x07fa08a855753f0ff7292fdcbe871216::TokenSwapFarm::StakeEvent";
+
     public static void main(String[] args) {
         SpringApplication.run(StarswapApiApplication.class, args);
     }
@@ -38,9 +47,8 @@ public class StarswapApiApplication {
         LOG.info("EXECUTING : EventsSubscribeHandler");
         //LOG.info("es url is " + esUrl);
         for (String seed : seeds) {
-            Thread handlerThread = new Thread(new StarcoinEventSubscribeHandler(seed, network,
-                    handleEventService));
-            //Thread handlerThread = new Thread(new SubscribeHandler(seed, network, elasticSearchHandler));
+            Thread handlerThread = new Thread(new StarcoinEventSubscribeHandler(seed,
+                    handleEventService, fromAddress, addLiquidityEventTypeTag, addFarmEventTypeTag, stakeEventTypeTag));
             handlerThread.start();
         }
     }
