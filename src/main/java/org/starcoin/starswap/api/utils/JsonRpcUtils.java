@@ -89,6 +89,14 @@ public class JsonRpcUtils {
         return new BigInteger(resultFields.get(0));
     }
 
+    // public fun query_total_stake<TokenX: store, TokenY: store>(): u128
+    public static BigInteger tokenSwapFarmQueryReleasePerSecond(JSONRPC2Session jsonRpcSession, String farmAddress, String tokenX, String tokenY) {
+        List<String> resultFields = contractCallV2(jsonRpcSession, farmAddress + "::TokenSwapFarmScript::query_release_per_second",
+                Arrays.asList(tokenX, tokenY), Collections.emptyList(), new TypeReference<List<String>>() {
+                });
+        return new BigInteger(resultFields.get(0));
+    }
+
     /**
      * JSON RPC call method 'contract.call_v2'.
      *
