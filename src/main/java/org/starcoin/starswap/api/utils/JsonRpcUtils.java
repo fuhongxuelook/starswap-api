@@ -37,6 +37,30 @@ public class JsonRpcUtils {
         return resultFields.get(0);
     }
 
+    public static Pair<BigInteger, BigInteger> getTokenSwapFarmStakedReserves(JSONRPC2Session jsonRpcSession, String farmAddress, String lpTokenAddress, String tokenX, String tokenY) {
+        BigInteger stakedLiquidity = tokenSwapFarmQueryTotalStake(jsonRpcSession, farmAddress, tokenX, tokenY);
+        return getReservesByLiquidity(jsonRpcSession, lpTokenAddress, tokenX, tokenY, stakedLiquidity);
+    }
+
+    public static Pair<BigInteger, BigInteger> getReservesByLiquidity(JSONRPC2Session jsonRpcSession, String lpTokenAddress, String tokenX, String tokenY, BigInteger liquidity) {
+        Pair<BigInteger, BigInteger> totalReservesPair = tokenSwapRouterGetReserves(jsonRpcSession, lpTokenAddress, tokenX, tokenY);
+        System.out.println("totalReservesPair: " + totalReservesPair);
+        BigInteger totalLiquidity = tokenSwapRouterTotalLiquidity(jsonRpcSession, lpTokenAddress, tokenX, tokenY);
+        System.out.println("totalLiquidity: " + totalLiquidity);
+        return new Pair<>(
+                totalReservesPair.getItem1().multiply(liquidity).divide(totalLiquidity),
+                totalReservesPair.getItem2().multiply(liquidity).divide(totalLiquidity)
+        );
+    }
+
+    // public fun total_liquidity<X: store, Y: store>(): u128
+    public static BigInteger tokenSwapRouterTotalLiquidity(JSONRPC2Session jsonRpcSession, String lpTokenAddress, String tokenX, String tokenY) {
+        List<String> resultFields = contractCallV2(jsonRpcSession, lpTokenAddress + "::TokenSwapRouter::total_liquidity",
+                Arrays.asList(tokenX, tokenY), Collections.emptyList(), new TypeReference<List<String>>() {
+                });
+        return new BigInteger(resultFields.get(0));
+    }
+
     // public fun get_reserves<X: store, Y: store>(): (u128, u128)
     public static Pair<BigInteger, BigInteger> tokenSwapRouterGetReserves(JSONRPC2Session jsonRpcSession, String lpTokenAddress, String tokenX, String tokenY) {
         List<String> resultFields = contractCallV2(jsonRpcSession, lpTokenAddress + "::TokenSwapRouter::get_reserves",
@@ -62,7 +86,7 @@ public class JsonRpcUtils {
         List<String> resultFields = contractCallV2(jsonRpcSession, farmAddress + "::TokenSwapFarmScript::query_total_stake",
                 Arrays.asList(tokenX, tokenY), Collections.emptyList(), new TypeReference<List<String>>() {
                 });
-        return new BigInteger(resultFields.get(0)); //todo Is this ok? need test...
+        return new BigInteger(resultFields.get(0));
     }
 
     /**

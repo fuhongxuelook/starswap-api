@@ -53,7 +53,17 @@ class StarswapApiApplicationTests {
 
     @Test
     void contextLoads() {
-        pullingEventTaskService.updatePullingEventTask(BigInteger.valueOf(42), BigInteger.valueOf(42));
+        Pair<BigInteger, BigInteger> stakedReserves = onChainService.getStakedReservesByTokenIdPair("Bot", "Ddd");
+        System.out.println(stakedReserves);
+        Pair<BigInteger, BigInteger> stakedReserves2 = onChainService.getStakedReservesByTokenIdPair("Bot", "Usdx");
+        System.out.println(stakedReserves2);
+        if (true) return;
+
+        BigDecimal exchangeRate = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot");
+        System.out.println(exchangeRate);
+        //if (true) return;
+
+        //pullingEventTaskService.updatePullingEventTask(BigInteger.valueOf(42), BigInteger.valueOf(43));
         //if (true) return;
 
         addTestNodeHeartbeats();
@@ -75,11 +85,6 @@ class StarswapApiApplicationTests {
         tryRun(this::addTestLiquidityTokenFarm);
 
         tryRun(this::addTestFarmAccount);
-
-        //
-        BigDecimal exchangeRate = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot");
-        System.out.println(exchangeRate);
-        //if (true) return;
 
         // test queries...
         System.out.println(liquidityTokenService.findOneByTokenIdPair("Bot", "Ddd"));
