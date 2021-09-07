@@ -150,23 +150,24 @@ public class DevNetworkInteractApp {
             // stake in farm, Bot:Ddd
             commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarmScript::stake -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd --arg 1000u128 -b")
                     .expect("\"ok\":", 10);
+            // ////////////// add_farm_pool, Bot:Usdx ////////////////
+            commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarmScript::add_farm_pool -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::Usdx --arg 10000u128 -b")
+                    .expect("\"ok\":", 10);
+            // stake in farm, Bot:Ddd
         }
         // unlock account
         commandLineInteractor.sendLine("account default 0x598b8cbfd4536ecbe88aa1cfaffa7a62").expect("\"ok\":", 10).sendLine("account unlock").expect("\"ok\":", 10);
         // 查询当前用户流动性
         commandLineInteractor.sendLine("dev call --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapRouter::liquidity -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd --arg 0x598b8cbfd4536ecbe88aa1cfaffa7a62")
                 .expect("\"ok\":", 10);
-        //if (true) return;
+
         // unstake, Bot:Ddd
         commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarmScript::unstake -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd -b")
                 .expect("\"ok\":", 10);
         // stake in farm, Bot:Ddd
         commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarmScript::stake -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd --arg 1000u128 -b")
                 .expect("\"ok\":", 10);
-        // ////////////// add_farm_pool, Bot:Usdx ////////////////
-        commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarmScript::add_farm_pool -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::Usdx --arg 10000u128 -b")
-                .expect("\"ok\":", 10);
-        // stake in farm, Bot:Ddd
+
         if (true) return;
 
         // 增加流动性  // ///////////////// usdx /////////////////

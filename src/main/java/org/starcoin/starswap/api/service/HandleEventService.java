@@ -32,16 +32,20 @@ public class HandleEventService {
 
     private final LiquidityTokenFarmService liquidityTokenFarmService;
 
+    private final NodeHeartbeatService nodeHeartbeatService;
+
     public HandleEventService(@Autowired LiquidityAccountService liquidityAccountService,
                               @Autowired TokenService tokenService,
                               @Autowired LiquidityTokenService liquidityTokenService,
                               @Autowired LiquidityTokenFarmService liquidityTokenFarmService,
-                              @Autowired LiquidityTokenFarmAccountService liquidityTokenFarmAccountService) {
+                              @Autowired LiquidityTokenFarmAccountService liquidityTokenFarmAccountService,
+                              @Autowired NodeHeartbeatService nodeHeartbeatService) {
         this.liquidityAccountService = liquidityAccountService;
         this.tokenService = tokenService;
         this.liquidityTokenService = liquidityTokenService;
         this.liquidityTokenFarmService = liquidityTokenFarmService;
         this.liquidityTokenFarmAccountService = liquidityTokenFarmAccountService;
+        this.nodeHeartbeatService = nodeHeartbeatService;
     }
 
     private static TypeTagStruct tryParseTypeTagStruct(String s) {
@@ -92,7 +96,14 @@ public class HandleEventService {
         } else if ("TokenSwapFarm".equals(eventTypeTagStruct.getModule()) && "StakeEvent".equals(eventTypeTagStruct.getName())) {
             handleStakeEvent(event, eventFromAddress, eventTypeTagStruct);
         } else {
+            LOG.error("Unknown event type: " + event);
             throw new RuntimeException("Unknown event type: " + event);
+        }
+        //todo 如果事件处理不成功？
+        try {
+            nodeHeartbeatService.beat(new BigInteger(event.getBlockNumber()));
+        } catch (RuntimeException runtimeException) {
+            LOG.error("Save heartbeat in database error.", runtimeException);
         }
     }
 

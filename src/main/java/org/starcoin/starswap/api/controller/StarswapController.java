@@ -10,6 +10,7 @@ import org.starcoin.starswap.api.data.model.*;
 import org.starcoin.starswap.api.service.*;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.util.List;
 
 @Api(tags = {"Starswap RESTful API"})
@@ -40,6 +41,9 @@ public class StarswapController {
     @Resource
     private LiquidityTokenFarmAccountService liquidityTokenFarmAccountService;
 
+    @Resource
+    private NodeHeartbeatService nodeHeartbeatService;
+
     @GetMapping(path = "tokens")
     public List<Token> getTokens() {
         return tokenService.findByDeactivedIsFalse();
@@ -69,10 +73,7 @@ public class StarswapController {
 
     @GetMapping(path = "liquidityPools/{id}")
     public LiquidityPool getLiquidityPool(@PathVariable(name = "id") @ApiParam("Pool Id., for example 'BTC:STC'") String id) {
-        //String[] axy = poolId.split("::");
-        //if (axy.length < 2) throw new IllegalArgumentException();
         String[] tokenXYId = parseTokenIdPair(id);
-        //LiquidityPoolId liquidityPoolIdObj = new LiquidityPoolId(liquidityTokenIdObj, axy[0]);
         return liquidityPoolService.findOneByTokenIdPair(tokenXYId[0], tokenXYId[1]);
     }
 
@@ -106,11 +107,16 @@ public class StarswapController {
         pullingEventTaskService.createPullingEventTask(pullingEventTask);
     }
 
+    @GetMapping(path = "heartbeatBreakIntervals")
+    public List<Pair<BigInteger, BigInteger>> getBreakIntervals() {
+        return nodeHeartbeatService.findBreakIntervals();
+    }
+
     private String[] parseTokenIdPair(String tokenPairId) {
         String[] xy = tokenPairId.split(":");
         if (xy.length < 2) throw new IllegalArgumentException();
-        return xy;
-        //LiquidityTokenId liquidityTokenIdObj = new LiquidityTokenId(xy[0], xy[1]);
+        TokenIdPair tokenIdPair = new TokenIdPair(xy[0], xy[1]);
+        return tokenIdPair.toStringArray();
     }
 
 

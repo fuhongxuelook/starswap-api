@@ -18,6 +18,20 @@ public class NodeHeartbeat {
     @Column(precision = 21, scale = 0)
     private BigInteger beatenAt;
 
+
+    @Column(length = 70, nullable = false)
+    private String createdBy;
+
+    @Column(length = 70, nullable = false)
+    private String updatedBy;
+
+    @Column(nullable = false)
+    private Long createdAt;
+
+    @Column(nullable = false)
+    private Long updatedAt;
+
+
     public String getNodeId() {
         return nodeId;
     }
@@ -40,5 +54,37 @@ public class NodeHeartbeat {
 
     public void setBeatenAt(BigInteger beatenAt) {
         this.beatenAt = beatenAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

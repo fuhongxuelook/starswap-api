@@ -29,9 +29,19 @@ public class NodeHeartbeatService {
         if (nodeHeartbeat == null) {
             nodeHeartbeat = new NodeHeartbeat();
             nodeHeartbeat.setNodeId(nodeId);
+            nodeHeartbeat.setStartedAt(timePoint);
             nodeHeartbeat.setBeatenAt(timePoint);
+            nodeHeartbeat.setCreatedAt(System.currentTimeMillis());
+            nodeHeartbeat.setCreatedBy("admin");
+            nodeHeartbeat.setUpdatedAt(nodeHeartbeat.getCreatedAt());
+            nodeHeartbeat.setUpdatedBy(nodeHeartbeat.getCreatedBy());
+        } else {
+            if (timePoint.compareTo(nodeHeartbeat.getBeatenAt()) > 0) {
+                nodeHeartbeat.setBeatenAt(timePoint);
+                nodeHeartbeat.setUpdatedAt(System.currentTimeMillis());
+                nodeHeartbeat.setUpdatedBy("admin");
+            }
         }
-        nodeHeartbeat.setBeatenAt(timePoint);
         nodeHeartbeatRepository.save(nodeHeartbeat);
     }
 

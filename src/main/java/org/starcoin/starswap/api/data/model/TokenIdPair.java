@@ -20,4 +20,7 @@ public class TokenIdPair extends Pair<String, String> {
         return getItem2();
     }
 
+    public String[] toStringArray() {
+        return new String[]{tokenXId(), tokenYId()};
+    }
 }
