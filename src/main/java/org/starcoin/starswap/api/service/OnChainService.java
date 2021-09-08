@@ -16,6 +16,8 @@ public class OnChainService {
 
     public static final String USD_EQUIVALENT_TOKEN_ID = "Usdx"; //todo config???
 
+    private final JsonRpcClient jsonRpcClient;
+
     @Autowired
     private TokenService tokenService;
 
@@ -24,8 +26,6 @@ public class OnChainService {
 
     @Autowired
     private LiquidityTokenFarmService liquidityTokenFarmService;
-
-    private final JsonRpcClient jsonRpcClient;
 
     public OnChainService(@Value("${starcoin.json-rpc-url}") String jsonRpcUrl) throws MalformedURLException {
         this.jsonRpcClient = new JsonRpcClient(jsonRpcUrl);
@@ -44,12 +44,25 @@ public class OnChainService {
     }
 
     public BigDecimal getToUsdExchangeRate(String tokenTypeTag) {
-        Token usdEquivalentToken = tokenService.getTokenOrElseThrow(USD_EQUIVALENT_TOKEN_ID, () -> new RuntimeException("Cannot find USD equivalent token."));
-        String usdEquivalentTokenTypeTag = usdEquivalentToken.getTokenStructType().toTypeTagString();
         StructType tokenStructType = StructType.parse(tokenTypeTag);
         Token token = tokenService.getTokenByStructType(tokenStructType);
+        return getToUsdExchangeRate(token);
+    }
+
+    public BigDecimal getToUsdExchangeRateByTokenId(String tokenId) {
+        Token token = tokenService.getTokenOrElseThrow(tokenId, () -> new RuntimeException("Cannot find Token by Id: " + tokenId));
+        return getToUsdExchangeRate(token);
+    }
+
+    private BigDecimal getToUsdExchangeRate(Token token) {
+        Token usdEquivalentToken = tokenService.getTokenOrElseThrow(USD_EQUIVALENT_TOKEN_ID, () -> new RuntimeException("Cannot find USD equivalent token."));
+        String usdEquivalentTokenTypeTag = usdEquivalentToken.getTokenStructType().toTypeTagString();
+
         LiquidityToken liquidityToken = liquidityTokenService.findOneByTokenIdPair(token.getTokenId(), usdEquivalentToken.getTokenId());
+        if (liquidityToken == null) {
+            throw new RuntimeException("Cannot find LiquidityToken by tokenId pair: " + token.getTokenId() + " / " + usdEquivalentToken.getTokenId());
+        }
         return jsonRpcClient.getExchangeRate(liquidityToken.getLiquidityTokenId().getLiquidityTokenAddress(),
-                tokenTypeTag, usdEquivalentTokenTypeTag);
+                token.getTokenStructType().toTypeTagString(), usdEquivalentTokenTypeTag);
     }
 }
