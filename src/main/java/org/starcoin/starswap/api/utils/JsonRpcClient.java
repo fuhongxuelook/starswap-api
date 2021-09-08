@@ -34,13 +34,26 @@ public class JsonRpcClient {
         return JsonRpcUtils.tokenSwapFarmQueryTotalStake(this.jsonRpcSession, farmAddress, tokenX, tokenY);
     }
 
+    public BigInteger tokenSwapFarmQueryReleasePerSecond(String farmAddress, String tokenX, String tokenY) {
+        return JsonRpcUtils.tokenSwapFarmQueryReleasePerSecond(this.jsonRpcSession, farmAddress, tokenX, tokenY);
+    }
+
     public Pair<BigInteger, BigInteger> getTokenSwapFarmStakedReserves(String farmAddress, String lpTokenAddress, String tokenX, String tokenY) {
         return JsonRpcUtils.getTokenSwapFarmStakedReserves(this.jsonRpcSession, farmAddress, lpTokenAddress, tokenX, tokenY);
+    }
+
+    public BigInteger tokenGetScalingFactor(String token) {
+        return JsonRpcUtils.tokenGetScalingFactor(jsonRpcSession, token);
     }
 
     public BigDecimal getExchangeRate(String lpTokenAddress, String tokenX, String tokenY) {
         BigInteger tokenXScalingFactor = JsonRpcUtils.tokenGetScalingFactor(jsonRpcSession, tokenX);
         BigInteger tokenYScalingFactor = JsonRpcUtils.tokenGetScalingFactor(jsonRpcSession, tokenY);
+        return getExchangeRate(lpTokenAddress, tokenX, tokenY, tokenXScalingFactor, tokenYScalingFactor);
+    }
+
+    public BigDecimal getExchangeRate(String lpTokenAddress, String tokenX, String tokenY,
+                                       BigInteger tokenXScalingFactor, BigInteger tokenYScalingFactor) {
         Pair<BigInteger, BigInteger> reserves = JsonRpcUtils.tokenSwapRouterGetReserves(jsonRpcSession, lpTokenAddress, tokenX, tokenY);
         BigInteger amountX = reserves.getItem1().divide(BigInteger.valueOf(100L));//tokenXScalingFactor;
         BigInteger amountY = JsonRpcUtils.tokenSwapRouterGetAmountOut(jsonRpcSession, lpTokenAddress, amountX, reserves.getItem1(), reserves.getItem2());

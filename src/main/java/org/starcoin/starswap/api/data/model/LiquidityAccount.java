@@ -11,7 +11,7 @@ import java.math.BigInteger;
  * 流动性账号（用户提供的流动性）。
  */
 @Entity
-@Table
+@Table(indexes = {@Index(name = "idx_token_x_y_id", columnList = "token_x_id, token_y_id")})
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})

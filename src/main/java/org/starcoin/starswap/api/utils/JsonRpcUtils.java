@@ -44,9 +44,9 @@ public class JsonRpcUtils {
 
     public static Pair<BigInteger, BigInteger> getReservesByLiquidity(JSONRPC2Session jsonRpcSession, String lpTokenAddress, String tokenX, String tokenY, BigInteger liquidity) {
         Pair<BigInteger, BigInteger> totalReservesPair = tokenSwapRouterGetReserves(jsonRpcSession, lpTokenAddress, tokenX, tokenY);
-        System.out.println("totalReservesPair: " + totalReservesPair);
+        //System.out.println("totalReservesPair: " + totalReservesPair);
         BigInteger totalLiquidity = tokenSwapRouterTotalLiquidity(jsonRpcSession, lpTokenAddress, tokenX, tokenY);
-        System.out.println("totalLiquidity: " + totalLiquidity);
+        //System.out.println("totalLiquidity: " + totalLiquidity);
         return new Pair<>(
                 totalReservesPair.getItem1().multiply(liquidity).divide(totalLiquidity),
                 totalReservesPair.getItem2().multiply(liquidity).divide(totalLiquidity)

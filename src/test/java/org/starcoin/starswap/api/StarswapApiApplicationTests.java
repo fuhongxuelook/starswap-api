@@ -53,6 +53,10 @@ class StarswapApiApplicationTests {
 
     @Test
     void contextLoads() {
+        BigDecimal estimatedApy = onChainService.getFarmEstimatedApyByTokenIdPair("Bot", "Ddd");
+        System.out.println(estimatedApy);
+        if (true) return;
+
         Pair<BigInteger, BigInteger> stakedReserves = onChainService.getFarmStakedReservesByTokenIdPair("Bot", "Ddd");
         System.out.println(stakedReserves);
         Pair<BigInteger, BigInteger> stakedReserves2 = onChainService.getFarmStakedReservesByTokenIdPair("Bot", "Usdx");
@@ -62,7 +66,7 @@ class StarswapApiApplicationTests {
         //        tryRun(() -> addTestLiquidityToken("Ddd", "Usdx"));
         //        tryRun(() -> addTestLiquidityToken("TBD", "Usdx"));
         //        if (true) return;
-
+        // need token swap pair in database...
         BigDecimal exchangeRateTbdToUsd = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::TBD::TBD");
         System.out.println("TBD / USD: " + exchangeRateTbdToUsd);
         BigDecimal exchangeRateDddToUsd = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd");
