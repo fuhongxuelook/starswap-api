@@ -114,6 +114,9 @@ public class OnChainService {
     }
 
     private BigDecimal getToUsdExchangeRate(Token token) {
+        if (USD_EQUIVALENT_TOKEN_ID.equals(token.getTokenId())) {
+            return BigDecimal.ONE;
+        }
         Token usdEquivalentToken = tokenService.getTokenOrElseThrow(USD_EQUIVALENT_TOKEN_ID, () -> new RuntimeException("Cannot find USD equivalent token."));
         String usdEquivalentTokenTypeTag = usdEquivalentToken.getTokenStructType().toTypeTagString();
         LiquidityToken liquidityToken = liquidityTokenService.findOneByTokenIdPair(token.getTokenId(), usdEquivalentToken.getTokenId());
