@@ -44,6 +44,9 @@ public class LiquidityTokenFarm {
     @Column(precision = 31, scale = 10)
     private BigDecimal estimatedApy;
 
+    @Column(length = 15, nullable = false, unique = true)
+    private String rewardTokenId;
+
     /**
      * 是否已禁用。
      */
@@ -159,5 +162,13 @@ public class LiquidityTokenFarm {
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    public String getRewardTokenId() {
+        return rewardTokenId;
+    }
+
+    public void setRewardTokenId(String rewardTokenId) {
+        this.rewardTokenId = rewardTokenId;
     }
 }

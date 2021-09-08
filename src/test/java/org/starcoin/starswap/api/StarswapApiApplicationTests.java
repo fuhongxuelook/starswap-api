@@ -57,7 +57,8 @@ class StarswapApiApplicationTests {
         System.out.println(stakedReserves);
         Pair<BigInteger, BigInteger> stakedReserves2 = onChainService.getStakedReservesByTokenIdPair("Bot", "Usdx");
         System.out.println(stakedReserves2);
-        if (true) return;
+
+        //if (true) return;
 
         BigDecimal exchangeRate = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot");
         System.out.println(exchangeRate);
@@ -68,6 +69,7 @@ class StarswapApiApplicationTests {
 
         addTestNodeHeartbeats();
         //if (true) return;
+        tryRun(() -> addTestToken("TBD", 90));
 
         tryRun(() -> addTestToken("Bot", 90));
 
@@ -96,48 +98,56 @@ class StarswapApiApplicationTests {
         b7.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
         b7.setStartedAt(BigInteger.valueOf(79));
         b7.setBeatenAt(BigInteger.valueOf(92));
-        nodeHeartbeatRepository.save(b7);
+        addNodeHeartbeat(nodeHeartbeatRepository, b7);
 
         NodeHeartbeat b6 = new NodeHeartbeat();
         b6.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
         b6.setStartedAt(BigInteger.valueOf(91));
         b6.setBeatenAt(BigInteger.valueOf(100));
-        nodeHeartbeatRepository.save(b6);
+        addNodeHeartbeat(nodeHeartbeatRepository, b6);
 
         NodeHeartbeat b5 = new NodeHeartbeat();
         b5.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
         b5.setStartedAt(BigInteger.valueOf(60));
         b5.setBeatenAt(BigInteger.valueOf(71));
-        nodeHeartbeatRepository.save(b5);
+        addNodeHeartbeat(nodeHeartbeatRepository, b5);
 
         NodeHeartbeat b4 = new NodeHeartbeat();
         b4.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
         b4.setStartedAt(BigInteger.valueOf(71));
         b4.setBeatenAt(BigInteger.valueOf(80));
-        nodeHeartbeatRepository.save(b4);
+        addNodeHeartbeat(nodeHeartbeatRepository, b4);
 
         NodeHeartbeat b3 = new NodeHeartbeat();
         b3.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
         b3.setStartedAt(BigInteger.valueOf(51));
         b3.setBeatenAt(BigInteger.valueOf(60));
-        nodeHeartbeatRepository.save(b3);
+        addNodeHeartbeat(nodeHeartbeatRepository, b3);
 
         NodeHeartbeat b2 = new NodeHeartbeat();
         b2.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
         b2.setStartedAt(BigInteger.valueOf(21));
         b2.setBeatenAt(BigInteger.valueOf(30));
-        nodeHeartbeatRepository.save(b2);
+        addNodeHeartbeat(nodeHeartbeatRepository, b2);
 
         NodeHeartbeat b1 = new NodeHeartbeat();
         b1.setNodeId("0x" + UUID.randomUUID().toString().replace("-", ""));
         b1.setStartedAt(BigInteger.valueOf(1));
         b1.setBeatenAt(BigInteger.valueOf(10));
-        nodeHeartbeatRepository.save(b1);
+        addNodeHeartbeat(nodeHeartbeatRepository, b1);
 
         List<Object[]> breakpoints = nodeHeartbeatRepository.findBreakpoints();
         breakpoints.forEach(p -> System.out.println(p[0] + "\t" + p[1]));
 
         System.out.println(nodeHeartbeatService.findBreakIntervals());
+    }
+
+    public static void addNodeHeartbeat(NodeHeartbeatRepository nodeHeartbeatRepository, NodeHeartbeat b7) {
+        b7.setCreatedAt(System.currentTimeMillis());
+        b7.setCreatedBy("admin");
+        b7.setUpdatedAt(b7.getCreatedAt());
+        b7.setUpdatedBy(b7.getCreatedBy());
+        nodeHeartbeatRepository.save(b7);
     }
 
     private void tryRun(Runnable runnable) {
@@ -201,6 +211,7 @@ class StarswapApiApplicationTests {
         liquidityTokenFarm.setSequenceNumber(11);//  11,
         liquidityTokenFarm.setUpdatedAt(System.currentTimeMillis());//  unix_timestamp(now()),
         liquidityTokenFarm.setUpdatedBy("admin");//  'admin'
+        liquidityTokenFarm.setRewardTokenId("TBD");
         liquidityTokenFarmRepository.save(liquidityTokenFarm);
 
         List<LiquidityTokenFarm> liquidityTokenFarms = liquidityTokenFarmRepository.findByLiquidityTokenFarmIdTokenXIdAndLiquidityTokenFarmIdTokenYId("Bot", "Ddd");
