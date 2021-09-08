@@ -1,0 +1,20 @@
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: INFO
+
+      # 输出数据库模型（开发阶段）
+      hibernate:
+        tool:
+          hbm2ddl: INFO
+
+      starcoin:
+        starswap:
+          api: INFO
+          subscribe:
+            handler: INFO
+
+
