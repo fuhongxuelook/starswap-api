@@ -67,6 +67,12 @@ http://localhost:8600/v1/starswap/lpTokenFarms/Bot:Ddd
 http://localhost:8600/v1/starswap/lpTokenFarmAccounts?accountAddress=0x598b8cbfd4536ecbe88aa1cfaffa7a62
 ```
 
+取得所有 Farm 的 TVL：
+
+```
+http://localhost:8600/v1/starswap/farmingTvlInUsd
+```
+
 更多 API 见 Swagger UI：
 
 ```

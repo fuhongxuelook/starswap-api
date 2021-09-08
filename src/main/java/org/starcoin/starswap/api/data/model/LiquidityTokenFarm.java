@@ -47,6 +47,9 @@ public class LiquidityTokenFarm {
     @Column(length = 15, nullable = false, unique = true)
     private String rewardTokenId;
 
+    @Column(precision = 51, scale = 10)
+    private BigDecimal tvlInUsd;
+
     /**
      * 是否已禁用。
      */
@@ -170,5 +173,13 @@ public class LiquidityTokenFarm {
 
     public void setRewardTokenId(String rewardTokenId) {
         this.rewardTokenId = rewardTokenId;
+    }
+
+    public BigDecimal getTvlInUsd() {
+        return tvlInUsd;
+    }
+
+    public void setTvlInUsd(BigDecimal tvlInUsd) {
+        this.tvlInUsd = tvlInUsd;
     }
 }

@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.starcoin.starswap.api.data.model.LiquidityTokenFarm;
+import org.starcoin.starswap.api.data.model.Pair;
 import org.starcoin.starswap.api.data.repo.LiquidityTokenFarmRepository;
 import org.starcoin.starswap.api.service.OnChainService;
 import org.starcoin.starswap.api.service.TokenService;
 import org.starcoin.starswap.api.utils.JsonRpcClient;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.util.List;
 
@@ -40,25 +40,15 @@ public class LiquidityTokenFarmRefreshTaskService {
     public void task() {
         List<LiquidityTokenFarm> farms = liquidityTokenFarmRepository.findByDeactivedIsFalse();
         for (LiquidityTokenFarm farm : farms) {
-            farm.setTotalStakeAmount(getFarmTotalStakeAmount(farm));
-            farm.setEstimatedApy(getEstimatedApy(farm));
+            farm.setTotalStakeAmount(onChainService.getFarmTotalStakeAmount(farm));
+            Pair<BigDecimal, BigDecimal> estimatedApyAndTvlInUsd = onChainService.getFarmEstimatedApyAndTvlInUsd(farm);
+            farm.setEstimatedApy(estimatedApyAndTvlInUsd.getItem1());
+            farm.setTvlInUsd(estimatedApyAndTvlInUsd.getItem2());
             farm.setUpdatedAt(System.currentTimeMillis());
             farm.setUpdatedBy("admin");
             liquidityTokenFarmRepository.save(farm);
         }
     }
 
-    private BigInteger getFarmTotalStakeAmount(LiquidityTokenFarm farm) {
-        String farmAddress = farm.getLiquidityTokenFarmId().getFarmAddress();
-        String tokenXId = farm.getLiquidityTokenFarmId().getLiquidityTokenId().getTokenXId();
-        String tokenX = tokenService.getTokenOrElseThrow(tokenXId, () -> { throw new RuntimeException("Cannot find token by Id: " + tokenXId);}).getTokenStructType().toTypeTagString();
-        String tokenYId = farm.getLiquidityTokenFarmId().getLiquidityTokenId().getTokenYId();
-        String tokenY = tokenService.getTokenOrElseThrow(tokenYId, () -> { throw new RuntimeException("Cannot find token by Id: " + tokenYId);}).getTokenStructType().toTypeTagString();
-        BigInteger stakeAmount = jsonRpcClient.tokenSwapFarmQueryTotalStake(farmAddress, tokenX, tokenY);
-        return stakeAmount;
-    }
 
-    private BigDecimal getEstimatedApy(LiquidityTokenFarm farm) {
-        return onChainService.getFarmEstimatedApy(farm);
-    }
 }

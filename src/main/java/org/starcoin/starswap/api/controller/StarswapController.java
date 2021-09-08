@@ -10,6 +10,7 @@ import org.starcoin.starswap.api.data.model.*;
 import org.starcoin.starswap.api.service.*;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -110,6 +111,12 @@ public class StarswapController {
     @GetMapping(path = "heartbeatBreakIntervals")
     public List<Pair<BigInteger, BigInteger>> getBreakIntervals() {
         return nodeHeartbeatService.findBreakIntervals();
+    }
+
+    @ApiOperation("Get Total Valued Locked in all farms")
+    @GetMapping(path = "farmingTvlInUsd")
+    public BigDecimal getFarmingTvlInUsd() {
+        return liquidityTokenFarmService.getTotalValueLockedInUsd();
     }
 
     private String[] parseTokenIdPair(String tokenPairId) {

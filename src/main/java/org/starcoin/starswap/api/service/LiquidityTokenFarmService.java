@@ -10,6 +10,7 @@ import org.starcoin.starswap.api.data.model.TokenIdPair;
 import org.starcoin.starswap.api.data.repo.LiquidityTokenFarmRepository;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -38,6 +39,14 @@ public class LiquidityTokenFarmService {
             throw new RuntimeException("Find more than one LiquidityPool by: " + tokenXId + ":" + tokenYId);
         }
         return liquidityTokenFarms.get(0);
+    }
+
+    public BigDecimal getTotalValueLockedInUsd() {
+        final BigDecimal[] tvl = {BigDecimal.ZERO};
+        liquidityTokenFarmRepository.findAll().forEach((f) -> {
+            tvl[0] = tvl[0].add(f.getTvlInUsd());
+        });
+        return tvl[0];
     }
 
     @Transactional
