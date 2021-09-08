@@ -97,11 +97,12 @@ public class DevNetworkInteractApp {
                     .sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::mint --arg 1000000000999u128 -b")
                     .expect("\"ok\":", 10)
 
+                    // ///////////////// usdx /////////////////
                     .sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::init -b")
                     .expect("\"ok\":", 10)
                     .sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::mint --arg 1500000000999u128 -b")
                     .expect("\"ok\":", 10)
-
+                    // ///////////////// usdx /////////////////
 
                     // 转一部分币给账户2
                     .sendLine("account default 0xff2794187d72cc3a9240198ca98ac7b6")
@@ -160,9 +161,43 @@ public class DevNetworkInteractApp {
                     .expect("\"ok\":", 10);
             // /////////// usdx ////////////////
 
-        }
+            // 注册交易对 Ddd:Usdx
+            commandLineInteractor
+                    .sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapScripts::register_swap_pair -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::Usdx -b")
+                    .expect("\"ok\":", 10)
+            ;
+            // 增加流动性，Ddd:Usdx
+            commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapScripts::add_liquidity -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::Usdx --arg 100000000000u128 --arg 15000000000u128 --arg 50000000000u128 --arg 7500000000u128 -b")
+                    .expect("\"ok\":", 10);
+
+            // 注册交易对 TBD:Usdx
+            commandLineInteractor
+                    .sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapScripts::register_swap_pair -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TBD::TBD -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::Usdx -b")
+                    .expect("\"ok\":", 10)
+            ;
+
+            // 查看 farm 奖励，Bot:Ddd
+            commandLineInteractor.sendLine("dev call --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarmScript::lookup_gain -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd --arg 0x598b8cbfd4536ecbe88aa1cfaffa7a62")
+                    .expect("\"ok\":", 10);
+
+            // 领取 farm 奖励（TBD），Bot:Ddd。金额 0 为领取全部。
+            commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarmScript::harvest -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd -b --arg 0u128")
+                    .expect("\"ok\":", 10);
+            // 增加流动性，TBD:Usdx
+            commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapScripts::add_liquidity -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TBD::TBD -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::Usdx --arg 1000u128 --arg 1500u128 --arg 500u128 --arg 750u128 -b")
+                    .expect("\"ok\":", 10);
+
+        } // end of init.
+
         // unlock account
         commandLineInteractor.sendLine("account default 0x598b8cbfd4536ecbe88aa1cfaffa7a62").expect("\"ok\":", 10).sendLine("account unlock").expect("\"ok\":", 10);
+        // ///////////////// usdx /////////////////
+//        // 查看 farm 奖励，Bot:Ddd
+//        commandLineInteractor.sendLine("dev call --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarmScript::lookup_gain -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd --arg 0x598b8cbfd4536ecbe88aa1cfaffa7a62")
+//                .expect("\"ok\":", 10);
+        if (true) return;
+        // ///////////////// usdx /////////////////
+
         // 查询当前用户流动性
         commandLineInteractor.sendLine("dev call --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapRouter::liquidity -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd --arg 0x598b8cbfd4536ecbe88aa1cfaffa7a62")
                 .expect("\"ok\":", 10);
@@ -176,9 +211,11 @@ public class DevNetworkInteractApp {
 
         if (true) return;
 
-        // 增加流动性  // ///////////////// usdx /////////////////
+        // ///////////////// usdx /////////////////
+        // 增加流动性，Bot:Usdx
         commandLineInteractor.sendLine("account execute-function -s 0x598b8cbfd4536ecbe88aa1cfaffa7a62 --function 0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapScripts::add_liquidity -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot -t 0x598b8cbfd4536ecbe88aa1cfaffa7a62::Usdx::Usdx --arg 100000000000u128 --arg 150000000000u128 --arg 50000000000u128 --arg 75000000000u128 -b")
                 .expect("\"ok\":", 10);
+        // ///////////////// usdx /////////////////
 
         commandLineInteractor
                 // 查询整体流动性

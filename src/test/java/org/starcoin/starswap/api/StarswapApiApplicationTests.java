@@ -53,16 +53,23 @@ class StarswapApiApplicationTests {
 
     @Test
     void contextLoads() {
-        Pair<BigInteger, BigInteger> stakedReserves = onChainService.getStakedReservesByTokenIdPair("Bot", "Ddd");
+        Pair<BigInteger, BigInteger> stakedReserves = onChainService.getFarmStakedReservesByTokenIdPair("Bot", "Ddd");
         System.out.println(stakedReserves);
-        Pair<BigInteger, BigInteger> stakedReserves2 = onChainService.getStakedReservesByTokenIdPair("Bot", "Usdx");
+        Pair<BigInteger, BigInteger> stakedReserves2 = onChainService.getFarmStakedReservesByTokenIdPair("Bot", "Usdx");
         System.out.println(stakedReserves2);
+        //        tryRun(() -> addTestLiquidityToken("Bot", "Ddd"));
+        //        tryRun(() -> addTestLiquidityToken("Bot", "Usdx"));
+        //        tryRun(() -> addTestLiquidityToken("Ddd", "Usdx"));
+        //        tryRun(() -> addTestLiquidityToken("TBD", "Usdx"));
+        //        if (true) return;
 
-        //if (true) return;
-
-        BigDecimal exchangeRate = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot");
-        System.out.println(exchangeRate);
-        //if (true) return;
+        BigDecimal exchangeRateTbdToUsd = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::TBD::TBD");
+        System.out.println("TBD / USD: " + exchangeRateTbdToUsd);
+        BigDecimal exchangeRateDddToUsd = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::Ddd::Ddd");
+        System.out.println("Ddd / USD: " + exchangeRateDddToUsd);
+        BigDecimal exchangeRateBotToUsd = onChainService.getToUsdExchangeRate("0x598b8cbfd4536ecbe88aa1cfaffa7a62::Bot::Bot");
+        System.out.println("Bot / USD: " + exchangeRateBotToUsd);
+        if (true) return;
 
         //pullingEventTaskService.updatePullingEventTask(BigInteger.valueOf(42), BigInteger.valueOf(43));
         //if (true) return;
@@ -79,6 +86,8 @@ class StarswapApiApplicationTests {
 
         tryRun(() -> addTestLiquidityToken("Bot", "Ddd"));
         tryRun(() -> addTestLiquidityToken("Bot", "Usdx"));
+        tryRun(() -> addTestLiquidityToken("Ddd", "Usdx"));
+        tryRun(() -> addTestLiquidityToken("TBD", "Usdx"));
 
         tryRun(this::addTestLiquidityPool);
 

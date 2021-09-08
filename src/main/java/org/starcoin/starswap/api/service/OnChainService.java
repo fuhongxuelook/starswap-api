@@ -14,7 +14,7 @@ import java.net.MalformedURLException;
 @Service
 public class OnChainService {
 
-    public static final String USD_EQUIVALENT_TOKEN_ID = "Usdx";
+    public static final String USD_EQUIVALENT_TOKEN_ID = "Usdx"; //todo config???
 
     @Autowired
     private TokenService tokenService;
@@ -31,7 +31,7 @@ public class OnChainService {
         this.jsonRpcClient = new JsonRpcClient(jsonRpcUrl);
     }
 
-    public Pair<BigInteger, BigInteger> getStakedReservesByTokenIdPair(String tokenXId, String tokenYId) {
+    public Pair<BigInteger, BigInteger> getFarmStakedReservesByTokenIdPair(String tokenXId, String tokenYId) {
         //LiquidityToken liquidityToken = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenYId);
         Token tokenX = tokenService.getToken(tokenXId);
         Token tokenY = tokenService.getToken(tokenYId);
