@@ -51,8 +51,16 @@ class StarswapApiApplicationTests {
     @Autowired
     PullingEventTaskService pullingEventTaskService;
 
+    @Autowired
+    TokenPriceService tokenPriceService;
+
     @Test
     void contextLoads() {
+        BigDecimal stcUsd = tokenPriceService.getToUsdExchangeRate("STC");
+        System.out.println(stcUsd);
+        BigDecimal ethUsd = tokenPriceService.getToUsdExchangeRate("ETH");
+        System.out.println(ethUsd);
+        if (true) return;
         BigDecimal estimatedApy = onChainService.getFarmEstimatedApyByTokenIdPair("Bot", "Ddd");
         System.out.println(estimatedApy);
         if (true) return;

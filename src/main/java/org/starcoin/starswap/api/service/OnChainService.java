@@ -1,6 +1,8 @@
 package org.starcoin.starswap.api.service;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.net.MalformedURLException;
 @Service
 public class OnChainService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(OnChainService.class);
+
     public static final String USD_EQUIVALENT_TOKEN_ID = "Usdx"; //todo config???
 
     private final JsonRpcClient jsonRpcClient;
@@ -28,10 +32,12 @@ public class OnChainService {
     @Autowired
     private LiquidityTokenFarmService liquidityTokenFarmService;
 
+    @Autowired
+    private TokenPriceService tokenPriceService;
+
     public OnChainService(@Value("${starcoin.json-rpc-url}") String jsonRpcUrl) throws MalformedURLException {
         this.jsonRpcClient = new JsonRpcClient(jsonRpcUrl);
     }
-
 
     public BigInteger getFarmTotalStakeAmount(LiquidityTokenFarm farm) {
         String farmAddress = farm.getLiquidityTokenFarmId().getFarmAddress();
@@ -118,8 +124,8 @@ public class OnChainService {
                 tokenY.getTokenStructType().toTypeTagString());
         BigInteger tokenXScalingFactor = jsonRpcClient.tokenGetScalingFactor(tokenX.getTokenStructType().toTypeTagString());
         BigInteger tokenYScalingFactor = jsonRpcClient.tokenGetScalingFactor(tokenY.getTokenStructType().toTypeTagString());
-        BigDecimal tokenXToUsdRate = getToUsdExchangeRate(tokenX);
-        BigDecimal tokenYToUsdRate = getToUsdExchangeRate(tokenY);
+        BigDecimal tokenXToUsdRate = getToUsdExchangeRateOffChainFirst(tokenX);
+        BigDecimal tokenYToUsdRate = getToUsdExchangeRateOffChainFirst(tokenY);
         BigDecimal tokenXReserveInUsd = new BigDecimal(reservePair.getItem1())
                 .divide(new BigDecimal(tokenXScalingFactor), tokenXScalingFactor.toString().length() - 1, RoundingMode.HALF_UP)
                 .multiply(tokenXToUsdRate);
@@ -138,6 +144,20 @@ public class OnChainService {
     public BigDecimal getToUsdExchangeRateByTokenId(String tokenId) {
         Token token = tokenService.getTokenOrElseThrow(tokenId, () -> new RuntimeException("Cannot find Token by Id: " + tokenId));
         return getToUsdExchangeRate(token);
+    }
+
+    private BigDecimal getToUsdExchangeRateOffChainFirst(Token token) {
+        BigDecimal rate;
+        try {
+            rate = tokenPriceService.getToUsdExchangeRate(token.getTokenId());
+        } catch (RuntimeException runtimeException) {
+            LOG.info("Get token to USD price from off-chain service error.", runtimeException);
+            rate = null;
+        }
+        if (rate == null) {
+            rate = getToUsdExchangeRate(token);
+        }
+        return rate;
     }
 
     private BigDecimal getToUsdExchangeRate(Token token) {

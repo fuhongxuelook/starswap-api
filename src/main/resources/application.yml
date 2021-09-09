@@ -67,6 +67,13 @@ starcoin:
     add-farm-event-type-tag: "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarm::AddFarmEvent"
     stake-event-type-tag: "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarm::StakeEvent"
 
+
+token-price-service:
+  get-pair-price-url: http://ac5e9dd967389445e809defadcba5242-1908387560.ap-northeast-1.elb.amazonaws.com/v1/priceFeeds/{pairId}
+#  to-usd-pair-id-mappings:
+#    STC: "STCUSD"
+
+
 #elasticsearch:
 #  host: ${STARCOIN_ES_URL}
 #  protocol: ${STARCOIN_ES_PROTOCOL}
