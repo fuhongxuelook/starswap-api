@@ -1,5 +1,7 @@
 package org.starcoin.starswap.api.data.model;
 
+import java.util.Objects;
+
 public class Pair<T1, T2> {
     private T1 item1;
     private T2 item2;
@@ -34,5 +36,18 @@ public class Pair<T1, T2> {
                 "item1=" + item1 +
                 ", item2=" + item2 +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        return Objects.equals(item1, pair.item1) && Objects.equals(item2, pair.item2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(item1, item2);
     }
 }

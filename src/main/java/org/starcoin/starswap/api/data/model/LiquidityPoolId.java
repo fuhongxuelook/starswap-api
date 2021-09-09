@@ -3,6 +3,7 @@ package org.starcoin.starswap.api.data.model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class LiquidityPoolId implements Serializable {
@@ -71,5 +72,16 @@ public class LiquidityPoolId implements Serializable {
         this.poolAddress = poolAddress;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LiquidityPoolId that = (LiquidityPoolId) o;
+        return Objects.equals(poolAddress, that.poolAddress) && Objects.equals(liquidityTokenId, that.liquidityTokenId);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(poolAddress, liquidityTokenId);
+    }
 }

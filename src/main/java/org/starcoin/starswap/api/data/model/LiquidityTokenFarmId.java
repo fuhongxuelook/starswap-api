@@ -3,6 +3,7 @@ package org.starcoin.starswap.api.data.model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class LiquidityTokenFarmId implements Serializable {
@@ -68,5 +69,16 @@ public class LiquidityTokenFarmId implements Serializable {
         this.farmAddress = farmAddress;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LiquidityTokenFarmId that = (LiquidityTokenFarmId) o;
+        return Objects.equals(farmAddress, that.farmAddress) && Objects.equals(liquidityTokenId, that.liquidityTokenId);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(farmAddress, liquidityTokenId);
+    }
 }

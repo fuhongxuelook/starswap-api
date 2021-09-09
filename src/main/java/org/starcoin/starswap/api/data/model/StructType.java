@@ -2,6 +2,7 @@ package org.starcoin.starswap.api.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.util.Objects;
 
 @Embeddable
 public class StructType {
@@ -69,5 +70,18 @@ public class StructType {
             throw new RuntimeException("Illegal string format.");
         }
         return new StructType(fs[0], fs[1], fs[2]);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StructType that = (StructType) o;
+        return Objects.equals(address, that.address) && Objects.equals(module, that.module) && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address, module, name);
     }
 }

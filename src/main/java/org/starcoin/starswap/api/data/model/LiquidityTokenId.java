@@ -3,6 +3,7 @@ package org.starcoin.starswap.api.data.model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Token Pair 的 Id。
@@ -53,5 +54,16 @@ public class LiquidityTokenId implements Serializable {
         this.tokenYId = tokenYId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LiquidityTokenId that = (LiquidityTokenId) o;
+        return Objects.equals(tokenXId, that.tokenXId) && Objects.equals(tokenYId, that.tokenYId) && Objects.equals(liquidityTokenAddress, that.liquidityTokenAddress);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(tokenXId, tokenYId, liquidityTokenAddress);
+    }
 }

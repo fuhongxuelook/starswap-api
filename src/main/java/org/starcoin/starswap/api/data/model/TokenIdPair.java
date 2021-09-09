@@ -23,4 +23,5 @@ public class TokenIdPair extends Pair<String, String> {
     public String[] toStringArray() {
         return new String[]{tokenXId(), tokenYId()};
     }
+
 }
