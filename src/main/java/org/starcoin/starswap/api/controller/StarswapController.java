@@ -105,7 +105,7 @@ public class StarswapController {
 
     @PostMapping(path = "pullingEventTasks")
     public void postPullingEventTask(@RequestBody PullingEventTask pullingEventTask) {
-        pullingEventTaskService.createPullingEventTask(pullingEventTask);
+        pullingEventTaskService.createOrUpdatePullingEventTask(pullingEventTask);
     }
 
     @GetMapping(path = "heartbeatBreakIntervals")

@@ -20,14 +20,23 @@ public class PullingEventTaskService {
     private PullingEventTaskRepository pullingEventTaskRepository;
 
     @Transactional
-    public void createPullingEventTask(PullingEventTask pullingEventTask) {
-        PullingEventTask targetEventTask = new PullingEventTask();
+    public void createOrUpdatePullingEventTask(PullingEventTask pullingEventTask) {
+        if (pullingEventTask.getFromBlockNumber() == null) {
+            throw new IllegalArgumentException("Argument 'fromBlockNumber' is null");
+        }
+        PullingEventTask targetEventTask = pullingEventTaskRepository.findById(pullingEventTask.getFromBlockNumber()).orElse(null);
+        if (targetEventTask == null) {
+            targetEventTask = new PullingEventTask();
+            targetEventTask.setCreatedAt(System.currentTimeMillis());
+            targetEventTask.setCreatedBy("ADMIN");
+            targetEventTask.setUpdatedAt(targetEventTask.getCreatedAt());
+            targetEventTask.setUpdatedBy(targetEventTask.getCreatedBy());
+        } else {
+            targetEventTask.setUpdatedAt(System.currentTimeMillis());
+            targetEventTask.setUpdatedBy("ADMIN");
+        }
         Set<String> props = Arrays.stream(new String[]{"fromBlockNumber", "toBlockNumber"}).collect(Collectors.toSet());
         BeanUtils2.copySpecificProperties(pullingEventTask, targetEventTask, props);
-        targetEventTask.setCreatedAt(System.currentTimeMillis());
-        targetEventTask.setCreatedBy("ADMIN");
-        targetEventTask.setUpdatedAt(targetEventTask.getCreatedAt());
-        targetEventTask.setUpdatedBy(targetEventTask.getCreatedBy());
         pullingEventTaskRepository.save(targetEventTask);
     }
 
