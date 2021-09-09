@@ -18,12 +18,9 @@ import java.net.MalformedURLException;
 public class OnChainService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OnChainService.class);
-
+    private final JsonRpcClient jsonRpcClient;
     @Value("${starswap.usd-equivalent-token-id}")
     private String usdEquivalentTokenId;
-
-    private final JsonRpcClient jsonRpcClient;
-
     @Autowired
     private TokenService tokenService;
 
@@ -43,9 +40,13 @@ public class OnChainService {
     public BigInteger getFarmTotalStakeAmount(LiquidityTokenFarm farm) {
         String farmAddress = farm.getLiquidityTokenFarmId().getFarmAddress();
         String tokenXId = farm.getLiquidityTokenFarmId().getLiquidityTokenId().getTokenXId();
-        String tokenX = tokenService.getTokenOrElseThrow(tokenXId, () -> { throw new RuntimeException("Cannot find token by Id: " + tokenXId);}).getTokenStructType().toTypeTagString();
+        String tokenX = tokenService.getTokenOrElseThrow(tokenXId, () -> {
+            throw new RuntimeException("Cannot find token by Id: " + tokenXId);
+        }).getTokenStructType().toTypeTagString();
         String tokenYId = farm.getLiquidityTokenFarmId().getLiquidityTokenId().getTokenYId();
-        String tokenY = tokenService.getTokenOrElseThrow(tokenYId, () -> { throw new RuntimeException("Cannot find token by Id: " + tokenYId);}).getTokenStructType().toTypeTagString();
+        String tokenY = tokenService.getTokenOrElseThrow(tokenYId, () -> {
+            throw new RuntimeException("Cannot find token by Id: " + tokenYId);
+        }).getTokenStructType().toTypeTagString();
         BigInteger stakeAmount = jsonRpcClient.tokenSwapFarmQueryTotalStake(farmAddress, tokenX, tokenY);
         return stakeAmount;
     }
@@ -103,7 +104,7 @@ public class OnChainService {
 
         Token rewardToken = tokenService.getTokenOrElseThrow(liquidityTokenFarm.getRewardTokenId(),
                 () -> new RuntimeException("Cannot find Token by Id: " + liquidityTokenFarm.getRewardTokenId()));
-        BigInteger rewardTokenScalingFactor = jsonRpcClient.tokenGetScalingFactor(rewardToken.getTokenStructType().toTypeTagString());
+        BigInteger rewardTokenScalingFactor = getTokenScalingFactor(rewardToken);
         BigDecimal rewardTokenToUsdRate = getToUsdExchangeRate(rewardToken);
         BigDecimal rewardPerYearInUsd = new BigDecimal(rewardPerYear)
                 .divide(new BigDecimal(rewardTokenScalingFactor), rewardTokenScalingFactor.toString().length() - 1, RoundingMode.HALF_UP)
@@ -123,8 +124,8 @@ public class OnChainService {
                 liquidityTokenAddress,
                 tokenX.getTokenStructType().toTypeTagString(),
                 tokenY.getTokenStructType().toTypeTagString());
-        BigInteger tokenXScalingFactor = jsonRpcClient.tokenGetScalingFactor(tokenX.getTokenStructType().toTypeTagString());
-        BigInteger tokenYScalingFactor = jsonRpcClient.tokenGetScalingFactor(tokenY.getTokenStructType().toTypeTagString());
+        BigInteger tokenXScalingFactor = getTokenScalingFactor(tokenX);
+        BigInteger tokenYScalingFactor = getTokenScalingFactor(tokenY);
         BigDecimal tokenXToUsdRate = getToUsdExchangeRateOffChainFirst(tokenX);
         BigDecimal tokenYToUsdRate = getToUsdExchangeRateOffChainFirst(tokenY);
         BigDecimal tokenXReserveInUsd = new BigDecimal(reservePair.getItem1())
@@ -134,6 +135,13 @@ public class OnChainService {
                 .divide(new BigDecimal(tokenYScalingFactor), tokenYScalingFactor.toString().length() - 1, RoundingMode.HALF_UP)
                 .multiply(tokenYToUsdRate);
         return tokenXReserveInUsd.add(tokenYReserveInUsd);
+    }
+
+    private BigInteger getTokenScalingFactor(Token token) {
+        if (token.getScalingFactor() != null) { // get from database first
+            return token.getScalingFactor();
+        }
+        return jsonRpcClient.tokenGetScalingFactor(token.getTokenStructType().toTypeTagString());
     }
 
     public BigDecimal getToUsdExchangeRate(String tokenTypeTag) {

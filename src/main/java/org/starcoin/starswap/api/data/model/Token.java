@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 @Entity
 @Table(name = "token", uniqueConstraints = {
@@ -34,11 +35,11 @@ public class Token {
     @Column(length = 1000, nullable = true)
     private String description;
 
-//    @Column(length = 1000, nullable = false)
-//    private String descriptionEn;
-
     @Column(nullable = false)
     private Integer sequenceNumber;
+
+    @Column(precision = 21, scale = 0)
+    private BigInteger scalingFactor;
 
     /**
      * 是否已禁用。
@@ -157,6 +158,14 @@ public class Token {
         this.version = version;
     }
 
+    public BigInteger getScalingFactor() {
+        return scalingFactor;
+    }
+
+    public void setScalingFactor(BigInteger scalingFactor) {
+        this.scalingFactor = scalingFactor;
+    }
+
     @Override
     public String toString() {
         return "Token{" +
@@ -165,6 +174,7 @@ public class Token {
                 ", iconUrl='" + iconUrl + '\'' +
                 ", description='" + description + '\'' +
                 ", sequenceNumber=" + sequenceNumber +
+                ", scalingFactor=" + scalingFactor +
                 ", deactived=" + deactived +
                 ", createdBy='" + createdBy + '\'' +
                 ", updatedBy='" + updatedBy + '\'' +
