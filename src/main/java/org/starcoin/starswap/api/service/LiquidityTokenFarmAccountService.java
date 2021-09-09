@@ -32,7 +32,7 @@ public class LiquidityTokenFarmAccountService {
         if (farmAccount == null) {
             farmAccount = new LiquidityTokenFarmAccount();
             farmAccount.setFarmAccountId(farmAccountId);
-            farmAccount.setStakeAmount(BigInteger.ZERO);//todo ???
+            farmAccount.setStakeAmount(BigInteger.ZERO);
             farmAccount.setDeactived(false);
             farmAccount.setCreatedAt(System.currentTimeMillis());
             farmAccount.setCreatedBy("admin");

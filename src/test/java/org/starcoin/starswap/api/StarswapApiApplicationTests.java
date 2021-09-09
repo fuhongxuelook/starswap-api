@@ -56,6 +56,13 @@ class StarswapApiApplicationTests {
 
     @Test
     void contextLoads() {
+//        nodeHeartbeatService.beat(BigInteger.valueOf(1));
+//        nodeHeartbeatService.beat(BigInteger.TEN);
+//        nodeHeartbeatService.beat(BigInteger.valueOf(12));
+//        nodeHeartbeatService.reset();
+//        nodeHeartbeatService.beat(BigInteger.valueOf(15));
+//        nodeHeartbeatService.beat(BigInteger.valueOf(17));
+//        if (true) return;
         BigDecimal stcUsd = tokenPriceService.getToUsdExchangeRate("STC");
         System.out.println(stcUsd);
         BigDecimal ethUsd = tokenPriceService.getToUsdExchangeRate("ETH");

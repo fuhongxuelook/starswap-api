@@ -35,7 +35,7 @@ public class LiquidityAccountService {
         if (liquidityAccount == null) {
             liquidityAccount = new LiquidityAccount();
             liquidityAccount.setLiquidityAccountId(liquidityAccountId);
-            liquidityAccount.setLiquidity(BigInteger.ZERO);//todo ???
+            liquidityAccount.setLiquidity(BigInteger.ZERO);
             liquidityAccount.setDeactived(false);
             liquidityAccount.setCreatedAt(System.currentTimeMillis());
             liquidityAccount.setCreatedBy("admin");

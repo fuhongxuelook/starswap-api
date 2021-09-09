@@ -3,15 +3,18 @@ package org.starcoin.starswap.api.data.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import java.math.BigInteger;
 
 @Entity
+@IdClass(NodeHeartbeatId.class)
 public class NodeHeartbeat {
 
     @Id
     @Column(length = 34)
     private String nodeId;
 
+    @Id
     @Column(precision = 21, scale = 0)
     private BigInteger startedAt;
 

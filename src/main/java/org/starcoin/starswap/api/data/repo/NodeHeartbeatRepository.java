@@ -3,10 +3,11 @@ package org.starcoin.starswap.api.data.repo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.starcoin.starswap.api.data.model.NodeHeartbeat;
+import org.starcoin.starswap.api.data.model.NodeHeartbeatId;
 
 import java.util.List;
 
-public interface NodeHeartbeatRepository extends JpaRepository<NodeHeartbeat, String> {
+public interface NodeHeartbeatRepository extends JpaRepository<NodeHeartbeat, NodeHeartbeatId> {
 
     @Query(nativeQuery = true, value = "SELECT DISTINCT\n" +
             "    g.beaten_at, g.is_end_point\n" +

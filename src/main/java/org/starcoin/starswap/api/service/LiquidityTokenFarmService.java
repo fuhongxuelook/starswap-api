@@ -55,7 +55,7 @@ public class LiquidityTokenFarmService {
         if (farm == null) {
             farm = new LiquidityTokenFarm();
             farm.setLiquidityTokenFarmId(farmId);
-            farm.setTotalStakeAmount(BigInteger.ZERO);//todo ???
+            farm.setTotalStakeAmount(BigInteger.ZERO);
             farm.setSequenceNumber(999);
             farm.setDeactived(false);
             farm.setRewardTokenId(DEFAULT_REWARD_TOKEN_ID);

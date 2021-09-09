@@ -88,20 +88,29 @@ public class HandleEventService {
         if (eventTypeTagStruct == null) {
             return;
         }
-        // todo 这样过滤事件？
-        if ("TokenSwap".equals(eventTypeTagStruct.getModule()) && "AddLiquidityEvent".equals(eventTypeTagStruct.getName())) {
-            handleAddLiquidityEvent(event, eventFromAddress, eventTypeTagStruct);
-        } else if ("TokenSwapFarm".equals(eventTypeTagStruct.getModule()) && "AddFarmEvent".equals(eventTypeTagStruct.getName())) {
-            handleAddFarmEvent(event, eventFromAddress, eventTypeTagStruct);
-        } else if ("TokenSwapFarm".equals(eventTypeTagStruct.getModule()) && "StakeEvent".equals(eventTypeTagStruct.getName())) {
-            handleStakeEvent(event, eventFromAddress, eventTypeTagStruct);
-        } else {
-            LOG.error("Unknown event type: " + event);
-            throw new RuntimeException("Unknown event type: " + event);
-        }
-        //todo 如果事件处理不成功？
+        boolean eventHandled;
         try {
-            nodeHeartbeatService.beat(new BigInteger(event.getBlockNumber()));
+            if ("TokenSwap".equals(eventTypeTagStruct.getModule()) && "AddLiquidityEvent".equals(eventTypeTagStruct.getName())) {
+                handleAddLiquidityEvent(event, eventFromAddress, eventTypeTagStruct);
+            } else if ("TokenSwapFarm".equals(eventTypeTagStruct.getModule()) && "AddFarmEvent".equals(eventTypeTagStruct.getName())) {
+                handleAddFarmEvent(event, eventFromAddress, eventTypeTagStruct);
+            } else if ("TokenSwapFarm".equals(eventTypeTagStruct.getModule()) && "StakeEvent".equals(eventTypeTagStruct.getName())) {
+                handleStakeEvent(event, eventFromAddress, eventTypeTagStruct);
+            } else {
+                throw new RuntimeException("Unknown event type.");
+            }
+            eventHandled = true;
+        } catch (RuntimeException runtimeException) {
+            LOG.error("Handle event error. event: " + event, runtimeException);
+            eventHandled = false;
+        }
+
+        try {
+            if (eventHandled) {
+                nodeHeartbeatService.beat(new BigInteger(event.getBlockNumber()));
+            } else {
+                nodeHeartbeatService.reset();
+            }
         } catch (RuntimeException runtimeException) {
             LOG.error("Save heartbeat in database error.", runtimeException);
         }
@@ -132,12 +141,8 @@ public class HandleEventService {
         try {
             stakeEvent = StakeEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
         } catch (DeserializationError deserializationError) {
-            //deserializationError.printStackTrace();
-            LOG.error("StakeEvent.bcsDeserialize error.", deserializationError);
-            //todo ???
-            return;
+            throw new RuntimeException("StakeEvent.bcsDeserialize error.", deserializationError);
         }
-        //System.out.println(addLiquidityEvent);
         String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(stakeEvent.x_token_code.address.value);
         String xTokenTypeModule = stakeEvent.x_token_code.module;
         String xTokenTypeName = stakeEvent.x_token_code.name;
@@ -148,20 +153,29 @@ public class HandleEventService {
 
         Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
         if (xToken == null) {
-            LOG.info("Cannot get token by struct type.");
-            return;
+            throw new RuntimeException("Cannot get token by struct type: " + stakeEvent.x_token_code);
         }
         Token yToken = tokenService.getTokenByStructType(yTokenTypeAddress, yTokenTypeModule, yTokenTypeName);
         if (yToken == null) {
-            LOG.info("Cannot get token by struct type.");
-            return;
+            throw new RuntimeException("Cannot get token by struct type: " + stakeEvent.y_token_code);
         }
-        String farmAddress = eventFromAddress;// todo Farm 池子的地址就是 event 的来源地址？
         String tokenXId = xToken.getTokenId();
         String tokenYId = yToken.getTokenId();
-        String liquidityTokenAddress = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenYId).getLiquidityTokenId().getLiquidityTokenAddress();//todo 通过查询得到 LiquidityToken 的地址？
+        // 通过查询得到 LiquidityToken 的地址
+        LiquidityToken liquidityToken = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenYId);
+        if (liquidityToken == null) {
+            throw new RuntimeException("Cannot find LiquidityToken by tokenId pair: " + tokenXId + " / " + tokenYId);
+        }
+        String liquidityTokenAddress = liquidityToken.getLiquidityTokenId().getLiquidityTokenAddress();
         LiquidityTokenId liquidityTokenId = new LiquidityTokenId(tokenXId, tokenYId, liquidityTokenAddress);
+        String farmAddress = eventFromAddress;// note：目前 Farm 池子的地址就是 event 的来源地址！
         LiquidityTokenFarmId liquidityTokenFarmId = new LiquidityTokenFarmId(liquidityTokenId, farmAddress);
+        // 如果只是查询 LiquidityToken 的信息，那么数据库中没有 Farm 的信息也可以正常执行。
+//        LiquidityTokenFarm liquidityTokenFarm = liquidityTokenFarmService.findOneByTokenIdPair(tokenXId, tokenYId);
+//        LiquidityTokenFarmId liquidityTokenFarmId = liquidityTokenFarm.getLiquidityTokenFarmId();
+//        if (!eventFromAddress.equalsIgnoreCase(liquidityTokenFarmId.getFarmAddress())) {
+//            throw new RuntimeException("eventFromAddress != farmAddress from findOneByTokenIdPair");
+//        }
         LiquidityTokenFarmAccountId farmAccountId = new LiquidityTokenFarmAccountId(accountAddress, liquidityTokenFarmId);
         liquidityTokenFarmAccountService.activeFarmAccount(farmAccountId);
     }
@@ -189,10 +203,7 @@ public class HandleEventService {
         try {
             addFarmEvent = AddFarmEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
         } catch (DeserializationError deserializationError) {
-            //deserializationError.printStackTrace();
-            LOG.error("AddFarmEvent.bcsDeserialize error.", deserializationError);
-            //todo ???
-            return;
+            throw new RuntimeException("AddFarmEvent.bcsDeserialize error.", deserializationError);
         }
         //System.out.println(addLiquidityEvent);
         String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addFarmEvent.x_token_code.address.value);
@@ -205,18 +216,20 @@ public class HandleEventService {
 
         Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
         if (xToken == null) {
-            LOG.info("Cannot get token by struct type.");
-            return;
+            throw new RuntimeException("Cannot get token by struct type: " + addFarmEvent.x_token_code);
         }
         Token yToken = tokenService.getTokenByStructType(yTokenTypeAddress, yTokenTypeModule, yTokenTypeName);
         if (yToken == null) {
-            LOG.info("Cannot get token by struct type.");
-            return;
+            throw new RuntimeException("Cannot get token by struct type: " + addFarmEvent.y_token_code);
         }
-        String farmAddress = eventFromAddress;// todo Farm 池子的地址就是 event 的来源地址？
+        String farmAddress = eventFromAddress;// note: 目前 Farm 池子的地址就是 event 的来源地址！
         String tokenXId = xToken.getTokenId();
         String tokenYId = yToken.getTokenId();
-        String liquidityTokenAddress = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenYId).getLiquidityTokenId().getLiquidityTokenAddress();//todo 通过查询得到 LiquidityToken 的地址？
+        LiquidityToken liquidityToken = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenYId);
+        if (liquidityToken == null) {
+            throw new RuntimeException("Cannot find LiquidityToken by tokenId pair: " + tokenXId + " / " + tokenYId);
+        }
+        String liquidityTokenAddress = liquidityToken.getLiquidityTokenId().getLiquidityTokenAddress();
         LiquidityTokenId liquidityTokenId = new LiquidityTokenId(tokenXId, tokenYId, liquidityTokenAddress);
         LiquidityTokenFarmId liquidityTokenFarmId = new LiquidityTokenFarmId(liquidityTokenId, farmAddress);
 
@@ -232,12 +245,8 @@ public class HandleEventService {
         try {
             addLiquidityEvent = AddLiquidityEvent.bcsDeserialize(CommonUtils.hexToByteArray(eventData));
         } catch (DeserializationError deserializationError) {
-            //deserializationError.printStackTrace();
-            LOG.error("AddLiquidityEvent.bcsDeserialize error.", deserializationError);
-            //todo ???
-            return;
+            throw new RuntimeException("AddLiquidityEvent.bcsDeserialize error.", deserializationError);
         }
-        //System.out.println(addLiquidityEvent);
         String xTokenTypeAddress = CommonUtils.byteListToHexWithPrefix(addLiquidityEvent.x_token_code.address.value);
         String xTokenTypeModule = addLiquidityEvent.x_token_code.module;
         String xTokenTypeName = addLiquidityEvent.x_token_code.name;
@@ -262,18 +271,15 @@ public class HandleEventService {
 
         Token xToken = tokenService.getTokenByStructType(xTokenTypeAddress, xTokenTypeModule, xTokenTypeName);
         if (xToken == null) {
-            LOG.info("Cannot get token by struct type.");
-            return;
+            throw new RuntimeException("Cannot get token by struct type: " + addLiquidityEvent.x_token_code);
         }
         Token yToken = tokenService.getTokenByStructType(yTokenTypeAddress, yTokenTypeModule, yTokenTypeName);
         if (yToken == null) {
-            LOG.info("Cannot get token by struct type.");
-            return;
+            throw new RuntimeException("Cannot get token by struct type: " + addLiquidityEvent.y_token_code);
         }
         String eventStructAddress = eventTypeTagStruct.getAddress();
-        //System.out.println(eventStructAddress);
-        String liquidityTokenAddress = eventStructAddress; // todo LiquidityToken 的地址就是事件的结构的地址？
-        String liquidityPollAddress = eventFromAddress;// todo 池子的地址就是 event 的来源地址？
+        String liquidityTokenAddress = eventStructAddress; // note：目前 LiquidityToken 的地址就是事件的结构的地址！
+        String liquidityPollAddress = eventFromAddress;// note：目前流动性池子的地址就是 event 的来源地址！
         LiquidityAccountId liquidityAccountId = new LiquidityAccountId(accountAddress,
                 new LiquidityPoolId(
                         new LiquidityTokenId(xToken.getTokenId(), yToken.getTokenId(), liquidityTokenAddress),
