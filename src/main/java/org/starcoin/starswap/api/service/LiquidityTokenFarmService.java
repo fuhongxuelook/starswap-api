@@ -3,6 +3,7 @@ package org.starcoin.starswap.api.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.starcoin.starswap.api.data.model.LiquidityTokenFarm;
 import org.starcoin.starswap.api.data.model.LiquidityTokenFarmId;
@@ -17,7 +18,8 @@ import java.util.List;
 @Service
 public class LiquidityTokenFarmService {
 
-    public static final String DEFAULT_REWARD_TOKEN_ID = "TBD";//todo config?
+    @Value("${starswap.lp-token-farming.default-reward-token-id}")
+    private String defaultRewardTokenId;
 
     private static final Logger LOG = LoggerFactory.getLogger(LiquidityTokenFarmService.class);
 
@@ -58,7 +60,7 @@ public class LiquidityTokenFarmService {
             farm.setTotalStakeAmount(BigInteger.ZERO);
             farm.setSequenceNumber(999);
             farm.setDeactived(false);
-            farm.setRewardTokenId(DEFAULT_REWARD_TOKEN_ID);
+            farm.setRewardTokenId(defaultRewardTokenId);
             farm.setCreatedAt(System.currentTimeMillis());
             farm.setCreatedBy("admin");
             farm.setUpdatedAt(farm.getCreatedAt());

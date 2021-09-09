@@ -14,10 +14,10 @@ import java.util.Map;
 @Service
 public class TokenPriceService {
 
-    @Value("${token-price-service.get-pair-price-url}")
+    @Value("${starswap.token-price-service.get-pair-price-url}")
     private String getPairPriceUrl;
 
-    //@Value("${token-price-service.to-usd-pair-id-mappings}") //todo config?
+    //@Value("${starswap.token-price-service.to-usd-pair-id-mappings}") //todo config?
     private Map<String, String> toUsdPairIdMappings;
 
     @Autowired

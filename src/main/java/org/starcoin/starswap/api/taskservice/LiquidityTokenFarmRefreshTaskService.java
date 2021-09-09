@@ -36,7 +36,7 @@ public class LiquidityTokenFarmRefreshTaskService {
         this.onChainService = onChainService;
     }
 
-    @Scheduled(fixedDelay = 10000) //todo config
+    @Scheduled(fixedDelayString = "${starswap.lp-token-farm-refresh-task-service.fixed-delay}")
     public void task() {
         List<LiquidityTokenFarm> farms = liquidityTokenFarmRepository.findByDeactivedIsFalse();
         for (LiquidityTokenFarm farm : farms) {

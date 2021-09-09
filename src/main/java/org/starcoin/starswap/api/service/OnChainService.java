@@ -19,7 +19,8 @@ public class OnChainService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OnChainService.class);
 
-    public static final String USD_EQUIVALENT_TOKEN_ID = "Usdx"; //todo config???
+    @Value("${starswap.usd-equivalent-token-id}")
+    private String usdEquivalentTokenId;
 
     private final JsonRpcClient jsonRpcClient;
 
@@ -161,10 +162,10 @@ public class OnChainService {
     }
 
     private BigDecimal getToUsdExchangeRate(Token token) {
-        if (USD_EQUIVALENT_TOKEN_ID.equals(token.getTokenId())) {
+        if (usdEquivalentTokenId.equals(token.getTokenId())) {
             return BigDecimal.ONE;
         }
-        Token usdEquivalentToken = tokenService.getTokenOrElseThrow(USD_EQUIVALENT_TOKEN_ID, () -> new RuntimeException("Cannot find USD equivalent token."));
+        Token usdEquivalentToken = tokenService.getTokenOrElseThrow(usdEquivalentTokenId, () -> new RuntimeException("Cannot find USD equivalent token."));
         String usdEquivalentTokenTypeTag = usdEquivalentToken.getTokenStructType().toTypeTagString();
         LiquidityToken liquidityToken = liquidityTokenService.findOneByTokenIdPair(token.getTokenId(), usdEquivalentToken.getTokenId());
         if (liquidityToken == null) {

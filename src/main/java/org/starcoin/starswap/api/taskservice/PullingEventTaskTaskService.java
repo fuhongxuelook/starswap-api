@@ -49,7 +49,7 @@ public class PullingEventTaskTaskService {
         this.stakeEventTypeTag = stakeEventTypeTag;
     }
 
-    @Scheduled(fixedDelay = 10000) //todo config
+    @Scheduled(fixedDelayString = "${starswap.pulling-event-task-service.fixed-delay}")
     public void task() {
         List<PullingEventTask> pullingEventTasks = pullingEventTaskService.getPullingEventTaskToProcess();
         if (pullingEventTasks == null || pullingEventTasks.isEmpty()) {

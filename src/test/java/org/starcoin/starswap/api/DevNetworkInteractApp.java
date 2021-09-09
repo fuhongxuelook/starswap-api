@@ -69,7 +69,7 @@ public class DevNetworkInteractApp {
 //                    .expect("\"ok\":", 10)
 //                    .sendLine("dev deploy storage/0x598b8cbfd4536ecbe88aa1cfaffa7a62/modules/TokenSwapGov.mv -b")
 //                    .expect("\"ok\":", 10)
-//                    .sendLine("dev deploy storage/0x598b8cbfd4536ecbe88aa1cfaffa7a62/modules/TokenSwapFarmScript.mv -b") //todo XxxxScripts???
+//                    .sendLine("dev deploy storage/0x598b8cbfd4536ecbe88aa1cfaffa7a62/modules/TokenSwapFarmScript.mv -b") //todo named 'XxxxScripts'???
 //                    .expect("\"ok\":", 10)
 //                    .sendLine("dev deploy storage/0x598b8cbfd4536ecbe88aa1cfaffa7a62/modules/TokenSwapGovScript.mv -b")
 //                    .expect("\"ok\":", 10)
