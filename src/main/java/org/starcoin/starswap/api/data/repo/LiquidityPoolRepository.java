@@ -14,7 +14,4 @@ public interface LiquidityPoolRepository extends JpaRepository<LiquidityPool, Li
     @Query(value = "select * from liquidity_pool p where token_x_id = :tokenXId and token_y_id = :tokenYId", nativeQuery = true)
     List<LiquidityPool> findByLiquidityPoolIdTokenXIdAndLiquidityPoolIdTokenYId(String tokenXId, String tokenYId);
 
-//
-//    Page<Token> findByNetworkAndDeletedAtIsNull(String network, Pageable page);
-//
 }

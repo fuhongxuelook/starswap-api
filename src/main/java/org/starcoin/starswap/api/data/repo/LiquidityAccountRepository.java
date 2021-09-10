@@ -12,7 +12,4 @@ public interface LiquidityAccountRepository extends JpaRepository<LiquidityAccou
 
     List<LiquidityAccount> findByLiquidityAccountIdAccountAddress(String accountAddress);
 
-//    Page<Token> findByNetworkAndDeletedAtIsNull(String network, Pageable page);
-//
-//    Token findByTitleOrTitleEnAndDeletedAtIsNull(String title, String titleEn);
 }

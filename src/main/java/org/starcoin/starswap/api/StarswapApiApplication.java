@@ -10,6 +10,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.starcoin.starswap.api.service.HandleEventService;
+import org.starcoin.starswap.api.service.OnChainService;
 import org.starcoin.starswap.subscribe.StarcoinEventSubscribeHandler;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
@@ -28,6 +29,9 @@ public class StarswapApiApplication {
 
     @Autowired
     private HandleEventService handleEventService;
+
+    @Autowired
+    private OnChainService onChainService;
 
     @Value("${starcoin.event-filter.from-address}")
     private String fromAddress;// = "0x598b8cbfd4536ecbe88aa1cfaffa7a62";
@@ -53,4 +57,13 @@ public class StarswapApiApplication {
         }
     }
 
+    @EventListener(ApplicationReadyEvent.class)
+    public void refreshTokenScalingFactors() {
+        LOG.info("Refreshing token scaling factors...");
+        try {
+            onChainService.refreshOffChainScalingFactors();
+        } catch (RuntimeException runtimeException) {
+            LOG.info("Refreshing token scaling factors error.", runtimeException);
+        }
+    }
 }

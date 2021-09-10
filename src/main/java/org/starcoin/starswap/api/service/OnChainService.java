@@ -23,6 +23,7 @@ public class OnChainService {
 
     @Value("${starswap.usd-equivalent-token-id}")
     private String usdEquivalentTokenId;
+
     @Autowired
     private TokenService tokenService;
 
@@ -109,7 +110,7 @@ public class OnChainService {
 
         Token rewardToken = tokenService.getTokenOrElseThrow(liquidityTokenFarm.getRewardTokenId(),
                 () -> new RuntimeException("Cannot find Token by Id: " + liquidityTokenFarm.getRewardTokenId()));
-        BigInteger rewardTokenScalingFactor = getTokenScalingFactor(rewardToken);
+        BigInteger rewardTokenScalingFactor = getTokenScalingFactorOffChainFirst(rewardToken);
         BigDecimal rewardTokenToUsdRate = getToUsdExchangeRate(rewardToken);
         BigDecimal rewardPerYearInUsd = new BigDecimal(rewardPerYear)
                 .divide(new BigDecimal(rewardTokenScalingFactor), rewardTokenScalingFactor.toString().length() - 1, RoundingMode.HALF_UP)
@@ -132,8 +133,8 @@ public class OnChainService {
                 liquidityTokenAddress,
                 tokenX.getTokenStructType().toTypeTagString(),
                 tokenY.getTokenStructType().toTypeTagString());
-        BigInteger tokenXScalingFactor = getTokenScalingFactor(tokenX);
-        BigInteger tokenYScalingFactor = getTokenScalingFactor(tokenY);
+        BigInteger tokenXScalingFactor = getTokenScalingFactorOffChainFirst(tokenX);
+        BigInteger tokenYScalingFactor = getTokenScalingFactorOffChainFirst(tokenY);
         BigDecimal tokenXToUsdRate = getToUsdExchangeRateOffChainFirst(tokenX);
         BigDecimal tokenYToUsdRate = getToUsdExchangeRateOffChainFirst(tokenY);
         BigDecimal tokenXReserveInUsd = new BigDecimal(reservePair.getItem1())
@@ -145,11 +146,16 @@ public class OnChainService {
         return tokenXReserveInUsd.add(tokenYReserveInUsd);
     }
 
-    private BigInteger getTokenScalingFactor(Token token) {
-        if (token.getScalingFactor() != null) { // get from database first
+    // get token scaling factor from database first, or else get from on-chain.
+    private BigInteger getTokenScalingFactorOffChainFirst(Token token) {
+        if (token.getScalingFactor() != null) {
             return token.getScalingFactor();
         }
         return jsonRpcClient.tokenGetScalingFactor(token.getTokenStructType().toTypeTagString());
+    }
+
+    public BigInteger getTokenScalingFactor(String typeTag) {
+        return jsonRpcClient.tokenGetScalingFactor(typeTag);
     }
 
     public BigDecimal getToUsdExchangeRate(String tokenTypeTag) {
@@ -191,6 +197,20 @@ public class OnChainService {
         //        token.getTokenStructType().toTypeTagString(), usdEquivalentTokenTypeTag);
         return jsonRpcClient.getExchangeRate(liquidityToken.getLiquidityTokenId().getLiquidityTokenAddress(),
                 token.getTokenStructType().toTypeTagString(), usdEquivalentToken.getTokenStructType().toTypeTagString(),
-                getTokenScalingFactor(token), getTokenScalingFactor(usdEquivalentToken));
+                getTokenScalingFactorOffChainFirst(token), getTokenScalingFactorOffChainFirst(usdEquivalentToken));
+    }
+
+    /**
+     * refresh token scaling factors in database.
+     */
+    public void refreshOffChainScalingFactors() {
+        tokenService.findByScalingFactorIsNull().forEach((t) -> {
+            if (t.getScalingFactor() == null) {
+                t.setScalingFactor(jsonRpcClient.tokenGetScalingFactor(t.getTokenStructType().toTypeTagString()));
+                t.setUpdatedAt(System.currentTimeMillis());
+                t.setUpdatedBy("admin");
+                tokenService.save(t);
+            }
+        });
     }
 }

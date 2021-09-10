@@ -13,7 +13,7 @@ public interface TokenRepository extends JpaRepository<Token, String> {
 
     Token findFirstByTokenStructType(StructType structType);
 
-//    Page<Token> findByNetworkAndDeletedAtIsNull(String network, Pageable page);
-//
-//    Token findByTitleOrTitleEnAndDeletedAtIsNull(String title, String titleEn);
+    List<Token> findByScalingFactorIsNull();
+
+
 }

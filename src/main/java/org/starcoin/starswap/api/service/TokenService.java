@@ -18,6 +18,7 @@ public class TokenService {
 
     private final TokenRepository tokenRepository;
 
+
     @Autowired
     public TokenService(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
@@ -41,5 +42,13 @@ public class TokenService {
 
     public Token getTokenByStructType(StructType structType) {
         return tokenRepository.findFirstByTokenStructType(structType);
+    }
+
+    public List<Token> findByScalingFactorIsNull() {
+        return tokenRepository.findByScalingFactorIsNull();
+    }
+
+    public void save(Token token) {
+        tokenRepository.save(token);
     }
 }

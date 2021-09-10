@@ -11,8 +11,7 @@ public interface LiquidityTokenRepository extends JpaRepository<LiquidityToken, 
     List<LiquidityToken> findByDeactivedIsFalse();
 
     List<LiquidityToken> findByLiquidityTokenIdTokenXIdAndLiquidityTokenIdTokenYId(String x, String y);
-//
+
 //    Page<Token> findByNetworkAndDeletedAtIsNull(String network, Pageable page);
-//
 
 }

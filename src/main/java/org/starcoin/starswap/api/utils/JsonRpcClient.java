@@ -55,7 +55,7 @@ public class JsonRpcClient {
     public BigDecimal getExchangeRate(String lpTokenAddress, String tokenX, String tokenY,
                                       BigInteger tokenXScalingFactor, BigInteger tokenYScalingFactor) {
         Pair<BigInteger, BigInteger> reserves = JsonRpcUtils.tokenSwapRouterGetReserves(jsonRpcSession, lpTokenAddress, tokenX, tokenY);
-        BigInteger amountX = reserves.getItem1().divide(BigInteger.valueOf(100L));//tokenXScalingFactor;
+        BigInteger amountX = reserves.getItem1().divide(BigInteger.valueOf(100L));//try to swap tokenX of 1 percent reserve
         BigInteger amountY = JsonRpcUtils.tokenSwapRouterGetAmountOut(jsonRpcSession, lpTokenAddress, amountX, reserves.getItem1(), reserves.getItem2());
         //System.out.println("----- amountX ------" + amountX);
         //System.out.println("----- amountY ------" + amountY);
