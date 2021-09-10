@@ -8,7 +8,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.starcoin.bean.Event;
 import org.starcoin.starswap.api.data.model.PullingEventTask;
+import org.starcoin.starswap.api.data.repo.NodeHeartbeatRepository;
 import org.starcoin.starswap.api.service.HandleEventService;
+import org.starcoin.starswap.api.service.NodeHeartbeatService;
 import org.starcoin.starswap.api.service.PullingEventTaskService;
 import org.starcoin.starswap.api.utils.JsonRpcClient;
 
@@ -19,12 +21,13 @@ import java.util.*;
 import static org.starcoin.starswap.api.data.model.PullingEventTask.PULLING_BLOCK_MAX_COUNT;
 
 @Service
-public class PullingEventTaskTaskService {
-    private static final Logger LOG = LoggerFactory.getLogger(PullingEventTaskTaskService.class);
+public class PullingEventTaskExecuteTaskService {
+    private static final Logger LOG = LoggerFactory.getLogger(PullingEventTaskExecuteTaskService.class);
 
     private final PullingEventTaskService pullingEventTaskService;
     private final HandleEventService handleEventService;
     private final JsonRpcClient jsonRpcClient;
+    private final NodeHeartbeatRepository nodeHeartbeatRepository;
 
     private final String fromAddress;// = "0x598b8cbfd4536ecbe88aa1cfaffa7a62";
     private final String addLiquidityEventTypeTag;// = "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwap::AddLiquidityEvent";
@@ -32,10 +35,11 @@ public class PullingEventTaskTaskService {
     private final String stakeEventTypeTag;// = "0x598b8cbfd4536ecbe88aa1cfaffa7a62::TokenSwapFarm::StakeEvent";
 
 
-    public PullingEventTaskTaskService(
+    public PullingEventTaskExecuteTaskService(
             @Value("${starcoin.json-rpc-url}") String jsonRpcUrl,
             @Autowired PullingEventTaskService pullingEventTaskService,
             @Autowired HandleEventService handleEventService,
+            @Autowired NodeHeartbeatRepository nodeHeartbeatRepository,
             @Value("${starcoin.event-filter.from-address}") String fromAddress,
             @Value("${starcoin.event-filter.add-liquidity-event-type-tag}") String addLiquidityEventTypeTag,
             @Value("${starcoin.event-filter.add-farm-event-type-tag}") String addFarmEventTypeTag,
@@ -43,13 +47,14 @@ public class PullingEventTaskTaskService {
         this.jsonRpcClient = new JsonRpcClient(jsonRpcUrl);
         this.pullingEventTaskService = pullingEventTaskService;
         this.handleEventService = handleEventService;
+        this.nodeHeartbeatRepository = nodeHeartbeatRepository;
         this.fromAddress = fromAddress;
         this.addLiquidityEventTypeTag = addLiquidityEventTypeTag;
         this.addFarmEventTypeTag = addFarmEventTypeTag;
         this.stakeEventTypeTag = stakeEventTypeTag;
     }
 
-    @Scheduled(fixedDelayString = "${starswap.pulling-event-task-service.fixed-delay}")
+    @Scheduled(fixedDelayString = "${starswap.pulling-event-task-execute.fixed-delay}")
     public void task() {
         List<PullingEventTask> pullingEventTasks = pullingEventTaskService.getPullingEventTaskToProcess();
         if (pullingEventTasks == null || pullingEventTasks.isEmpty()) {
@@ -62,6 +67,9 @@ public class PullingEventTaskTaskService {
 
     private void executeTask(PullingEventTask t) {
         BigInteger fromBlockNumber = t.getFromBlockNumber();
+        // use a new individual nodeId to record heartbeats.
+        NodeHeartbeatService nodeHeartbeatService = new NodeHeartbeatService(nodeHeartbeatRepository);
+        nodeHeartbeatService.beat(t.getFromBlockNumber());
         while (fromBlockNumber.compareTo(t.getToBlockNumber()) < 0) {
             BigInteger toBlockNumber = fromBlockNumber.add(BigInteger.valueOf(PULLING_BLOCK_MAX_COUNT));
             if (toBlockNumber.compareTo(t.getToBlockNumber()) > 0) {
@@ -84,6 +92,7 @@ public class PullingEventTaskTaskService {
             fromBlockNumber = toBlockNumber;
         }
         pullingEventTaskService.updateStatusDone(t);
+        nodeHeartbeatService.beat(t.getToBlockNumber());
     }
 
 

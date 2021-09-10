@@ -78,8 +78,10 @@ starswap:
   usd-equivalent-token-id: "Usdx"
   lp-token-farm-refresh-task-service:
     fixed-delay: 30000
-  pulling-event-task-service:
+  pulling-event-task-execute:
     fixed-delay: 20000
+  pulling-event-task-auto-add:
+    fixed-delay: 60000
 
 
 #elasticsearch:

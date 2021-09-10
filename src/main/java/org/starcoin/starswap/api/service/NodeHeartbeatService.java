@@ -25,8 +25,12 @@ public class NodeHeartbeatService {
 
     private final AtomicReference<BigInteger> startedAt = new AtomicReference<>();
 
+    private final NodeHeartbeatRepository nodeHeartbeatRepository;
+
     @Autowired
-    private NodeHeartbeatRepository nodeHeartbeatRepository;
+    public NodeHeartbeatService(NodeHeartbeatRepository nodeHeartbeatRepository) {
+        this.nodeHeartbeatRepository = nodeHeartbeatRepository;
+    }
 
     public void reset() {
         startedAt.set(null);

@@ -34,6 +34,7 @@ public class PullingEventTaskService {
         } else {
             targetEventTask.setUpdatedAt(System.currentTimeMillis());
             targetEventTask.setUpdatedBy("ADMIN");
+            targetEventTask.resetStatus();
         }
         Set<String> props = Arrays.stream(new String[]{"fromBlockNumber", "toBlockNumber"}).collect(Collectors.toSet());
         BeanUtils2.copySpecificProperties(pullingEventTask, targetEventTask, props);
@@ -41,7 +42,7 @@ public class PullingEventTaskService {
     }
 
     @Transactional
-    public void updatePullingEventTask(BigInteger fromBlockNumber, BigInteger toBlockNumber) {
+    public void createOrUpdatePullingEventTask(BigInteger fromBlockNumber, BigInteger toBlockNumber) {
         PullingEventTask targetEventTask = pullingEventTaskRepository.findById(fromBlockNumber).orElse(null);
         if (targetEventTask == null) {
             targetEventTask = new PullingEventTask();
