@@ -70,7 +70,7 @@ starcoin:
 
 starswap:
   token-price-service:
-    get-pair-price-url: http://ac5e9dd967389445e809defadcba5242-1908387560.ap-northeast-1.elb.amazonaws.com/v1/priceFeeds/{pairId}
+    get-pair-price-url: http://ac5e9dd967389445e809defadcba5242-1908387560.ap-northeast-1.elb.amazonaws.com/barnard/v1/priceFeeds/{pairId}
   #  to-usd-pair-id-mappings:
   #    STC: "STCUSD"
   lp-token-farming:
