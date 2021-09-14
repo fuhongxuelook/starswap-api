@@ -1,5 +1,6 @@
 package org.starcoin.starswap.api.service;
 
+import com.williamfiset.algorithms.graphtheory.DijkstrasShortestPathAdjacencyList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.starcoin.starswap.api.data.model.LiquidityTokenId;
 import org.starcoin.starswap.api.data.model.TokenIdPair;
 import org.starcoin.starswap.api.data.repo.LiquidityTokenRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LiquidityTokenService {
@@ -43,4 +46,35 @@ public class LiquidityTokenService {
         }
         return liquidityTokens.get(0);
     }
+
+    public List<String> getShortestIndirectSwapPath(String tokenXId, String tokenYId) {
+        List<LiquidityToken> liquidityTokens = liquidityTokenRepository.findByDeactivedIsFalse();
+        List<String> tokenIdList = getTokenIdList(liquidityTokens);
+        DijkstrasShortestPathAdjacencyList pathAdjacencyList = new DijkstrasShortestPathAdjacencyList(tokenIdList.size());
+        for (LiquidityToken t : liquidityTokens) {
+            String lpTokenXId = t.getLiquidityTokenId().getTokenXId();
+            String lpTokenYId = t.getLiquidityTokenId().getTokenYId();
+            if (new TokenIdPair(tokenXId, tokenYId).equals(new TokenIdPair(lpTokenXId, lpTokenYId))) {
+                continue;
+            }
+            pathAdjacencyList.addEdge(tokenIdList.indexOf(lpTokenXId), tokenIdList.indexOf(lpTokenYId), 1);
+            pathAdjacencyList.addEdge(tokenIdList.indexOf(lpTokenYId), tokenIdList.indexOf(lpTokenXId), 1);
+        }
+        List<Integer> path = pathAdjacencyList.reconstructPath(tokenIdList.indexOf(tokenXId), tokenIdList.indexOf(tokenYId));
+        return path.stream().map(tokenIdList::get).collect(Collectors.toList());
+    }
+
+    private List<String> getTokenIdList(List<LiquidityToken> liquidityTokens) {
+        List<String> tokenIdList = new ArrayList<>();
+        for (LiquidityToken t : liquidityTokens) {
+            if (!tokenIdList.contains(t.getLiquidityTokenId().getTokenXId())) {
+                tokenIdList.add(t.getLiquidityTokenId().getTokenXId());
+            }
+            if (!tokenIdList.contains(t.getLiquidityTokenId().getTokenYId())) {
+                tokenIdList.add(t.getLiquidityTokenId().getTokenYId());
+            }
+        }
+        return tokenIdList;
+    }
+
 }

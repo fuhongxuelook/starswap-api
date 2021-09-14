@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class OnChainService {
@@ -41,6 +44,42 @@ public class OnChainService {
 
     public OnChainService(@Value("${starcoin.json-rpc-url}") String jsonRpcUrl) throws MalformedURLException {
         this.jsonRpcClient = new JsonRpcClient(jsonRpcUrl);
+    }
+
+    public List<String> getBestSwapPath(String tokenXId, String tokenYId, BigInteger amountX) {
+        String tokenX = tokenService.getTokenOrElseThrow(tokenXId, () -> {
+            throw new RuntimeException("Cannot find token by Id: " + tokenXId);
+        }).getTokenStructType().toTypeTagString();
+        String tokenY = tokenService.getTokenOrElseThrow(tokenYId, () -> {
+            throw new RuntimeException("Cannot find token by Id: " + tokenYId);
+        }).getTokenStructType().toTypeTagString();
+        LiquidityToken liquidityToken = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenYId);
+        List<String> indirectSwapPath = liquidityTokenService.getShortestIndirectSwapPath(tokenXId, tokenYId);
+        BigInteger directAmountY = null;
+        if (liquidityToken != null) {
+            if (indirectSwapPath.size() == 0 || indirectSwapPath.size() > 3) {
+                return Arrays.asList(tokenXId, tokenYId);
+            }
+            // todo call On-Chain contract twice??
+            directAmountY = jsonRpcClient.tokenSwapRouterGetAmountOut(liquidityToken.getLiquidityTokenId().getLiquidityTokenAddress(), tokenX, tokenY, amountX);
+        }
+        if (liquidityToken == null && (indirectSwapPath.size() == 0 || indirectSwapPath.size() > 3)) {
+            return Collections.emptyList();
+        }
+        if (liquidityToken == null) {
+            return indirectSwapPath;
+        }
+        String tokenRId = indirectSwapPath.get(1);
+        String tokenR = tokenService.getTokenOrElseThrow(tokenRId, () -> {
+            throw new RuntimeException("Cannot find token by Id: " + tokenRId);
+        }).getTokenStructType().toTypeTagString();
+        LiquidityToken liquidityTokenXR = liquidityTokenService.findOneByTokenIdPair(tokenXId, tokenRId);
+        // todo call On-Chain contract twice??
+        BigInteger amountR = jsonRpcClient.tokenSwapRouterGetAmountOut(liquidityTokenXR.getLiquidityTokenId().getLiquidityTokenAddress(), tokenX, tokenR, amountX);
+        LiquidityToken liquidityTokenRY = liquidityTokenService.findOneByTokenIdPair(tokenRId, tokenYId);
+        // todo call On-Chain contract twice??
+        BigInteger indirectAmountY = jsonRpcClient.tokenSwapRouterGetAmountOut(liquidityTokenRY.getLiquidityTokenId().getLiquidityTokenAddress(), tokenR, tokenY, amountR);
+        return directAmountY.compareTo(indirectAmountY) > 0 ? Arrays.asList(tokenXId, tokenYId) : indirectSwapPath;
     }
 
     public BigInteger getFarmTotalStakeAmount(LiquidityTokenFarm farm) {

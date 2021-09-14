@@ -64,4 +64,9 @@ public class JsonRpcClient {
                 .divide(new BigDecimal(amountX).divide(new BigDecimal(tokenXScalingFactor), scale, RoundingMode.HALF_UP),
                         scale, RoundingMode.HALF_UP);
     }
+
+    public BigInteger tokenSwapRouterGetAmountOut(String lpTokenAddress, String tokenX, String tokenY, BigInteger amountX) {
+        Pair<BigInteger, BigInteger> reserves = JsonRpcUtils.tokenSwapRouterGetReserves(jsonRpcSession, lpTokenAddress, tokenX, tokenY);
+        return JsonRpcUtils.tokenSwapRouterGetAmountOut(jsonRpcSession, lpTokenAddress, amountX, reserves.getItem1(), reserves.getItem2());
+    }
 }

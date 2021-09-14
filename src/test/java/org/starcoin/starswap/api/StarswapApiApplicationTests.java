@@ -54,8 +54,26 @@ class StarswapApiApplicationTests {
     @Autowired
     TokenPriceService tokenPriceService;
 
+    public static void addNodeHeartbeat(NodeHeartbeatRepository nodeHeartbeatRepository, NodeHeartbeat b7) {
+        b7.setCreatedAt(System.currentTimeMillis());
+        b7.setCreatedBy("admin");
+        b7.setUpdatedAt(b7.getCreatedAt());
+        b7.setUpdatedBy(b7.getCreatedBy());
+        nodeHeartbeatRepository.save(b7);
+    }
+
     @Test
     void contextLoads() {
+        List<String> swapPathBotDdd = onChainService.getBestSwapPath("Bot", "Ddd", BigInteger.valueOf(100000L));
+        System.out.println(swapPathBotDdd);
+        if (true) return;
+//        List<String> swapPathBotDdd = liquidityTokenService.getShortestIndirectSwapPath("Bot", "Ddd");
+//        System.out.println(swapPathBotDdd);
+        List<String> swapPathTbdDdd = liquidityTokenService.getShortestIndirectSwapPath("TBD", "Ddd");
+        System.out.println(swapPathTbdDdd);
+        List<String> swapPathBotTbd = liquidityTokenService.getShortestIndirectSwapPath("Bot", "TBD");
+        System.out.println(swapPathBotTbd);
+        if (true) return;
 //        nodeHeartbeatService.beat(BigInteger.valueOf(1));
 //        nodeHeartbeatService.beat(BigInteger.TEN);
 //        nodeHeartbeatService.beat(BigInteger.valueOf(12));
@@ -168,14 +186,6 @@ class StarswapApiApplicationTests {
         breakpoints.forEach(p -> System.out.println(p[0] + "\t" + p[1]));
 
         System.out.println(nodeHeartbeatService.findBreakIntervals());
-    }
-
-    public static void addNodeHeartbeat(NodeHeartbeatRepository nodeHeartbeatRepository, NodeHeartbeat b7) {
-        b7.setCreatedAt(System.currentTimeMillis());
-        b7.setCreatedBy("admin");
-        b7.setUpdatedAt(b7.getCreatedAt());
-        b7.setUpdatedBy(b7.getCreatedBy());
-        nodeHeartbeatRepository.save(b7);
     }
 
     private void tryRun(Runnable runnable) {

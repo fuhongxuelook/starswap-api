@@ -45,6 +45,9 @@ public class StarswapController {
     @Resource
     private NodeHeartbeatService nodeHeartbeatService;
 
+    @Resource
+    private OnChainService onChainService;
+
     @GetMapping(path = "tokens")
     public List<Token> getTokens() {
         return tokenService.findByDeactivedIsFalse();
@@ -117,6 +120,13 @@ public class StarswapController {
     @GetMapping(path = "farmingTvlInUsd")
     public BigDecimal getFarmingTvlInUsd() {
         return liquidityTokenFarmService.getTotalValueLockedInUsd();
+    }
+
+    @GetMapping(path = "getBestSwapPath")
+    public List<String> getBestSwapPath(@RequestParam("from") String tokenXId,
+                                        @RequestParam("to") String tokenYId,
+                                        @RequestParam("amount") BigInteger amountX) {
+        return onChainService.getBestSwapPath(tokenXId, tokenYId, amountX);
     }
 
     private String[] parseTokenIdPair(String tokenPairId) {

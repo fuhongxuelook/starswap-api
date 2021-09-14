@@ -49,6 +49,12 @@ http://localhost:8600/v1/starswap/liquidityPools/Bot:Ddd
 http://localhost:8600/v1/starswap/liquidityAccounts?accountAddress=0x598b8cbfd4536ecbe88aa1cfaffa7a62
 ```
 
+取得兑换的最佳路径：
+
+```
+http://localhost:8600/v1/starswap/getBestSwapPath?from=Bot&to=Ddd&amount=100000
+```
+
 取得 Farm 的列表：
 
 ```
